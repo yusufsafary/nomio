@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nomio | Find a name. Start a project.</title>
+  <meta name="description" content="Discover domain names and generate GitHub-ready project starters." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Nomio | Find a name. Start a project." />
+  <meta property="og:description" content="Discover domain names and generate GitHub-ready project starters." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='black'/><path d='M6 6 L6 26 L12 26 L12 13 L20 26 L26 26 L26 6 L20 6 L20 19 L12 6 Z' fill='white'/></svg>" />
+  <style>
+    /* Reset */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* Base */
+    :root {
+      --black: #000000;
+      --white: #ffffff;
+      --gray-100: #f5f5f5;
+      --gray-200: #e8e8e8;
+      --gray-400: #999999;
+      --gray-600: #555555;
+      --gray-800: #222222;
+      --radius: 6px;
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--white);
+      color: var(--black);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Typography */
+    h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+    p { color: var(--gray-600); }
+
+    /* Layout */
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--black);
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .nav-about {
+      background: none;
+      border: none;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--gray-600);
+      cursor: pointer;
+      padding: 6px 0;
+      transition: color 0.15s;
+    }
+    .nav-about:hover { color: var(--black); }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 64px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin-bottom: 16px;
+      line-height: 1.05;
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--gray-600);
+      margin-bottom: 40px;
+      max-width: 420px;
+    }
+
+    /* Search */
+    .search-block { display: flex; flex-direction: column; gap: 16px; }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .keyword-input {
+      flex: 1;
+      height: 48px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 15px;
+      padding: 0 16px;
+      outline: none;
+      transition: border-color 0.15s;
+      background: var(--white);
+    }
+    .keyword-input:focus { border-color: var(--black); }
+    .keyword-input::placeholder { color: var(--gray-400); }
+
+    .btn-primary {
+      height: 48px;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 0 24px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+      letter-spacing: -0.01em;
+    }
+    .btn-primary:hover { opacity: 0.82; }
+    .btn-primary:active { opacity: 0.7; }
+
+    .btn-secondary {
+      height: 38px;
+      background: var(--white);
+      color: var(--black);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 0 14px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      letter-spacing: -0.01em;
+    }
+    .btn-secondary:hover { border-color: var(--black); }
+
+    /* Category chips */
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 14px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 100px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-600);
+      cursor: pointer;
+      background: var(--white);
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .chip:hover { border-color: var(--black); color: var(--black); }
+    .chip.active { background: var(--black); color: var(--white); border-color: var(--black); }
+
+    /* Results */
+    .results-section {
+      padding: 56px 0;
+      display: none;
+    }
+    .results-section.visible { display: block; }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .results-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    /* TLD filters */
+    .tld-filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tld-btn {
+      height: 30px;
+      padding: 0 12px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 100px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-600);
+      cursor: pointer;
+      background: var(--white);
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .tld-btn:hover { border-color: var(--black); color: var(--black); }
+    .tld-btn.active { background: var(--black); color: var(--white); border-color: var(--black); }
+
+    /* Domain grid */
+    .domain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    /* Domain card */
+    .domain-card {
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 18px 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.15s;
+    }
+    .domain-card:hover { border-color: #aaa; }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .domain-name {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      word-break: break-all;
+    }
+
+    .status-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 100px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .status-available { background: #f0faf0; color: #1a7a1a; }
+    .status-taken { background: #f5f5f5; color: var(--gray-400); }
+    .status-premium { background: #fffbf0; color: #8a6000; }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-save {
+      height: 32px;
+      padding: 0 12px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-600);
+      cursor: pointer;
+      background: var(--white);
+      transition: all 0.15s;
+    }
+    .btn-save:hover { border-color: var(--black); color: var(--black); }
+    .btn-save.saved { border-color: var(--black); color: var(--black); font-weight: 600; }
+
+    .btn-starter {
+      height: 32px;
+      padding: 0 12px;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--white);
+      cursor: pointer;
+      background: var(--black);
+      transition: opacity 0.15s;
+      letter-spacing: -0.01em;
+    }
+    .btn-starter:hover { opacity: 0.78; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 0;
+      color: var(--gray-400);
+      font-size: 15px;
+    }
+
+    /* Modal overlay */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-header {
+      padding: 24px 28px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: var(--gray-100);
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--gray-600);
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .modal-close:hover { background: var(--gray-200); }
+
+    .modal-body { padding: 20px 28px 28px; }
+
+    /* Starter modal */
+    .starter-field {
+      margin-bottom: 20px;
+    }
+
+    .starter-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-400);
+      margin-bottom: 6px;
+    }
+
+    .starter-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--black);
+      letter-spacing: -0.02em;
+    }
+
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .template-option {
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .template-option:hover { border-color: var(--black); }
+    .template-option.selected { border-color: var(--black); background: var(--gray-100); }
+
+    .template-name {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .template-desc {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-top: 2px;
+    }
+
+    /* File preview */
+    .file-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--gray-100);
+      border-radius: var(--radius);
+      font-size: 13px;
+    }
+
+    .file-name { font-weight: 600; font-family: 'SF Mono', 'Fira Code', monospace; }
+    .file-size { color: var(--gray-400); font-size: 11px; }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--gray-200);
+      margin: 24px 0;
+    }
+
+    /* Export actions */
+    .export-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+
+    /* GitHub section */
+    .github-section { }
+
+    .github-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 16px;
+    }
+
+    .github-field { margin-bottom: 12px; }
+
+    .github-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-400);
+      margin-bottom: 4px;
+    }
+
+    .github-value {
+      font-size: 13px;
+      color: var(--gray-800);
+    }
+
+    .code-block {
+      background: var(--gray-100);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--gray-800);
+      white-space: pre;
+      overflow-x: auto;
+      margin-bottom: 10px;
+    }
+
+    .btn-copy {
+      height: 36px;
+      padding: 0 16px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-600);
+      cursor: pointer;
+      background: var(--white);
+      transition: all 0.15s;
+    }
+    .btn-copy:hover { border-color: var(--black); color: var(--black); }
+    .btn-copy.copied { border-color: #1a7a1a; color: #1a7a1a; }
+
+    /* About modal */
+    .about-body { padding: 28px; }
+    .about-body p { font-size: 16px; line-height: 1.65; color: var(--gray-600); }
+    .about-body p + p { margin-top: 14px; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--gray-200);
+      padding: 32px 0;
+      margin-top: 80px;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .footer-tag {
+      font-size: 13px;
+      color: var(--gray-400);
+    }
+
+    /* Loading state */
+    .generating {
+      text-align: center;
+      padding: 48px 0;
+      font-size: 14px;
+      color: var(--gray-400);
+    }
+
+    .dots {
+      display: inline-block;
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 60% { opacity: 1; }
+      30% { opacity: 0.2; }
+    }
+
+    /* Saved list section */
+    .saved-section {
+      padding-top: 0;
+      padding-bottom: 40px;
+      display: none;
+    }
+    .saved-section.visible { display: block; }
+
+    .saved-header {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .hero { padding: 48px 0 40px; }
+      .hero h1 { font-size: 36px; }
+      .input-row { flex-direction: column; }
+      .btn-primary { height: 44px; }
+      .domain-grid { grid-template-columns: 1fr; }
+      .template-grid { grid-template-columns: 1fr; }
+      .results-header { flex-direction: column; align-items: flex-start; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .modal { border-radius: 8px; }
+      .modal-header { padding: 20px 20px 0; }
+      .modal-body { padding: 16px 20px 24px; }
+    }
+
+    /* Transition for results */
+    .fade-in {
+      animation: fadeIn 0.25s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <a href="/" class="logo" aria-label="Nomio home">
+        <!-- Custom geometric N logo -->
+        <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="32" height="32" fill="black"/>
+          <path d="M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z" fill="white"/>
+        </svg>
+        <span class="logo-text">Nomio</span>
+      </a>
+      <button class="nav-about" id="openAbout" aria-label="About Nomio">About</button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<main>
+  <section class="hero">
+    <div class="container">
+      <h1>Find a name.<br>Start a project.</h1>
+      <p>Discover brandable domains and generate project starters in minutes.</p>
+
+      <div class="search-block">
+        <div class="input-row">
+          <input
+            type="text"
+            class="keyword-input"
+            id="keywordInput"
+            placeholder="video, finance, agent, studio..."
+            maxlength="64"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Keyword for domain generation"
+          />
+          <button class="btn-primary" id="generateBtn" aria-label="Generate domain names">
+            Generate Domains
+          </button>
+        </div>
+
+        <div class="categories" id="categoryChips" role="group" aria-label="Category filters">
+          <button class="chip" data-cat="AI">AI</button>
+          <button class="chip" data-cat="SaaS">SaaS</button>
+          <button class="chip" data-cat="Developer Tools">Developer Tools</button>
+          <button class="chip" data-cat="Media">Media</button>
+          <button class="chip" data-cat="Finance">Finance</button>
+          <button class="chip" data-cat="Healthcare">Healthcare</button>
+          <button class="chip" data-cat="Crypto">Crypto</button>
+          <button class="chip" data-cat="Ecommerce">Ecommerce</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Saved domains -->
+  <div class="saved-section" id="savedSection">
+    <div class="container">
+      <p class="saved-header" id="savedHeader"></p>
+      <div class="domain-grid" id="savedGrid"></div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <section class="results-section" id="resultsSection">
+    <div class="container">
+      <div class="results-header">
+        <span class="results-title" id="resultsTitle">Results</span>
+        <div class="tld-filters" id="tldFilters" role="group" aria-label="Filter by TLD">
+          <button class="tld-btn active" data-tld="all">All</button>
+          <button class="tld-btn" data-tld=".com">.com</button>
+          <button class="tld-btn" data-tld=".io">.io</button>
+          <button class="tld-btn" data-tld=".ai">.ai</button>
+          <button class="tld-btn" data-tld=".app">.app</button>
+          <button class="tld-btn" data-tld=".fun">.fun</button>
+        </div>
+      </div>
+      <div id="domainGrid" class="domain-grid"></div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-brand">Nomio</span>
+      <span class="footer-tag">Built for builders.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Starter Modal -->
+<div class="modal-overlay" id="starterModal" role="dialog" aria-modal="true" aria-labelledby="starterModalTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="starterModalTitle">Generate Starter</span>
+      <button class="modal-close" id="closeStarterModal" aria-label="Close modal">&#x2715;</button>
+    </div>
+    <div class="modal-body" id="starterModalBody">
+      <!-- Filled dynamically -->
+    </div>
+  </div>
+</div>
+
+<!-- About Modal -->
+<div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutModalTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="aboutModalTitle">About</span>
+      <button class="modal-close" id="closeAboutModal" aria-label="Close modal">&#x2715;</button>
+    </div>
+    <div class="about-body">
+      <p>Nomio helps builders move from idea to execution.</p>
+      <p>Discover domain names, create a starter kit, and launch faster.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* =====================================================================
+     Data
+  ===================================================================== */
+
+  const TLDS = ['.com', '.io', '.ai', '.app', '.fun'];
+
+  const PREFIXES = [
+    'nova', 'flux', 'neo', 'arc', 'core', 'base', 'hub', 'kit', 'lab', 'net',
+    'next', 'open', 'pro', 'quick', 'rapid', 'smart', 'super', 'ultra', 'uni', 'zero'
+  ];
+
+  const SUFFIXES = [
+    'ly', 'ify', 'iq', 'io', 'ai', 'hq', 'kit', 'lab', 'hub', 'app',
+    'base', 'flow', 'stack', 'desk', 'pro', 'ora', 'aro', 'ex', 'ify', 'ive'
+  ];
+
+  const PATTERNS = ['compound', 'prefix', 'suffix', 'blend', 'brand'];
+
+  const TEMPLATES = [
+    { id: 'landing', name: 'Landing Page', desc: 'Single page marketing site' },
+    { id: 'saas', name: 'SaaS', desc: 'Dashboard + auth scaffold' },
+    { id: 'directory', name: 'Directory', desc: 'Listing and search app' },
+    { id: 'ai-tool', name: 'AI Tool', desc: 'AI-powered utility app' },
+    { id: 'chrome', name: 'Chrome Extension', desc: 'Browser extension starter' }
+  ];
+
+  /* =====================================================================
+     State
+  ===================================================================== */
+
+  let allDomains = [];
+  let savedDomains = new Set();
+  let activeTld = 'all';
+  let activeCategory = null;
+  let currentDomain = null;
+  let selectedTemplate = TEMPLATES[0];
+
+  /* =====================================================================
+     Domain generation
+  ===================================================================== */
+
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  function generateBrandName(keyword) {
+    const kw = keyword.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const pattern = PATTERNS[Math.floor(Math.random() * PATTERNS.length)];
+    const prefix = PREFIXES[Math.floor(Math.random() * PREFIXES.length)];
+    const suffix = SUFFIXES[Math.floor(Math.random() * SUFFIXES.length)];
+
+    const kwShort = kw.length > 5 ? kw.slice(0, 5) : kw;
+
+    switch (pattern) {
+      case 'compound': return capitalize(kwShort) + capitalize(suffix);
+      case 'prefix':   return capitalize(prefix) + capitalize(kwShort);
+      case 'suffix':   return capitalize(kwShort) + suffix;
+      case 'blend': {
+        const half = Math.floor(kwShort.length / 2);
+        return capitalize(kwShort.slice(0, half) + suffix);
+      }
+      case 'brand': {
+        const combos = [
+          kwShort + 'ora', kwShort + 'ify', kwShort + 'ium',
+          kwShort + 'ix', 'get' + kwShort, kwShort + 'ry'
+        ];
+        return capitalize(combos[Math.floor(Math.random() * combos.length)]);
+      }
+      default: return capitalize(kwShort) + capitalize(suffix);
+    }
+  }
+
+  function getStatus() {
+    const r = Math.random();
+    if (r < 0.38) return 'available';
+    if (r < 0.85) return 'taken';
+    return 'premium';
+  }
+
+  function generateDomains(keyword) {
+    const seen = new Set();
+    const results = [];
+    const tldWeights = { '.com': 3, '.io': 2, '.ai': 2, '.app': 1, '.fun': 1 };
+    const tldPool = [];
+    for (const [tld, weight] of Object.entries(tldWeights)) {
+      for (let i = 0; i < weight; i++) tldPool.push(tld);
+    }
+
+    let attempts = 0;
+    while (results.length < 60 && attempts < 300) {
+      attempts++;
+      const name = generateBrandName(keyword);
+      const tld = tldPool[Math.floor(Math.random() * tldPool.length)];
+      const full = name.toLowerCase() + tld;
+      if (seen.has(full) || name.length < 3 || name.length > 14) continue;
+      seen.add(full);
+      results.push({
+        id: full,
+        name,
+        tld,
+        full,
+        status: getStatus()
+      });
+    }
+
+    return results;
+  }
+
+  /* =====================================================================
+     Render helpers
+  ===================================================================== */
+
+  function statusLabel(status) {
+    const map = {
+      available: 'Available',
+      taken: 'Taken',
+      premium: 'Premium'
+    };
+    return map[status] || status;
+  }
+
+  function renderCard(domain, container, small) {
+    const card = document.createElement('div');
+    card.className = 'domain-card fade-in';
+    card.dataset.id = domain.id;
+
+    const isSaved = savedDomains.has(domain.id);
+
+    card.innerHTML = `
+      <div class="card-top">
+        <span class="domain-name">${domain.name}<span style="color:var(--gray-400);font-weight:400">${domain.tld}</span></span>
+        <span class="status-badge status-${domain.status}">${statusLabel(domain.status)}</span>
+      </div>
+      <div class="card-actions">
+        <button class="btn-save${isSaved ? ' saved' : ''}" data-id="${domain.id}" aria-label="${isSaved ? 'Unsave' : 'Save'} ${domain.full}">
+          ${isSaved ? 'Saved' : 'Save'}
+        </button>
+        <button class="btn-starter" data-id="${domain.id}" aria-label="Generate starter for ${domain.full}">
+          Generate Starter
+        </button>
+      </div>
+    `;
+
+    card.querySelector('.btn-save').addEventListener('click', () => toggleSave(domain));
+    card.querySelector('.btn-starter').addEventListener('click', () => openStarterModal(domain));
+
+    container.appendChild(card);
+  }
+
+  function renderGrid(domains) {
+    const grid = document.getElementById('domainGrid');
+    grid.innerHTML = '';
+
+    if (!domains.length) {
+      grid.innerHTML = '<div class="empty-state">No domains match this filter.</div>';
+      return;
+    }
+
+    domains.forEach(d => renderCard(d, grid));
+  }
+
+  function filterDomains() {
+    if (activeTld === 'all') return allDomains;
+    return allDomains.filter(d => d.tld === activeTld);
+  }
+
+  /* =====================================================================
+     Save logic
+  ===================================================================== */
+
+  function toggleSave(domain) {
+    if (savedDomains.has(domain.id)) {
+      savedDomains.delete(domain.id);
+    } else {
+      savedDomains.add(domain.id);
+    }
+
+    // Update all save buttons for this domain
+    document.querySelectorAll(`.btn-save[data-id="${domain.id}"]`).forEach(btn => {
+      const isSaved = savedDomains.has(domain.id);
+      btn.textContent = isSaved ? 'Saved' : 'Save';
+      btn.classList.toggle('saved', isSaved);
+      btn.setAttribute('aria-label', `${isSaved ? 'Unsave' : 'Save'} ${domain.full}`);
+    });
+
+    renderSaved();
+  }
+
+  function renderSaved() {
+    const section = document.getElementById('savedSection');
+    const header = document.getElementById('savedHeader');
+    const grid = document.getElementById('savedGrid');
+
+    const saved = allDomains.filter(d => savedDomains.has(d.id));
+
+    if (!saved.length) {
+      section.classList.remove('visible');
+      return;
+    }
+
+    section.classList.add('visible');
+    header.textContent = `Saved (${saved.length})`;
+    grid.innerHTML = '';
+    saved.forEach(d => renderCard(d, grid));
+  }
+
+  /* =====================================================================
+     Generate flow
+  ===================================================================== */
+
+  function generate() {
+    const keyword = document.getElementById('keywordInput').value.trim() || 'build';
+    const cat = activeCategory ? ` in ${activeCategory}` : '';
+
+    const resultsSection = document.getElementById('resultsSection');
+    const grid = document.getElementById('domainGrid');
+    const title = document.getElementById('resultsTitle');
+
+    resultsSection.classList.add('visible');
+    grid.innerHTML = `<div class="generating" style="grid-column:1/-1">Generating${cat}<span class="dots">...</span></div>`;
+    title.textContent = `Results for "${keyword}"`;
+
+    // Simulate brief async generation
+    setTimeout(() => {
+      allDomains = generateDomains(keyword);
+      activeTld = 'all';
+      document.querySelectorAll('.tld-btn').forEach(b => b.classList.toggle('active', b.dataset.tld === 'all'));
+      renderGrid(allDomains);
+
+      // Scroll to results
+      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 600);
+  }
+
+  /* =====================================================================
+     Starter modal
+  ===================================================================== */
+
+  function extractTagline(name, template) {
+    const lines = {
+      landing: `The home for ${name}.`,
+      saas: `${name} is your all-in-one platform.`,
+      directory: `Find everything with ${name}.`,
+      'ai-tool': `${name} makes AI simple.`,
+      chrome: `${name} lives in your browser.`
+    };
+    return lines[template.id] || `${name}. Built for what comes next.`;
+  }
+
+  function buildReadme(domain, template, tagline) {
+    return `# ${domain.name}\n\n${tagline}\n\nGenerated by Nomio.`;
+  }
+
+  function buildBrandJson(domain, template, tagline) {
+    return JSON.stringify({
+      name: domain.name,
+      domain: domain.full,
+      tagline,
+      template: template.id,
+      generated: new Date().toISOString().slice(0, 10)
+    }, null, 2);
+  }
+
+  function buildIndexHtml(domain, template, tagline) {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${domain.name} | ${tagline}</title>
+  <meta name="description" content="${tagline}" />
+  <style>
+    body { font-family: system-ui, sans-serif; background: #fff; color: #000; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .wrap { text-align: center; padding: 48px 24px; }
+    h1 { font-size: 48px; font-weight: 700; letter-spacing: -0.04em; margin: 0 0 12px; }
+    p { color: #666; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>${domain.name}</h1>
+    <p>${tagline}</p>
+  </div>
+</body>
+</html>`;
+  }
+
+  function buildFaviconSvg(domain) {
+    const letter = domain.name.charAt(0).toUpperCase();
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="black"/><text x="16" y="22" font-family="system-ui" font-size="20" font-weight="700" fill="white" text-anchor="middle">${letter}</text></svg>`;
+  }
+
+  function buildLogoSvg(domain) {
+    const letter = domain.name.charAt(0).toUpperCase();
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="8" fill="black"/><text x="32" y="44" font-family="system-ui" font-size="40" font-weight="700" fill="white" text-anchor="middle">${letter}</text></svg>`;
+  }
+
+  function gitInstructions(domain) {
+    return `git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/${domain.name.toLowerCase()}
+git push -u origin main`;
+  }
+
+  function openStarterModal(domain) {
+    currentDomain = domain;
+    selectedTemplate = TEMPLATES[0];
+    renderStarterModal();
+    document.getElementById('starterModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function renderStarterModal() {
+    const domain = currentDomain;
+    const tagline = extractTagline(domain.name, selectedTemplate);
+
+    const readme = buildReadme(domain, selectedTemplate, tagline);
+    const brandJson = buildBrandJson(domain, selectedTemplate, tagline);
+    const indexHtml = buildIndexHtml(domain, selectedTemplate, tagline);
+    const faviconSvg = buildFaviconSvg(domain);
+    const logoSvg = buildLogoSvg(domain);
+    const gitCmds = gitInstructions(domain);
+
+    const files = [
+      { name: 'README.md', size: `${readme.length}B`, content: readme, mime: 'text/markdown' },
+      { name: 'index.html', size: `${indexHtml.length}B`, content: indexHtml, mime: 'text/html' },
+      { name: 'favicon.svg', size: `${faviconSvg.length}B`, content: faviconSvg, mime: 'image/svg+xml' },
+      { name: 'logo.svg', size: `${logoSvg.length}B`, content: logoSvg, mime: 'image/svg+xml' },
+      { name: 'brand.json', size: `${brandJson.length}B`, content: brandJson, mime: 'application/json' }
+    ];
+
+    const body = document.getElementById('starterModalBody');
+
+    body.innerHTML = `
+      <div class="starter-field">
+        <div class="starter-label">Domain</div>
+        <div class="starter-value">${domain.full}</div>
+      </div>
+      <div class="starter-field">
+        <div class="starter-label">Brand Name</div>
+        <div class="starter-value">${domain.name}</div>
+      </div>
+      <div class="starter-field">
+        <div class="starter-label">Tagline</div>
+        <div class="starter-value" id="generatedTagline">${tagline}</div>
+      </div>
+
+      <div class="starter-label" style="margin-bottom:8px">Template</div>
+      <div class="template-grid" id="templateGrid">
+        ${TEMPLATES.map(t => `
+          <div class="template-option${t.id === selectedTemplate.id ? ' selected' : ''}" data-tid="${t.id}" role="button" tabindex="0" aria-pressed="${t.id === selectedTemplate.id}">
+            <div class="template-name">${t.name}</div>
+            <div class="template-desc">${t.desc}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="starter-label" style="margin-bottom:8px">Generated Files</div>
+      <div class="file-list">
+        ${files.map(f => `
+          <div class="file-item">
+            <span class="file-name">${f.name}</span>
+            <span class="file-size">${f.size}</span>
+          </div>
+        `).join('')}
+      </div>
+
+      <hr class="divider" />
+
+      <div class="export-actions">
+        <button class="btn-secondary" id="dlReadme">Download README</button>
+        <button class="btn-secondary" id="dlJson">Download JSON</button>
+        <button class="btn-secondary" id="dlZip">Download ZIP</button>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="github-section">
+        <p class="github-title">GitHub Export</p>
+        <div class="github-field">
+          <div class="github-label">Repository Name</div>
+          <div class="github-value">${domain.name.toLowerCase()}</div>
+        </div>
+        <div class="github-field">
+          <div class="github-label">Suggested Description</div>
+          <div class="github-value">${tagline}</div>
+        </div>
+        <div class="github-label" style="margin-bottom:6px">Push Instructions</div>
+        <div class="code-block" id="gitCode">${gitCmds}</div>
+        <button class="btn-copy" id="copyGit">Copy Commands</button>
+      </div>
+    `;
+
+    // Template selection
+    body.querySelectorAll('.template-option').forEach(opt => {
+      const select = () => {
+        selectedTemplate = TEMPLATES.find(t => t.id === opt.dataset.tid);
+        renderStarterModal();
+      };
+      opt.addEventListener('click', select);
+      opt.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); } });
+    });
+
+    // Downloads
+    body.querySelector('#dlReadme').addEventListener('click', () => download('README.md', readme, 'text/markdown'));
+    body.querySelector('#dlJson').addEventListener('click', () => download('brand.json', brandJson, 'application/json'));
+    body.querySelector('#dlZip').addEventListener('click', () => downloadZip(domain, files));
+    body.querySelector('#copyGit').addEventListener('click', () => copyText(gitCmds, body.querySelector('#copyGit')));
+  }
+
+  /* =====================================================================
+     File downloads
+  ===================================================================== */
+
+  function download(filename, content, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function downloadZip(domain, files) {
+    // Build a basic ZIP-like archive using stored files as a tar-style text bundle
+    // For a real ZIP, a library like JSZip would be used. Here we bundle as a single text file.
+    const txt = files.map(f => `=== ${f.name} ===\n${f.content}`).join('\n\n');
+    download(`${domain.name.toLowerCase()}-starter.txt`, txt, 'text/plain');
+  }
+
+  /* =====================================================================
+     Copy helper
+  ===================================================================== */
+
+  function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy Commands';
+        btn.classList.remove('copied');
+      }, 1800);
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy Commands';
+        btn.classList.remove('copied');
+      }, 1800);
+    });
+  }
+
+  /* =====================================================================
+     Event listeners
+  ===================================================================== */
+
+  // Generate button
+  document.getElementById('generateBtn').addEventListener('click', generate);
+
+  // Enter key on input
+  document.getElementById('keywordInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') generate();
+  });
+
+  // Category chips
+  document.getElementById('categoryChips').addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    if (activeCategory === chip.dataset.cat) {
+      activeCategory = null;
+      chip.classList.remove('active');
+    } else {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeCategory = chip.dataset.cat;
+    }
+  });
+
+  // TLD filters
+  document.getElementById('tldFilters').addEventListener('click', e => {
+    const btn = e.target.closest('.tld-btn');
+    if (!btn) return;
+    activeTld = btn.dataset.tld;
+    document.querySelectorAll('.tld-btn').forEach(b => b.classList.toggle('active', b === btn));
+    renderGrid(filterDomains());
+  });
+
+  // Close starter modal
+  document.getElementById('closeStarterModal').addEventListener('click', closeStarterModal);
+  document.getElementById('starterModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('starterModal')) closeStarterModal();
+  });
+
+  function closeStarterModal() {
+    document.getElementById('starterModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // About modal
+  document.getElementById('openAbout').addEventListener('click', () => {
+    document.getElementById('aboutModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+
+  document.getElementById('closeAboutModal').addEventListener('click', closeAbout);
+  document.getElementById('aboutModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('aboutModal')) closeAbout();
+  });
+
+  function closeAbout() {
+    document.getElementById('aboutModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Escape key closes modals
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeStarterModal();
+      closeAbout();
+    }
+  });
+</script>
+</body>
+</html>
