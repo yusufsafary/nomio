@@ -9,26 +9,31 @@
   <meta property="og:title" content="Nomio | Find a name. Start a project." />
   <meta property="og:description" content="Discover domain names and generate GitHub-ready project starters." />
   <meta property="og:type" content="website" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='black'/><path d='M6 6 L6 26 L12 26 L12 13 L20 26 L26 26 L26 6 L20 6 L20 19 L12 6 Z' fill='white'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='black'/%3E%3Cpath d='M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z' fill='white'/%3E%3C/svg%3E" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+
   <style>
-    /* Reset */
+    /* ====================== Reset ====================== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Base */
+    /* ====================== Tokens ====================== */
     :root {
-      --black: #000000;
-      --white: #ffffff;
-      --gray-100: #f5f5f5;
-      --gray-200: #e8e8e8;
-      --gray-400: #999999;
-      --gray-600: #555555;
-      --gray-800: #222222;
-      --radius: 6px;
-      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --black:    #000;
+      --white:    #fff;
+      --g100:     #f5f5f5;
+      --g200:     #e8e8e8;
+      --g400:     #999;
+      --g600:     #555;
+      --g800:     #222;
+      --radius:   6px;
+      --font:     'Inter', system-ui, -apple-system, sans-serif;
     }
 
+    /* ====================== Base ====================== */
     html { font-size: 16px; scroll-behavior: smooth; }
-
     body {
       font-family: var(--font);
       background: var(--white);
@@ -36,601 +41,352 @@
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
     }
+    h1, h2, h3 { font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+    p { color: var(--g600); }
+    button { font-family: var(--font); cursor: pointer; }
 
-    /* Typography */
-    h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
-    p { color: var(--gray-600); }
-
-    /* Layout */
+    /* ====================== Layout ====================== */
     .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
 
-    /* Header */
+    /* ====================== Header ====================== */
     header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
       background: var(--white);
-      border-bottom: 1px solid var(--gray-200);
+      border-bottom: 1px solid var(--g200);
     }
-
     .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
       height: 56px;
     }
-
     .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: var(--black);
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--black);
     }
-
-    .logo-mark {
-      width: 32px;
-      height: 32px;
-      flex-shrink: 0;
-    }
-
-    .logo-text {
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-
+    .logo-mark { width: 30px; height: 30px; flex-shrink: 0; }
+    .logo-text { font-size: 17px; font-weight: 700; letter-spacing: -0.04em; }
     .nav-about {
-      background: none;
-      border: none;
-      font-family: var(--font);
-      font-size: 14px;
-      color: var(--gray-600);
-      cursor: pointer;
-      padding: 6px 0;
-      transition: color 0.15s;
+      background: none; border: none;
+      font-size: 14px; color: var(--g600);
+      padding: 6px 0; transition: color .15s;
     }
     .nav-about:hover { color: var(--black); }
 
-    /* Hero */
-    .hero {
-      padding: 80px 0 64px;
-      border-bottom: 1px solid var(--gray-200);
-    }
+    /* ====================== Hero ====================== */
+    .hero { padding: 80px 0 64px; border-bottom: 1px solid var(--g200); }
+    .hero h1 { font-size: clamp(38px, 6vw, 68px); margin-bottom: 16px; }
+    .hero p  { font-size: 16px; margin-bottom: 40px; max-width: 400px; }
 
-    .hero h1 {
-      font-size: clamp(36px, 6vw, 64px);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      margin-bottom: 16px;
-      line-height: 1.05;
-    }
-
-    .hero p {
-      font-size: 16px;
-      color: var(--gray-600);
-      margin-bottom: 40px;
-      max-width: 420px;
-    }
-
-    /* Search */
-    .search-block { display: flex; flex-direction: column; gap: 16px; }
-
-    .input-row {
-      display: flex;
-      gap: 10px;
-      align-items: stretch;
-    }
-
+    /* ====================== Search ====================== */
+    .search-block { display: flex; flex-direction: column; gap: 14px; }
+    .input-row { display: flex; gap: 10px; }
     .keyword-input {
-      flex: 1;
-      height: 48px;
-      border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius);
-      font-family: var(--font);
-      font-size: 15px;
-      padding: 0 16px;
-      outline: none;
-      transition: border-color 0.15s;
-      background: var(--white);
+      flex: 1; height: 48px;
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      font-size: 15px; padding: 0 16px; outline: none;
+      transition: border-color .15s;
     }
     .keyword-input:focus { border-color: var(--black); }
-    .keyword-input::placeholder { color: var(--gray-400); }
+    .keyword-input::placeholder { color: var(--g400); }
 
+    /* Primary button */
     .btn-primary {
-      height: 48px;
-      background: var(--black);
-      color: var(--white);
-      border: none;
-      border-radius: var(--radius);
-      font-family: var(--font);
-      font-size: 14px;
-      font-weight: 600;
-      padding: 0 24px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: opacity 0.15s;
-      letter-spacing: -0.01em;
+      height: 48px; padding: 0 24px;
+      background: var(--black); color: var(--white);
+      border: none; border-radius: var(--radius);
+      font-size: 14px; font-weight: 600; white-space: nowrap;
+      letter-spacing: -.01em; transition: opacity .15s;
     }
-    .btn-primary:hover { opacity: 0.82; }
-    .btn-primary:active { opacity: 0.7; }
+    .btn-primary:hover   { opacity: .82; }
+    .btn-primary:active  { opacity: .68; }
+    .btn-primary:disabled { opacity: .4; cursor: not-allowed; }
 
+    /* Secondary button */
     .btn-secondary {
-      height: 38px;
-      background: var(--white);
-      color: var(--black);
-      border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius);
-      font-family: var(--font);
-      font-size: 13px;
-      font-weight: 500;
-      padding: 0 14px;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-      letter-spacing: -0.01em;
+      height: 38px; padding: 0 16px;
+      background: var(--white); color: var(--black);
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      font-size: 13px; font-weight: 500;
+      transition: border-color .15s;
     }
     .btn-secondary:hover { border-color: var(--black); }
 
-    /* Category chips */
-    .categories {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
+    /* ====================== Chips ====================== */
+    .categories { display: flex; flex-wrap: wrap; gap: 8px; }
     .chip {
-      height: 34px;
-      display: inline-flex;
-      align-items: center;
-      padding: 0 14px;
-      border: 1.5px solid var(--gray-200);
-      border-radius: 100px;
-      font-family: var(--font);
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--gray-600);
-      cursor: pointer;
-      background: var(--white);
-      transition: border-color 0.15s, color 0.15s, background 0.15s;
-      user-select: none;
+      height: 34px; padding: 0 14px;
+      display: inline-flex; align-items: center;
+      border: 1.5px solid var(--g200); border-radius: 100px;
+      font-size: 13px; font-weight: 500; color: var(--g600);
+      background: var(--white); transition: all .15s; user-select: none;
     }
     .chip:hover { border-color: var(--black); color: var(--black); }
     .chip.active { background: var(--black); color: var(--white); border-color: var(--black); }
 
-    /* Results */
-    .results-section {
-      padding: 56px 0;
-      display: none;
-    }
+    /* ====================== Results ====================== */
+    .results-section { padding: 56px 0; display: none; }
     .results-section.visible { display: block; }
 
     .results-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      gap: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
     }
-
-    .results-title {
-      font-size: 20px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-    }
+    .results-title { font-size: 20px; font-weight: 600; letter-spacing: -.02em; }
+    .results-meta { font-size: 13px; color: var(--g400); }
 
     /* TLD filters */
-    .tld-filters {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
+    .tld-filters { display: flex; gap: 6px; flex-wrap: wrap; }
     .tld-btn {
-      height: 30px;
-      padding: 0 12px;
-      border: 1.5px solid var(--gray-200);
-      border-radius: 100px;
-      font-family: var(--font);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--gray-600);
-      cursor: pointer;
-      background: var(--white);
-      transition: all 0.15s;
-      letter-spacing: 0.02em;
+      height: 30px; padding: 0 12px;
+      border: 1.5px solid var(--g200); border-radius: 100px;
+      font-size: 12px; font-weight: 600; color: var(--g600);
+      background: var(--white); transition: all .15s; letter-spacing: .02em;
     }
     .tld-btn:hover { border-color: var(--black); color: var(--black); }
     .tld-btn.active { background: var(--black); color: var(--white); border-color: var(--black); }
 
-    /* Domain grid */
+    /* ====================== Domain grid ====================== */
     .domain-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
       gap: 12px;
     }
 
-    /* Domain card */
+    /* ====================== Domain card ====================== */
     .domain-card {
-      border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius);
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
       padding: 18px 18px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      transition: border-color 0.15s;
+      display: flex; flex-direction: column; gap: 12px;
+      transition: border-color .15s, box-shadow .15s;
     }
-    .domain-card:hover { border-color: #aaa; }
+    .domain-card:hover { border-color: #bbb; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
 
     .card-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
     }
-
     .domain-name {
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      word-break: break-all;
+      font-size: 17px; font-weight: 700; letter-spacing: -.03em; word-break: break-all;
     }
+    .domain-tld { color: var(--g400); font-weight: 400; }
 
     .status-badge {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 100px;
-      white-space: nowrap;
-      flex-shrink: 0;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
+      font-size: 10px; font-weight: 700; padding: 3px 8px;
+      border-radius: 100px; white-space: nowrap; flex-shrink: 0;
+      letter-spacing: .04em; text-transform: uppercase;
     }
-    .status-available { background: #f0faf0; color: #1a7a1a; }
-    .status-taken { background: #f5f5f5; color: var(--gray-400); }
-    .status-premium { background: #fffbf0; color: #8a6000; }
+    .status-available { background: #edfbee; color: #1a7a1a; }
+    .status-taken     { background: var(--g100); color: var(--g400); }
+    .status-premium   { background: #fff9ec; color: #8a6000; }
 
-    .card-actions {
-      display: flex;
-      gap: 8px;
-    }
+    .card-actions { display: flex; gap: 8px; }
 
     .btn-save {
-      height: 32px;
-      padding: 0 12px;
-      border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius);
-      font-family: var(--font);
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--gray-600);
-      cursor: pointer;
-      background: var(--white);
-      transition: all 0.15s;
+      height: 32px; padding: 0 12px;
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      font-size: 12px; font-weight: 500; color: var(--g600);
+      background: var(--white); transition: all .15s;
     }
     .btn-save:hover { border-color: var(--black); color: var(--black); }
-    .btn-save.saved { border-color: var(--black); color: var(--black); font-weight: 600; }
+    .btn-save.saved { border-color: var(--black); color: var(--black); font-weight: 700; background: var(--g100); }
 
     .btn-starter {
-      height: 32px;
-      padding: 0 12px;
-      border: none;
-      border-radius: var(--radius);
-      font-family: var(--font);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--white);
-      cursor: pointer;
-      background: var(--black);
-      transition: opacity 0.15s;
-      letter-spacing: -0.01em;
+      height: 32px; padding: 0 12px;
+      border: none; border-radius: var(--radius);
+      font-size: 12px; font-weight: 600; color: var(--white);
+      background: var(--black); transition: opacity .15s;
     }
-    .btn-starter:hover { opacity: 0.78; }
+    .btn-starter:hover { opacity: .78; }
 
-    /* Empty state */
+    /* ====================== Saved section ====================== */
+    .saved-section { padding: 40px 0 0; display: none; }
+    .saved-section.visible { display: block; }
+    .section-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--g400); margin-bottom: 14px;
+    }
+
+    /* ====================== Loading ====================== */
+    .generating {
+      grid-column: 1 / -1;
+      text-align: center; padding: 60px 0;
+      font-size: 14px; color: var(--g400);
+    }
+    .dot-pulse::after {
+      content: '';
+      animation: dots 1.4s infinite;
+    }
+    @keyframes dots {
+      0%   { content: '.'; }
+      33%  { content: '..'; }
+      66%  { content: '...'; }
+    }
+
+    /* ====================== Empty ====================== */
     .empty-state {
-      text-align: center;
-      padding: 60px 0;
-      color: var(--gray-400);
-      font-size: 15px;
+      grid-column: 1 / -1;
+      text-align: center; padding: 60px 0;
+      font-size: 14px; color: var(--g400);
     }
 
-    /* Modal overlay */
+    /* ====================== Modal ====================== */
     .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      z-index: 200;
-      display: none;
-      align-items: center;
-      justify-content: center;
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,.48);
+      display: none; align-items: center; justify-content: center;
       padding: 24px;
     }
     .modal-overlay.open { display: flex; }
 
     .modal {
-      background: var(--white);
-      border-radius: 12px;
-      width: 100%;
-      max-width: 560px;
-      max-height: 90vh;
-      overflow-y: auto;
+      background: var(--white); border-radius: 12px;
+      width: 100%; max-width: 580px;
+      max-height: 92vh; overflow-y: auto;
       position: relative;
     }
 
     .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
       padding: 24px 28px 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      position: sticky; top: 0; background: var(--white);
+      z-index: 1; padding-bottom: 0;
     }
-
-    .modal-title {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-
+    .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -.03em; }
     .modal-close {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      background: var(--gray-100);
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 16px;
-      color: var(--gray-600);
-      transition: background 0.15s;
-      flex-shrink: 0;
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      border: none; background: var(--g100); border-radius: 50%;
+      font-size: 14px; color: var(--g600);
+      transition: background .15s; flex-shrink: 0;
     }
-    .modal-close:hover { background: var(--gray-200); }
+    .modal-close:hover { background: var(--g200); color: var(--black); }
 
-    .modal-body { padding: 20px 28px 28px; }
+    .modal-body { padding: 20px 28px 32px; }
 
-    /* Starter modal */
-    .starter-field {
-      margin-bottom: 20px;
+    /* ====================== Starter modal internals ====================== */
+    .starter-row { margin-bottom: 20px; }
+    .field-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--g400); margin-bottom: 5px;
     }
-
-    .starter-label {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--gray-400);
-      margin-bottom: 6px;
-    }
-
-    .starter-value {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--black);
-      letter-spacing: -0.02em;
-    }
+    .field-value { font-size: 15px; font-weight: 600; letter-spacing: -.02em; }
 
     .template-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
       margin-bottom: 24px;
     }
-
-    .template-option {
-      border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius);
-      padding: 12px 14px;
-      cursor: pointer;
-      transition: all 0.15s;
-      user-select: none;
+    .tpl-opt {
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      padding: 12px 14px; cursor: pointer; transition: all .15s; user-select: none;
     }
-    .template-option:hover { border-color: var(--black); }
-    .template-option.selected { border-color: var(--black); background: var(--gray-100); }
+    .tpl-opt:hover { border-color: var(--g800); }
+    .tpl-opt.selected { border-color: var(--black); background: var(--g100); }
+    .tpl-opt:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
+    .tpl-name { font-size: 13px; font-weight: 600; letter-spacing: -.01em; }
+    .tpl-desc { font-size: 11px; color: var(--g400); margin-top: 2px; }
 
-    .template-name {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-
-    .template-desc {
-      font-size: 11px;
-      color: var(--gray-400);
-      margin-top: 2px;
-    }
-
-    /* File preview */
+    /* File list */
     .file-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
-
     .file-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 14px;
-      background: var(--gray-100);
-      border-radius: var(--radius);
-      font-size: 13px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; background: var(--g100); border-radius: var(--radius);
     }
+    .file-name { font-size: 13px; font-weight: 600; font-family: 'SF Mono', 'Fira Code', monospace; }
+    .file-size { font-size: 11px; color: var(--g400); }
 
-    .file-name { font-weight: 600; font-family: 'SF Mono', 'Fira Code', monospace; }
-    .file-size { color: var(--gray-400); font-size: 11px; }
-
-    /* Divider */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--gray-200);
-      margin: 24px 0;
-    }
+    hr.divider { border: none; border-top: 1px solid var(--g200); margin: 24px 0; }
 
     /* Export actions */
-    .export-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .export-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
 
     /* GitHub section */
-    .github-section { }
-
-    .github-title {
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      margin-bottom: 16px;
-    }
-
-    .github-field { margin-bottom: 12px; }
-
-    .github-label {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--gray-400);
-      margin-bottom: 4px;
-    }
-
-    .github-value {
-      font-size: 13px;
-      color: var(--gray-800);
-    }
+    .gh-title { font-size: 14px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 16px; }
+    .gh-field { margin-bottom: 12px; }
+    .gh-value { font-size: 13px; color: var(--g800); }
 
     .code-block {
-      background: var(--gray-100);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
-      font-size: 12px;
-      line-height: 1.7;
-      color: var(--gray-800);
-      white-space: pre;
-      overflow-x: auto;
-      margin-bottom: 10px;
+      background: var(--g100); border-radius: var(--radius);
+      padding: 14px 16px; font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px; line-height: 1.75; color: var(--g800);
+      white-space: pre; overflow-x: auto; margin-bottom: 10px;
     }
 
     .btn-copy {
-      height: 36px;
-      padding: 0 16px;
-      border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius);
-      font-family: var(--font);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--gray-600);
-      cursor: pointer;
-      background: var(--white);
-      transition: all 0.15s;
+      height: 36px; padding: 0 16px;
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      font-size: 12px; font-weight: 600; color: var(--g600);
+      background: var(--white); transition: all .15s;
     }
     .btn-copy:hover { border-color: var(--black); color: var(--black); }
     .btn-copy.copied { border-color: #1a7a1a; color: #1a7a1a; }
 
-    /* About modal */
-    .about-body { padding: 28px; }
-    .about-body p { font-size: 16px; line-height: 1.65; color: var(--gray-600); }
+    /* ====================== About modal ====================== */
+    .about-body { padding: 24px 28px 32px; }
+    .about-body p { font-size: 16px; line-height: 1.7; color: var(--g600); }
     .about-body p + p { margin-top: 14px; }
 
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--gray-200);
-      padding: 32px 0;
-      margin-top: 80px;
-    }
-
+    /* ====================== Footer ====================== */
+    footer { border-top: 1px solid var(--g200); padding: 32px 0; margin-top: 80px; }
     .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-brand { font-size: 14px; font-weight: 700; letter-spacing: -.02em; }
+    .footer-tag   { font-size: 13px; color: var(--g400); }
+
+    /* ====================== Animations ====================== */
+    .fade-in { animation: fadeUp .22s ease both; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .footer-brand {
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+    /* ====================== Toast ====================== */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--black); color: var(--white);
+      font-size: 13px; font-weight: 500; padding: 10px 20px;
+      border-radius: 100px; z-index: 999;
+      opacity: 0; transition: opacity .2s;
+      pointer-events: none; white-space: nowrap;
     }
+    .toast.show { opacity: 1; }
 
-    .footer-tag {
-      font-size: 13px;
-      color: var(--gray-400);
-    }
-
-    /* Loading state */
-    .generating {
-      text-align: center;
-      padding: 48px 0;
-      font-size: 14px;
-      color: var(--gray-400);
-    }
-
-    .dots {
-      display: inline-block;
-      animation: blink 1.2s infinite;
-    }
-
-    @keyframes blink {
-      0%, 60% { opacity: 1; }
-      30% { opacity: 0.2; }
-    }
-
-    /* Saved list section */
-    .saved-section {
-      padding-top: 0;
-      padding-bottom: 40px;
-      display: none;
-    }
-    .saved-section.visible { display: block; }
-
-    .saved-header {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--gray-600);
-      margin-bottom: 12px;
-      letter-spacing: -0.01em;
-    }
-
-    /* Mobile */
+    /* ====================== Mobile ====================== */
     @media (max-width: 600px) {
       .hero { padding: 48px 0 40px; }
-      .hero h1 { font-size: 36px; }
       .input-row { flex-direction: column; }
       .btn-primary { height: 44px; }
       .domain-grid { grid-template-columns: 1fr; }
       .template-grid { grid-template-columns: 1fr; }
       .results-header { flex-direction: column; align-items: flex-start; }
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 4px; }
-      .modal { border-radius: 8px; }
+      .modal { border-radius: 10px; }
       .modal-header { padding: 20px 20px 0; }
-      .modal-body { padding: 16px 20px 24px; }
-    }
-
-    /* Transition for results */
-    .fade-in {
-      animation: fadeIn 0.25s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+      .modal-body { padding: 16px 20px 28px; }
+      .about-body { padding: 20px 20px 28px; }
     }
   </style>
 </head>
 <body>
 
-<!-- Header -->
+<!-- ============================== Header ============================== -->
 <header>
   <div class="container">
     <div class="header-inner">
-      <a href="/" class="logo" aria-label="Nomio home">
-        <!-- Custom geometric N logo -->
+      <a href="/" class="logo" aria-label="Nomio">
         <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect width="32" height="32" fill="black"/>
-          <path d="M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z" fill="white"/>
+          <rect width="32" height="32" fill="#000"/>
+          <path d="M6 6L6 26L11 26L11 14.5L21 26L26 26L26 6L21 6L21 17.5L11 6Z" fill="#fff"/>
         </svg>
         <span class="logo-text">Nomio</span>
       </a>
-      <button class="nav-about" id="openAbout" aria-label="About Nomio">About</button>
+      <button class="nav-about" id="openAbout">About</button>
     </div>
   </div>
 </header>
 
-<!-- Hero -->
+<!-- ============================== Main ============================== -->
 <main>
+
+  <!-- Hero -->
   <section class="hero">
     <div class="container">
       <h1>Find a name.<br>Start a project.</h1>
@@ -646,14 +402,12 @@
             maxlength="64"
             autocomplete="off"
             spellcheck="false"
-            aria-label="Keyword for domain generation"
+            aria-label="Keyword"
           />
-          <button class="btn-primary" id="generateBtn" aria-label="Generate domain names">
-            Generate Domains
-          </button>
+          <button class="btn-primary" id="generateBtn">Generate Domains</button>
         </div>
 
-        <div class="categories" id="categoryChips" role="group" aria-label="Category filters">
+        <div class="categories" id="chips" role="group" aria-label="Categories">
           <button class="chip" data-cat="AI">AI</button>
           <button class="chip" data-cat="SaaS">SaaS</button>
           <button class="chip" data-cat="Developer Tools">Developer Tools</button>
@@ -668,18 +422,21 @@
   </section>
 
   <!-- Saved domains -->
-  <div class="saved-section" id="savedSection">
+  <section class="saved-section" id="savedSection" aria-label="Saved domains">
     <div class="container">
-      <p class="saved-header" id="savedHeader"></p>
+      <p class="section-label" id="savedLabel">Saved</p>
       <div class="domain-grid" id="savedGrid"></div>
     </div>
-  </div>
+  </section>
 
   <!-- Results -->
-  <section class="results-section" id="resultsSection">
+  <section class="results-section" id="resultsSection" aria-label="Domain results">
     <div class="container">
       <div class="results-header">
-        <span class="results-title" id="resultsTitle">Results</span>
+        <div>
+          <p class="results-title" id="resultsTitle">Results</p>
+          <p class="results-meta" id="resultsMeta"></p>
+        </div>
         <div class="tld-filters" id="tldFilters" role="group" aria-label="Filter by TLD">
           <button class="tld-btn active" data-tld="all">All</button>
           <button class="tld-btn" data-tld=".com">.com</button>
@@ -689,12 +446,13 @@
           <button class="tld-btn" data-tld=".fun">.fun</button>
         </div>
       </div>
-      <div id="domainGrid" class="domain-grid"></div>
+      <div class="domain-grid" id="domainGrid"></div>
     </div>
   </section>
+
 </main>
 
-<!-- Footer -->
+<!-- ============================== Footer ============================== -->
 <footer>
   <div class="container">
     <div class="footer-inner">
@@ -704,25 +462,23 @@
   </div>
 </footer>
 
-<!-- Starter Modal -->
-<div class="modal-overlay" id="starterModal" role="dialog" aria-modal="true" aria-labelledby="starterModalTitle">
+<!-- ============================== Starter Modal ============================== -->
+<div class="modal-overlay" id="starterModal" role="dialog" aria-modal="true" aria-labelledby="starterTitle">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title" id="starterModalTitle">Generate Starter</span>
-      <button class="modal-close" id="closeStarterModal" aria-label="Close modal">&#x2715;</button>
+      <span class="modal-title" id="starterTitle">Generate Starter</span>
+      <button class="modal-close" id="closeStarter" aria-label="Close">&#x2715;</button>
     </div>
-    <div class="modal-body" id="starterModalBody">
-      <!-- Filled dynamically -->
-    </div>
+    <div class="modal-body" id="starterBody"></div>
   </div>
 </div>
 
-<!-- About Modal -->
-<div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutModalTitle">
+<!-- ============================== About Modal ============================== -->
+<div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title" id="aboutModalTitle">About</span>
-      <button class="modal-close" id="closeAboutModal" aria-label="Close modal">&#x2715;</button>
+      <span class="modal-title" id="aboutTitle">About</span>
+      <button class="modal-close" id="closeAbout" aria-label="Close">&#x2715;</button>
     </div>
     <div class="about-body">
       <p>Nomio helps builders move from idea to execution.</p>
@@ -731,540 +487,532 @@
   </div>
 </div>
 
+<!-- ============================== Toast ============================== -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ============================== Script ============================== -->
 <script>
-  /* =====================================================================
-     Data
-  ===================================================================== */
+/* ========================================================
+   Constants
+======================================================== */
+const TLDS = ['.com','.io','.ai','.app','.fun'];
 
-  const TLDS = ['.com', '.io', '.ai', '.app', '.fun'];
+const PREFIXES = [
+  'nova','flux','neo','arc','core','base','hub','kit','lab','net',
+  'next','open','pro','rapid','smart','super','ultra','uni','zero','go',
+  'my','get','use','try','run','on','re','up','do','be'
+];
 
-  const PREFIXES = [
-    'nova', 'flux', 'neo', 'arc', 'core', 'base', 'hub', 'kit', 'lab', 'net',
-    'next', 'open', 'pro', 'quick', 'rapid', 'smart', 'super', 'ultra', 'uni', 'zero'
-  ];
+const SUFFIXES = [
+  'ly','ify','iq','io','ai','hq','kit','lab','hub','app',
+  'base','flow','stack','desk','pro','ora','aro','ex','ive','ix',
+  'ium','ery','fy','zy','sy','co','io','oo','ro','vo'
+];
 
-  const SUFFIXES = [
-    'ly', 'ify', 'iq', 'io', 'ai', 'hq', 'kit', 'lab', 'hub', 'app',
-    'base', 'flow', 'stack', 'desk', 'pro', 'ora', 'aro', 'ex', 'ify', 'ive'
-  ];
+const BLENDS = [
+  'ora','ova','era','ara','ila','ela','uri','ini','ani','eno',
+  'omo','ato','eto','ito','uto','ario','ario','orio','orio','urio'
+];
 
-  const PATTERNS = ['compound', 'prefix', 'suffix', 'blend', 'brand'];
+const TEMPLATES = [
+  { id:'landing',  name:'Landing Page',    desc:'Single page marketing site' },
+  { id:'saas',     name:'SaaS',            desc:'Dashboard + auth scaffold'  },
+  { id:'directory',name:'Directory',       desc:'Listing and search app'     },
+  { id:'ai-tool',  name:'AI Tool',         desc:'AI-powered utility app'     },
+  { id:'chrome',   name:'Chrome Extension',desc:'Browser extension starter'  }
+];
 
-  const TEMPLATES = [
-    { id: 'landing', name: 'Landing Page', desc: 'Single page marketing site' },
-    { id: 'saas', name: 'SaaS', desc: 'Dashboard + auth scaffold' },
-    { id: 'directory', name: 'Directory', desc: 'Listing and search app' },
-    { id: 'ai-tool', name: 'AI Tool', desc: 'AI-powered utility app' },
-    { id: 'chrome', name: 'Chrome Extension', desc: 'Browser extension starter' }
-  ];
+const TLD_WEIGHTS = [
+  ['.com',4],['.io',3],['.ai',3],['.app',2],['.fun',1]
+];
 
-  /* =====================================================================
-     State
-  ===================================================================== */
+/* ========================================================
+   State
+======================================================== */
+let allDomains     = [];
+let savedIds       = new Set();
+let activeTld      = 'all';
+let activeCategory = null;
+let currentDomain  = null;
+let selectedTpl    = TEMPLATES[0];
 
-  let allDomains = [];
-  let savedDomains = new Set();
-  let activeTld = 'all';
-  let activeCategory = null;
-  let currentDomain = null;
-  let selectedTemplate = TEMPLATES[0];
+/* ========================================================
+   Utilities
+======================================================== */
+function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase(); }
 
-  /* =====================================================================
-     Domain generation
-  ===================================================================== */
+function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-  function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]/g,''); }
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=> t.classList.remove('show'), 2200);
+}
+
+/* ========================================================
+   Domain generation
+======================================================== */
+function makeName(kw){
+  const k = kw.length>6 ? kw.slice(0,6) : kw;
+  const p = Math.floor(Math.random()*6);
+  switch(p){
+    case 0: return cap(k) + rand(SUFFIXES);
+    case 1: return cap(rand(PREFIXES)) + cap(k);
+    case 2: return cap(k.slice(0,4)) + rand(BLENDS);
+    case 3: return cap(rand(PREFIXES)) + rand(BLENDS);
+    case 4: return cap(k) + 'hq';
+    case 5: return cap(k.slice(0,3)) + cap(rand(PREFIXES));
+    default: return cap(k) + rand(SUFFIXES);
   }
+}
 
-  function generateBrandName(keyword) {
-    const kw = keyword.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const pattern = PATTERNS[Math.floor(Math.random() * PATTERNS.length)];
-    const prefix = PREFIXES[Math.floor(Math.random() * PREFIXES.length)];
-    const suffix = SUFFIXES[Math.floor(Math.random() * SUFFIXES.length)];
+function pickTld(){
+  const pool = [];
+  TLD_WEIGHTS.forEach(([t,w])=>{ for(let i=0;i<w;i++) pool.push(t); });
+  return rand(pool);
+}
 
-    const kwShort = kw.length > 5 ? kw.slice(0, 5) : kw;
+function getStatus(){
+  const r = Math.random();
+  if(r < 0.35) return 'available';
+  if(r < 0.82) return 'taken';
+  return 'premium';
+}
 
-    switch (pattern) {
-      case 'compound': return capitalize(kwShort) + capitalize(suffix);
-      case 'prefix':   return capitalize(prefix) + capitalize(kwShort);
-      case 'suffix':   return capitalize(kwShort) + suffix;
-      case 'blend': {
-        const half = Math.floor(kwShort.length / 2);
-        return capitalize(kwShort.slice(0, half) + suffix);
-      }
-      case 'brand': {
-        const combos = [
-          kwShort + 'ora', kwShort + 'ify', kwShort + 'ium',
-          kwShort + 'ix', 'get' + kwShort, kwShort + 'ry'
-        ];
-        return capitalize(combos[Math.floor(Math.random() * combos.length)]);
-      }
-      default: return capitalize(kwShort) + capitalize(suffix);
-    }
+function generateDomains(keyword){
+  const kw  = slug(keyword) || 'build';
+  const seen = new Set();
+  const out  = [];
+  let tries  = 0;
+  while(out.length < 60 && tries < 400){
+    tries++;
+    const name = makeName(kw);
+    const tld  = pickTld();
+    const full = name.toLowerCase()+tld;
+    if(seen.has(full) || name.length<3 || name.length>13) continue;
+    seen.add(full);
+    out.push({ id:full, name, tld, full, status:getStatus() });
   }
+  return out;
+}
 
-  function getStatus() {
-    const r = Math.random();
-    if (r < 0.38) return 'available';
-    if (r < 0.85) return 'taken';
-    return 'premium';
+/* ========================================================
+   Render card
+======================================================== */
+function renderCard(domain, container){
+  const isSaved = savedIds.has(domain.id);
+  const card    = document.createElement('div');
+  card.className = 'domain-card fade-in';
+  card.dataset.id = domain.id;
+
+  card.innerHTML = `
+    <div class="card-top">
+      <span class="domain-name">${domain.name}<span class="domain-tld">${domain.tld}</span></span>
+      <span class="status-badge status-${domain.status}">${cap(domain.status)}</span>
+    </div>
+    <div class="card-actions">
+      <button class="btn-save${isSaved?' saved':''}" data-id="${domain.id}">
+        ${isSaved ? 'Saved' : 'Save'}
+      </button>
+      <button class="btn-starter" data-id="${domain.id}">Generate Starter</button>
+    </div>`;
+
+  card.querySelector('.btn-save').addEventListener('click',()=> toggleSave(domain));
+  card.querySelector('.btn-starter').addEventListener('click',()=> openStarter(domain));
+  container.appendChild(card);
+}
+
+function renderGrid(list){
+  const grid = document.getElementById('domainGrid');
+  grid.innerHTML = '';
+  if(!list.length){
+    grid.innerHTML = '<div class="empty-state">No domains match this filter.</div>';
+    return;
   }
+  list.forEach(d => renderCard(d, grid));
+  updateMeta(list);
+}
 
-  function generateDomains(keyword) {
-    const seen = new Set();
-    const results = [];
-    const tldWeights = { '.com': 3, '.io': 2, '.ai': 2, '.app': 1, '.fun': 1 };
-    const tldPool = [];
-    for (const [tld, weight] of Object.entries(tldWeights)) {
-      for (let i = 0; i < weight; i++) tldPool.push(tld);
-    }
+function updateMeta(list){
+  const avail = list.filter(d=>d.status==='available').length;
+  document.getElementById('resultsMeta').textContent =
+    `${list.length} names${avail ? `, ${avail} available` : ''}`;
+}
 
-    let attempts = 0;
-    while (results.length < 60 && attempts < 300) {
-      attempts++;
-      const name = generateBrandName(keyword);
-      const tld = tldPool[Math.floor(Math.random() * tldPool.length)];
-      const full = name.toLowerCase() + tld;
-      if (seen.has(full) || name.length < 3 || name.length > 14) continue;
-      seen.add(full);
-      results.push({
-        id: full,
-        name,
-        tld,
-        full,
-        status: getStatus()
-      });
-    }
-
-    return results;
+/* ========================================================
+   Save
+======================================================== */
+function toggleSave(domain){
+  if(savedIds.has(domain.id)){
+    savedIds.delete(domain.id);
+    showToast('Removed from saved');
+  } else {
+    savedIds.add(domain.id);
+    showToast('Saved');
   }
+  // Update all matching buttons
+  document.querySelectorAll(`.btn-save[data-id="${domain.id}"]`).forEach(btn=>{
+    const on = savedIds.has(domain.id);
+    btn.textContent = on ? 'Saved' : 'Save';
+    btn.classList.toggle('saved', on);
+  });
+  renderSaved();
+}
 
-  /* =====================================================================
-     Render helpers
-  ===================================================================== */
+function renderSaved(){
+  const sec    = document.getElementById('savedSection');
+  const lbl    = document.getElementById('savedLabel');
+  const grid   = document.getElementById('savedGrid');
+  const saved  = allDomains.filter(d=> savedIds.has(d.id));
 
-  function statusLabel(status) {
-    const map = {
-      available: 'Available',
-      taken: 'Taken',
-      premium: 'Premium'
-    };
-    return map[status] || status;
-  }
+  if(!saved.length){ sec.classList.remove('visible'); return; }
 
-  function renderCard(domain, container, small) {
-    const card = document.createElement('div');
-    card.className = 'domain-card fade-in';
-    card.dataset.id = domain.id;
+  sec.classList.add('visible');
+  lbl.textContent = `Saved (${saved.length})`;
+  grid.innerHTML  = '';
+  saved.forEach(d=> renderCard(d, grid));
+}
 
-    const isSaved = savedDomains.has(domain.id);
+/* ========================================================
+   Generate flow
+======================================================== */
+function generate(){
+  const raw = document.getElementById('keywordInput').value.trim();
+  const kw  = raw || 'build';
+  const btn = document.getElementById('generateBtn');
 
-    card.innerHTML = `
-      <div class="card-top">
-        <span class="domain-name">${domain.name}<span style="color:var(--gray-400);font-weight:400">${domain.tld}</span></span>
-        <span class="status-badge status-${domain.status}">${statusLabel(domain.status)}</span>
-      </div>
-      <div class="card-actions">
-        <button class="btn-save${isSaved ? ' saved' : ''}" data-id="${domain.id}" aria-label="${isSaved ? 'Unsave' : 'Save'} ${domain.full}">
-          ${isSaved ? 'Saved' : 'Save'}
-        </button>
-        <button class="btn-starter" data-id="${domain.id}" aria-label="Generate starter for ${domain.full}">
-          Generate Starter
-        </button>
-      </div>
-    `;
+  const sec = document.getElementById('resultsSection');
+  sec.classList.add('visible');
+  document.getElementById('domainGrid').innerHTML =
+    `<div class="generating"><span class="dot-pulse">Generating domains</span></div>`;
+  document.getElementById('resultsTitle').textContent = `Results for "${kw}"`;
+  document.getElementById('resultsMeta').textContent  = '';
+  btn.disabled = true;
 
-    card.querySelector('.btn-save').addEventListener('click', () => toggleSave(domain));
-    card.querySelector('.btn-starter').addEventListener('click', () => openStarterModal(domain));
+  setTimeout(()=>{
+    allDomains = generateDomains(kw);
+    activeTld  = 'all';
+    document.querySelectorAll('.tld-btn').forEach(b=>
+      b.classList.toggle('active', b.dataset.tld==='all'));
+    renderGrid(allDomains);
+    btn.disabled = false;
+    sec.scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 700);
+}
 
-    container.appendChild(card);
-  }
+/* ========================================================
+   Starter files
+======================================================== */
+function tagline(name, tpl){
+  const map = {
+    landing:   `The home for ${name}.`,
+    saas:      `${name} makes your workflow faster.`,
+    directory: `Find everything on ${name}.`,
+    'ai-tool': `${name} puts AI to work.`,
+    chrome:    `${name} lives in your browser.`
+  };
+  return map[tpl.id] || `${name}. Built for what comes next.`;
+}
 
-  function renderGrid(domains) {
-    const grid = document.getElementById('domainGrid');
-    grid.innerHTML = '';
+function fileReadme(domain, tpl, tag){
+  return `# ${domain.name}\n\n${tag}\n\nGenerated by Nomio.\n`;
+}
 
-    if (!domains.length) {
-      grid.innerHTML = '<div class="empty-state">No domains match this filter.</div>';
-      return;
-    }
-
-    domains.forEach(d => renderCard(d, grid));
-  }
-
-  function filterDomains() {
-    if (activeTld === 'all') return allDomains;
-    return allDomains.filter(d => d.tld === activeTld);
-  }
-
-  /* =====================================================================
-     Save logic
-  ===================================================================== */
-
-  function toggleSave(domain) {
-    if (savedDomains.has(domain.id)) {
-      savedDomains.delete(domain.id);
-    } else {
-      savedDomains.add(domain.id);
-    }
-
-    // Update all save buttons for this domain
-    document.querySelectorAll(`.btn-save[data-id="${domain.id}"]`).forEach(btn => {
-      const isSaved = savedDomains.has(domain.id);
-      btn.textContent = isSaved ? 'Saved' : 'Save';
-      btn.classList.toggle('saved', isSaved);
-      btn.setAttribute('aria-label', `${isSaved ? 'Unsave' : 'Save'} ${domain.full}`);
-    });
-
-    renderSaved();
-  }
-
-  function renderSaved() {
-    const section = document.getElementById('savedSection');
-    const header = document.getElementById('savedHeader');
-    const grid = document.getElementById('savedGrid');
-
-    const saved = allDomains.filter(d => savedDomains.has(d.id));
-
-    if (!saved.length) {
-      section.classList.remove('visible');
-      return;
-    }
-
-    section.classList.add('visible');
-    header.textContent = `Saved (${saved.length})`;
-    grid.innerHTML = '';
-    saved.forEach(d => renderCard(d, grid));
-  }
-
-  /* =====================================================================
-     Generate flow
-  ===================================================================== */
-
-  function generate() {
-    const keyword = document.getElementById('keywordInput').value.trim() || 'build';
-    const cat = activeCategory ? ` in ${activeCategory}` : '';
-
-    const resultsSection = document.getElementById('resultsSection');
-    const grid = document.getElementById('domainGrid');
-    const title = document.getElementById('resultsTitle');
-
-    resultsSection.classList.add('visible');
-    grid.innerHTML = `<div class="generating" style="grid-column:1/-1">Generating${cat}<span class="dots">...</span></div>`;
-    title.textContent = `Results for "${keyword}"`;
-
-    // Simulate brief async generation
-    setTimeout(() => {
-      allDomains = generateDomains(keyword);
-      activeTld = 'all';
-      document.querySelectorAll('.tld-btn').forEach(b => b.classList.toggle('active', b.dataset.tld === 'all'));
-      renderGrid(allDomains);
-
-      // Scroll to results
-      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 600);
-  }
-
-  /* =====================================================================
-     Starter modal
-  ===================================================================== */
-
-  function extractTagline(name, template) {
-    const lines = {
-      landing: `The home for ${name}.`,
-      saas: `${name} is your all-in-one platform.`,
-      directory: `Find everything with ${name}.`,
-      'ai-tool': `${name} makes AI simple.`,
-      chrome: `${name} lives in your browser.`
-    };
-    return lines[template.id] || `${name}. Built for what comes next.`;
-  }
-
-  function buildReadme(domain, template, tagline) {
-    return `# ${domain.name}\n\n${tagline}\n\nGenerated by Nomio.`;
-  }
-
-  function buildBrandJson(domain, template, tagline) {
-    return JSON.stringify({
-      name: domain.name,
-      domain: domain.full,
-      tagline,
-      template: template.id,
-      generated: new Date().toISOString().slice(0, 10)
-    }, null, 2);
-  }
-
-  function buildIndexHtml(domain, template, tagline) {
-    return `<!DOCTYPE html>
+function fileIndex(domain, tpl, tag){
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${domain.name} | ${tagline}</title>
-  <meta name="description" content="${tagline}" />
+  <title>${domain.name}</title>
+  <meta name="description" content="${tag}" />
   <style>
-    body { font-family: system-ui, sans-serif; background: #fff; color: #000; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-    .wrap { text-align: center; padding: 48px 24px; }
-    h1 { font-size: 48px; font-weight: 700; letter-spacing: -0.04em; margin: 0 0 12px; }
-    p { color: #666; font-size: 18px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #fff; color: #000;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 24px;
+    }
+    .wrap { text-align: center; max-width: 480px; }
+    h1 { font-size: clamp(36px,8vw,64px); font-weight: 700; letter-spacing: -.04em; margin-bottom: 12px; }
+    p  { color: #666; font-size: 18px; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>${domain.name}</h1>
-    <p>${tagline}</p>
+    <p>${tag}</p>
   </div>
 </body>
 </html>`;
-  }
+}
 
-  function buildFaviconSvg(domain) {
-    const letter = domain.name.charAt(0).toUpperCase();
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="black"/><text x="16" y="22" font-family="system-ui" font-size="20" font-weight="700" fill="white" text-anchor="middle">${letter}</text></svg>`;
-  }
+function fileFavicon(domain){
+  const L = domain.name.charAt(0).toUpperCase();
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#000"/>
+  <text x="16" y="23" font-family="system-ui" font-size="19" font-weight="700" fill="#fff" text-anchor="middle">${L}</text>
+</svg>`;
+}
 
-  function buildLogoSvg(domain) {
-    const letter = domain.name.charAt(0).toUpperCase();
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="8" fill="black"/><text x="32" y="44" font-family="system-ui" font-size="40" font-weight="700" fill="white" text-anchor="middle">${letter}</text></svg>`;
-  }
+function fileLogo(domain){
+  const L = domain.name.charAt(0).toUpperCase();
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="8" fill="#000"/>
+  <text x="32" y="46" font-family="system-ui" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">${L}</text>
+</svg>`;
+}
 
-  function gitInstructions(domain) {
-    return `git init
+function fileBrand(domain, tpl, tag){
+  return JSON.stringify({
+    name: domain.name,
+    domain: domain.full,
+    tagline: tag,
+    template: tpl.id,
+    generated: new Date().toISOString().slice(0,10)
+  }, null, 2);
+}
+
+function gitCmds(domain){
+  return `git init
 git add .
 git commit -m "Initial commit"
 git branch -M main
 git remote add origin https://github.com/YOUR_USERNAME/${domain.name.toLowerCase()}
 git push -u origin main`;
-  }
+}
 
-  function openStarterModal(domain) {
-    currentDomain = domain;
-    selectedTemplate = TEMPLATES[0];
-    renderStarterModal();
-    document.getElementById('starterModal').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
+/* ========================================================
+   Starter modal
+======================================================== */
+function openStarter(domain){
+  currentDomain   = domain;
+  selectedTpl     = TEMPLATES[0];
+  renderStarter();
+  document.getElementById('starterModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
 
-  function renderStarterModal() {
-    const domain = currentDomain;
-    const tagline = extractTagline(domain.name, selectedTemplate);
+function renderStarter(){
+  const domain = currentDomain;
+  const tpl    = selectedTpl;
+  const tag    = tagline(domain.name, tpl);
 
-    const readme = buildReadme(domain, selectedTemplate, tagline);
-    const brandJson = buildBrandJson(domain, selectedTemplate, tagline);
-    const indexHtml = buildIndexHtml(domain, selectedTemplate, tagline);
-    const faviconSvg = buildFaviconSvg(domain);
-    const logoSvg = buildLogoSvg(domain);
-    const gitCmds = gitInstructions(domain);
+  const readme  = fileReadme(domain, tpl, tag);
+  const idx     = fileIndex(domain, tpl, tag);
+  const fav     = fileFavicon(domain);
+  const logo    = fileLogo(domain);
+  const brand   = fileBrand(domain, tpl, tag);
+  const cmds    = gitCmds(domain);
 
-    const files = [
-      { name: 'README.md', size: `${readme.length}B`, content: readme, mime: 'text/markdown' },
-      { name: 'index.html', size: `${indexHtml.length}B`, content: indexHtml, mime: 'text/html' },
-      { name: 'favicon.svg', size: `${faviconSvg.length}B`, content: faviconSvg, mime: 'image/svg+xml' },
-      { name: 'logo.svg', size: `${logoSvg.length}B`, content: logoSvg, mime: 'image/svg+xml' },
-      { name: 'brand.json', size: `${brandJson.length}B`, content: brandJson, mime: 'application/json' }
-    ];
+  const files = [
+    { name:'README.md',   content:readme, mime:'text/markdown'     },
+    { name:'index.html',  content:idx,    mime:'text/html'         },
+    { name:'favicon.svg', content:fav,    mime:'image/svg+xml'     },
+    { name:'logo.svg',    content:logo,   mime:'image/svg+xml'     },
+    { name:'brand.json',  content:brand,  mime:'application/json'  }
+  ];
 
-    const body = document.getElementById('starterModalBody');
+  const body = document.getElementById('starterBody');
+  body.innerHTML = `
+    <div class="starter-row">
+      <p class="field-label">Domain</p>
+      <p class="field-value">${domain.full}</p>
+    </div>
+    <div class="starter-row">
+      <p class="field-label">Brand Name</p>
+      <p class="field-value">${domain.name}</p>
+    </div>
+    <div class="starter-row">
+      <p class="field-label">Tagline</p>
+      <p class="field-value" id="taglineVal">${tag}</p>
+    </div>
 
-    body.innerHTML = `
-      <div class="starter-field">
-        <div class="starter-label">Domain</div>
-        <div class="starter-value">${domain.full}</div>
-      </div>
-      <div class="starter-field">
-        <div class="starter-label">Brand Name</div>
-        <div class="starter-value">${domain.name}</div>
-      </div>
-      <div class="starter-field">
-        <div class="starter-label">Tagline</div>
-        <div class="starter-value" id="generatedTagline">${tagline}</div>
-      </div>
+    <p class="field-label" style="margin-bottom:8px">Template</p>
+    <div class="template-grid" id="tplGrid">
+      ${TEMPLATES.map(t=>`
+        <div class="tpl-opt${t.id===tpl.id?' selected':''}" data-tid="${t.id}" role="button" tabindex="0">
+          <p class="tpl-name">${t.name}</p>
+          <p class="tpl-desc">${t.desc}</p>
+        </div>`).join('')}
+    </div>
 
-      <div class="starter-label" style="margin-bottom:8px">Template</div>
-      <div class="template-grid" id="templateGrid">
-        ${TEMPLATES.map(t => `
-          <div class="template-option${t.id === selectedTemplate.id ? ' selected' : ''}" data-tid="${t.id}" role="button" tabindex="0" aria-pressed="${t.id === selectedTemplate.id}">
-            <div class="template-name">${t.name}</div>
-            <div class="template-desc">${t.desc}</div>
-          </div>
-        `).join('')}
-      </div>
+    <p class="field-label" style="margin-bottom:8px">Generated Files</p>
+    <div class="file-list">
+      ${files.map(f=>`
+        <div class="file-item">
+          <span class="file-name">${f.name}</span>
+          <span class="file-size">${f.content.length}B</span>
+        </div>`).join('')}
+    </div>
 
-      <div class="starter-label" style="margin-bottom:8px">Generated Files</div>
-      <div class="file-list">
-        ${files.map(f => `
-          <div class="file-item">
-            <span class="file-name">${f.name}</span>
-            <span class="file-size">${f.size}</span>
-          </div>
-        `).join('')}
-      </div>
+    <hr class="divider" />
 
-      <hr class="divider" />
+    <div class="export-row">
+      <button class="btn-secondary" id="dlReadme">Download README</button>
+      <button class="btn-secondary" id="dlJson">Download brand.json</button>
+      <button class="btn-secondary" id="dlZip">Download ZIP</button>
+    </div>
 
-      <div class="export-actions">
-        <button class="btn-secondary" id="dlReadme">Download README</button>
-        <button class="btn-secondary" id="dlJson">Download JSON</button>
-        <button class="btn-secondary" id="dlZip">Download ZIP</button>
-      </div>
+    <hr class="divider" />
 
-      <hr class="divider" />
+    <p class="gh-title">GitHub Export</p>
 
-      <div class="github-section">
-        <p class="github-title">GitHub Export</p>
-        <div class="github-field">
-          <div class="github-label">Repository Name</div>
-          <div class="github-value">${domain.name.toLowerCase()}</div>
-        </div>
-        <div class="github-field">
-          <div class="github-label">Suggested Description</div>
-          <div class="github-value">${tagline}</div>
-        </div>
-        <div class="github-label" style="margin-bottom:6px">Push Instructions</div>
-        <div class="code-block" id="gitCode">${gitCmds}</div>
-        <button class="btn-copy" id="copyGit">Copy Commands</button>
-      </div>
-    `;
+    <div class="gh-field">
+      <p class="field-label">Repository Name</p>
+      <p class="gh-value">${domain.name.toLowerCase()}</p>
+    </div>
+    <div class="gh-field">
+      <p class="field-label">Suggested Description</p>
+      <p class="gh-value">${tag}</p>
+    </div>
 
-    // Template selection
-    body.querySelectorAll('.template-option').forEach(opt => {
-      const select = () => {
-        selectedTemplate = TEMPLATES.find(t => t.id === opt.dataset.tid);
-        renderStarterModal();
-      };
-      opt.addEventListener('click', select);
-      opt.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); } });
-    });
+    <p class="field-label" style="margin-bottom:6px">Push Instructions</p>
+    <div class="code-block" id="gitBlock">${cmds}</div>
+    <button class="btn-copy" id="copyGit">Copy Commands</button>
+  `;
 
-    // Downloads
-    body.querySelector('#dlReadme').addEventListener('click', () => download('README.md', readme, 'text/markdown'));
-    body.querySelector('#dlJson').addEventListener('click', () => download('brand.json', brandJson, 'application/json'));
-    body.querySelector('#dlZip').addEventListener('click', () => downloadZip(domain, files));
-    body.querySelector('#copyGit').addEventListener('click', () => copyText(gitCmds, body.querySelector('#copyGit')));
-  }
+  /* --- Template selection --- */
+  body.querySelectorAll('.tpl-opt').forEach(opt=>{
+    const select = ()=>{
+      selectedTpl = TEMPLATES.find(t=> t.id===opt.dataset.tid);
+      renderStarter();
+    };
+    opt.addEventListener('click', select);
+    opt.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); select(); } });
+  });
 
-  /* =====================================================================
-     File downloads
-  ===================================================================== */
+  /* --- Downloads --- */
+  body.querySelector('#dlReadme').addEventListener('click',()=> dlFile('README.md', readme, 'text/markdown'));
+  body.querySelector('#dlJson').addEventListener('click',()=> dlFile('brand.json', brand, 'application/json'));
+  body.querySelector('#dlZip').addEventListener('click',()=> dlZip(domain, files));
 
-  function download(filename, content, mime) {
-    const blob = new Blob([content], { type: mime });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
+  /* --- Copy git --- */
+  body.querySelector('#copyGit').addEventListener('click',()=> copyText(cmds, body.querySelector('#copyGit')));
+}
+
+/* ========================================================
+   File download helpers
+======================================================== */
+function dlFile(name, content, mime){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download = name;
+  a.click();
+  setTimeout(()=> URL.revokeObjectURL(a.href), 1000);
+  showToast(`Downloading ${name}`);
+}
+
+async function dlZip(domain, files){
+  const btn = document.getElementById('dlZip');
+  btn.textContent = 'Creating ZIP...';
+  btn.disabled    = true;
+
+  try {
+    if(typeof JSZip === 'undefined') throw new Error('JSZip not loaded');
+    const zip = new JSZip();
+    files.forEach(f=> zip.file(f.name, f.content));
+    const blob = await zip.generateAsync({ type:'blob', compression:'DEFLATE' });
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = `${domain.name.toLowerCase()}-starter.zip`;
     a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setTimeout(()=> URL.revokeObjectURL(a.href), 1000);
+    showToast('ZIP downloaded');
+  } catch(err){
+    /* Fallback: bundle as plain text */
+    const txt = files.map(f=>`=== ${f.name} ===\n${f.content}`).join('\n\n');
+    dlFile(`${domain.name.toLowerCase()}-starter.txt`, txt, 'text/plain');
+  } finally {
+    btn.textContent = 'Download ZIP';
+    btn.disabled    = false;
   }
+}
 
-  function downloadZip(domain, files) {
-    // Build a basic ZIP-like archive using stored files as a tar-style text bundle
-    // For a real ZIP, a library like JSZip would be used. Here we bundle as a single text file.
-    const txt = files.map(f => `=== ${f.name} ===\n${f.content}`).join('\n\n');
-    download(`${domain.name.toLowerCase()}-starter.txt`, txt, 'text/plain');
-  }
-
-  /* =====================================================================
-     Copy helper
-  ===================================================================== */
-
-  function copyText(text, btn) {
-    navigator.clipboard.writeText(text).then(() => {
-      btn.textContent = 'Copied!';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'Copy Commands';
-        btn.classList.remove('copied');
-      }, 1800);
-    }).catch(() => {
-      // Fallback
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      btn.textContent = 'Copied!';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'Copy Commands';
-        btn.classList.remove('copied');
-      }, 1800);
+/* ========================================================
+   Copy to clipboard
+======================================================== */
+async function copyText(text, btn){
+  const orig = btn.textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const ta = Object.assign(document.createElement('textarea'),{
+      value:text, style:'position:fixed;opacity:0'
     });
+    document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
   }
+  btn.textContent = 'Copied!';
+  btn.classList.add('copied');
+  setTimeout(()=>{ btn.textContent=orig; btn.classList.remove('copied'); }, 1800);
+}
 
-  /* =====================================================================
-     Event listeners
-  ===================================================================== */
+/* ========================================================
+   Modal helpers
+======================================================== */
+function closeStarter(){
+  document.getElementById('starterModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeAbout(){
+  document.getElementById('aboutModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
 
-  // Generate button
-  document.getElementById('generateBtn').addEventListener('click', generate);
+/* ========================================================
+   Event wiring
+======================================================== */
+document.getElementById('generateBtn').addEventListener('click', generate);
+document.getElementById('keywordInput').addEventListener('keydown', e=>{ if(e.key==='Enter') generate(); });
 
-  // Enter key on input
-  document.getElementById('keywordInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') generate();
-  });
-
-  // Category chips
-  document.getElementById('categoryChips').addEventListener('click', e => {
-    const chip = e.target.closest('.chip');
-    if (!chip) return;
-    if (activeCategory === chip.dataset.cat) {
-      activeCategory = null;
-      chip.classList.remove('active');
-    } else {
-      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      activeCategory = chip.dataset.cat;
-    }
-  });
-
-  // TLD filters
-  document.getElementById('tldFilters').addEventListener('click', e => {
-    const btn = e.target.closest('.tld-btn');
-    if (!btn) return;
-    activeTld = btn.dataset.tld;
-    document.querySelectorAll('.tld-btn').forEach(b => b.classList.toggle('active', b === btn));
-    renderGrid(filterDomains());
-  });
-
-  // Close starter modal
-  document.getElementById('closeStarterModal').addEventListener('click', closeStarterModal);
-  document.getElementById('starterModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('starterModal')) closeStarterModal();
-  });
-
-  function closeStarterModal() {
-    document.getElementById('starterModal').classList.remove('open');
-    document.body.style.overflow = '';
+/* Category chips */
+document.getElementById('chips').addEventListener('click', e=>{
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  if(activeCategory===chip.dataset.cat){
+    activeCategory = null;
+    chip.classList.remove('active');
+  } else {
+    document.querySelectorAll('.chip').forEach(c=> c.classList.remove('active'));
+    chip.classList.add('active');
+    activeCategory = chip.dataset.cat;
   }
+  /* Clicking a category auto-fills the input if empty */
+  const inp = document.getElementById('keywordInput');
+  if(!inp.value.trim()) inp.value = chip.dataset.cat.toLowerCase().split(' ')[0];
+});
 
-  // About modal
-  document.getElementById('openAbout').addEventListener('click', () => {
-    document.getElementById('aboutModal').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  });
+/* TLD filters */
+document.getElementById('tldFilters').addEventListener('click', e=>{
+  const btn = e.target.closest('.tld-btn');
+  if(!btn) return;
+  activeTld = btn.dataset.tld;
+  document.querySelectorAll('.tld-btn').forEach(b=> b.classList.toggle('active', b===btn));
+  renderGrid(activeTld==='all' ? allDomains : allDomains.filter(d=> d.tld===activeTld));
+});
 
-  document.getElementById('closeAboutModal').addEventListener('click', closeAbout);
-  document.getElementById('aboutModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('aboutModal')) closeAbout();
-  });
+/* Starter modal */
+document.getElementById('closeStarter').addEventListener('click', closeStarter);
+document.getElementById('starterModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeStarter(); });
 
-  function closeAbout() {
-    document.getElementById('aboutModal').classList.remove('open');
-    document.body.style.overflow = '';
-  }
+/* About modal */
+document.getElementById('openAbout').addEventListener('click',()=>{
+  document.getElementById('aboutModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+});
+document.getElementById('closeAbout').addEventListener('click', closeAbout);
+document.getElementById('aboutModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeAbout(); });
 
-  // Escape key closes modals
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      closeStarterModal();
-      closeAbout();
-    }
-  });
+/* Escape key */
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){ closeStarter(); closeAbout(); }
+});
 </script>
 </body>
 </html>
