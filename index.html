@@ -11,7 +11,7 @@
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='black'/%3E%3Cpath d='M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z' fill='white'/%3E%3C/svg%3E" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
 
@@ -30,7 +30,7 @@
       --g800:     #222;
       --radius:   6px;
       --font:     'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-      --font-display: 'Syne', system-ui, -apple-system, sans-serif;
+      --font-display: 'Instrument Serif', Georgia, serif;
       --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
     }
 
@@ -43,7 +43,7 @@
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
     }
-    h1, h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+    h1, h2, h3 { font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
     p { color: var(--g600); }
     button { font-family: var(--font); cursor: pointer; }
 
@@ -66,9 +66,10 @@
     }
     .logo-mark { width: 30px; height: 30px; flex-shrink: 0; }
     .logo-text {
-      font-family: var(--font-display);
-      font-size: 18px; font-weight: 800; letter-spacing: -0.05em;
+      font-family: var(--font);
+      font-size: 17px; font-weight: 800; letter-spacing: -0.04em;
     }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
     .nav-about {
       background: none; border: none;
       font-family: var(--font);
@@ -76,14 +77,23 @@
       padding: 6px 0; transition: color .15s;
     }
     .nav-about:hover { color: var(--black); }
+    .nav-x {
+      display: flex; align-items: center; gap: 6px;
+      text-decoration: none; color: var(--g600);
+      font-size: 13px; font-weight: 500;
+      transition: color .15s;
+    }
+    .nav-x:hover { color: var(--black); }
+    .nav-x svg { width: 15px; height: 15px; flex-shrink: 0; }
 
     /* ====================== Hero ====================== */
     .hero { padding: 88px 0 68px; border-bottom: 1px solid var(--g200); }
     .hero h1 {
       font-family: var(--font-display);
-      font-size: clamp(42px, 6.5vw, 76px);
-      font-weight: 800; letter-spacing: -0.04em;
-      margin-bottom: 18px;
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 400; font-style: italic;
+      letter-spacing: -0.02em; line-height: 1.08;
+      margin-bottom: 20px;
     }
     .hero p  { font-size: 16px; line-height: 1.65; margin-bottom: 44px; max-width: 400px; }
 
@@ -141,7 +151,7 @@
       display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
     }
-    .results-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; letter-spacing: -.03em; }
+    .results-title { font-size: 20px; font-weight: 700; letter-spacing: -.03em; }
     .results-meta { font-size: 13px; color: var(--g400); }
 
     /* TLD filters */
@@ -175,8 +185,7 @@
       display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
     }
     .domain-name {
-      font-family: var(--font-display);
-      font-size: 17px; font-weight: 700; letter-spacing: -.04em; word-break: break-all;
+      font-size: 16px; font-weight: 700; letter-spacing: -.03em; word-break: break-all;
     }
     .domain-tld { color: var(--g400); font-weight: 400; }
 
@@ -261,7 +270,7 @@
       position: sticky; top: 0; background: var(--white);
       z-index: 1; padding-bottom: 0;
     }
-    .modal-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: -.04em; }
+    .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -.03em; }
     .modal-close {
       width: 30px; height: 30px;
       display: flex; align-items: center; justify-content: center;
@@ -279,7 +288,7 @@
       font-size: 11px; font-weight: 700; text-transform: uppercase;
       letter-spacing: .08em; color: var(--g400); margin-bottom: 5px;
     }
-    .field-value { font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: -.03em; }
+    .field-value { font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
 
     .template-grid {
       display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
@@ -292,7 +301,7 @@
     .tpl-opt:hover { border-color: var(--g800); }
     .tpl-opt.selected { border-color: var(--black); background: var(--g100); }
     .tpl-opt:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
-    .tpl-name { font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: -.02em; }
+    .tpl-name { font-size: 13px; font-weight: 700; letter-spacing: -.02em; }
     .tpl-desc { font-size: 11px; color: var(--g400); margin-top: 2px; }
 
     /* File list */
@@ -310,7 +319,7 @@
     .export-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
 
     /* GitHub section */
-    .gh-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 16px; }
+    .gh-title { font-size: 14px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 16px; }
     .gh-field { margin-bottom: 12px; }
     .gh-value { font-size: 13px; color: var(--g800); }
 
@@ -340,8 +349,16 @@
     .footer-inner {
       display: flex; align-items: center; justify-content: space-between;
     }
-    .footer-brand { font-family: var(--font-display); font-size: 15px; font-weight: 800; letter-spacing: -.05em; }
+    .footer-brand { font-size: 15px; font-weight: 800; letter-spacing: -.04em; }
     .footer-tag   { font-size: 13px; color: var(--g400); }
+    .footer-x {
+      display: flex; align-items: center; gap: 6px;
+      text-decoration: none; color: var(--g400);
+      font-size: 13px; font-weight: 500;
+      transition: color .15s;
+    }
+    .footer-x:hover { color: var(--black); }
+    .footer-x svg { width: 14px; height: 14px; }
 
     /* ====================== Animations ====================== */
     .fade-in { animation: fadeUp .22s ease both; }
@@ -390,7 +407,13 @@
         </svg>
         <span class="logo-text">Nomio</span>
       </a>
-      <button class="nav-about" id="openAbout">About</button>
+      <div class="nav-right">
+        <a class="nav-x" href="https://x.com/nomiouk" target="_blank" rel="noopener" aria-label="@nomiouk on X">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          @nomiouk
+        </a>
+        <button class="nav-about" id="openAbout">About</button>
+      </div>
     </div>
   </div>
 </header>
@@ -468,8 +491,14 @@
 <footer>
   <div class="container">
     <div class="footer-inner">
-      <span class="footer-brand">Nomio</span>
-      <span class="footer-tag">Built for builders.</span>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span class="footer-brand">Nomio</span>
+        <span class="footer-tag">Built for builders.</span>
+      </div>
+      <a class="footer-x" href="https://x.com/nomiouk" target="_blank" rel="noopener" aria-label="@nomiouk on X">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        @nomiouk
+      </a>
     </div>
   </div>
 </footer>
