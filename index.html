@@ -11,7 +11,7 @@
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='black'/%3E%3Cpath d='M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z' fill='white'/%3E%3C/svg%3E" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
 
@@ -29,7 +29,9 @@
       --g600:     #555;
       --g800:     #222;
       --radius:   6px;
-      --font:     'Inter', system-ui, -apple-system, sans-serif;
+      --font:     'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-display: 'Syne', system-ui, -apple-system, sans-serif;
+      --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
     }
 
     /* ====================== Base ====================== */
@@ -41,7 +43,7 @@
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
     }
-    h1, h2, h3 { font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+    h1, h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
     p { color: var(--g600); }
     button { font-family: var(--font); cursor: pointer; }
 
@@ -63,18 +65,27 @@
       text-decoration: none; color: var(--black);
     }
     .logo-mark { width: 30px; height: 30px; flex-shrink: 0; }
-    .logo-text { font-size: 17px; font-weight: 700; letter-spacing: -0.04em; }
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 800; letter-spacing: -0.05em;
+    }
     .nav-about {
       background: none; border: none;
-      font-size: 14px; color: var(--g600);
+      font-family: var(--font);
+      font-size: 14px; font-weight: 500; color: var(--g600);
       padding: 6px 0; transition: color .15s;
     }
     .nav-about:hover { color: var(--black); }
 
     /* ====================== Hero ====================== */
-    .hero { padding: 80px 0 64px; border-bottom: 1px solid var(--g200); }
-    .hero h1 { font-size: clamp(38px, 6vw, 68px); margin-bottom: 16px; }
-    .hero p  { font-size: 16px; margin-bottom: 40px; max-width: 400px; }
+    .hero { padding: 88px 0 68px; border-bottom: 1px solid var(--g200); }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 6.5vw, 76px);
+      font-weight: 800; letter-spacing: -0.04em;
+      margin-bottom: 18px;
+    }
+    .hero p  { font-size: 16px; line-height: 1.65; margin-bottom: 44px; max-width: 400px; }
 
     /* ====================== Search ====================== */
     .search-block { display: flex; flex-direction: column; gap: 14px; }
@@ -130,7 +141,7 @@
       display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
     }
-    .results-title { font-size: 20px; font-weight: 600; letter-spacing: -.02em; }
+    .results-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; letter-spacing: -.03em; }
     .results-meta { font-size: 13px; color: var(--g400); }
 
     /* TLD filters */
@@ -164,7 +175,8 @@
       display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
     }
     .domain-name {
-      font-size: 17px; font-weight: 700; letter-spacing: -.03em; word-break: break-all;
+      font-family: var(--font-display);
+      font-size: 17px; font-weight: 700; letter-spacing: -.04em; word-break: break-all;
     }
     .domain-tld { color: var(--g400); font-weight: 400; }
 
@@ -249,7 +261,7 @@
       position: sticky; top: 0; background: var(--white);
       z-index: 1; padding-bottom: 0;
     }
-    .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -.03em; }
+    .modal-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: -.04em; }
     .modal-close {
       width: 30px; height: 30px;
       display: flex; align-items: center; justify-content: center;
@@ -267,7 +279,7 @@
       font-size: 11px; font-weight: 700; text-transform: uppercase;
       letter-spacing: .08em; color: var(--g400); margin-bottom: 5px;
     }
-    .field-value { font-size: 15px; font-weight: 600; letter-spacing: -.02em; }
+    .field-value { font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: -.03em; }
 
     .template-grid {
       display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
@@ -280,7 +292,7 @@
     .tpl-opt:hover { border-color: var(--g800); }
     .tpl-opt.selected { border-color: var(--black); background: var(--g100); }
     .tpl-opt:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
-    .tpl-name { font-size: 13px; font-weight: 600; letter-spacing: -.01em; }
+    .tpl-name { font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: -.02em; }
     .tpl-desc { font-size: 11px; color: var(--g400); margin-top: 2px; }
 
     /* File list */
@@ -289,7 +301,7 @@
       display: flex; align-items: center; justify-content: space-between;
       padding: 10px 14px; background: var(--g100); border-radius: var(--radius);
     }
-    .file-name { font-size: 13px; font-weight: 600; font-family: 'SF Mono', 'Fira Code', monospace; }
+    .file-name { font-size: 12px; font-weight: 500; font-family: var(--font-mono); }
     .file-size { font-size: 11px; color: var(--g400); }
 
     hr.divider { border: none; border-top: 1px solid var(--g200); margin: 24px 0; }
@@ -298,14 +310,14 @@
     .export-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
 
     /* GitHub section */
-    .gh-title { font-size: 14px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 16px; }
+    .gh-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 16px; }
     .gh-field { margin-bottom: 12px; }
     .gh-value { font-size: 13px; color: var(--g800); }
 
     .code-block {
       background: var(--g100); border-radius: var(--radius);
-      padding: 14px 16px; font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 12px; line-height: 1.75; color: var(--g800);
+      padding: 14px 16px; font-family: var(--font-mono);
+      font-size: 11.5px; line-height: 1.8; color: var(--g800);
       white-space: pre; overflow-x: auto; margin-bottom: 10px;
     }
 
@@ -328,7 +340,7 @@
     .footer-inner {
       display: flex; align-items: center; justify-content: space-between;
     }
-    .footer-brand { font-size: 14px; font-weight: 700; letter-spacing: -.02em; }
+    .footer-brand { font-family: var(--font-display); font-size: 15px; font-weight: 800; letter-spacing: -.05em; }
     .footer-tag   { font-size: 13px; color: var(--g400); }
 
     /* ====================== Animations ====================== */
