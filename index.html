@@ -1,0 +1,2143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nomio | Find a name. Start a project.</title>
+  <meta name="description" content="Discover brandable domain names and generate GitHub-ready project starters in minutes." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Nomio | Find a name. Start a project." />
+  <meta property="og:description" content="Discover brandable domain names and generate GitHub-ready project starters in minutes." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nomio.uk" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@lucasreedxx" />
+  <meta name="twitter:creator" content="@lucasreedxx" />
+  <meta property="og:image" content="https://nomio.uk/og.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='black'/%3E%3Cpath d='M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z' fill='white'/%3E%3C/svg%3E" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+
+  <style>
+    /* ============================================================
+       Reset & Tokens
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:  #0a0a0a;
+      --white:  #ffffff;
+      --g50:    #fafafa;
+      --g100:   #f4f4f4;
+      --g200:   #e5e5e5;
+      --g400:   #a3a3a3;
+      --g600:   #525252;
+      --g800:   #262626;
+      --radius: 7px;
+      --font:         'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+      --ease:         cubic-bezier(.4,0,.2,1);
+    }
+
+    [data-theme="dark"] {
+      --black:  #f0f0f0;
+      --white:  #0d0d0d;
+      --g50:    #141414;
+      --g100:   #1c1c1c;
+      --g200:   #2a2a2a;
+      --g400:   #5a5a5a;
+      --g600:   #a0a0a0;
+      --g800:   #d0d0d0;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--white);
+      color: var(--black);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      transition: background .2s var(--ease), color .2s var(--ease);
+    }
+    p { color: var(--g600); }
+    button { font-family: var(--font); cursor: pointer; }
+    a { color: inherit; }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+    /* ============================================================
+       Header
+    ============================================================ */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--g200);
+      transition: background .2s var(--ease), border-color .2s var(--ease);
+    }
+    [data-theme="dark"] header { background: rgba(13,13,13,.95); }
+
+    .header-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--black);
+    }
+    .logo-mark { width: 30px; height: 30px; flex-shrink: 0; }
+    .logo-wordmark { height: 18px; }
+
+    .nav-right { display: flex; align-items: center; gap: 4px; }
+    .nav-link {
+      display: flex; align-items: center; gap: 5px;
+      background: none; border: none; text-decoration: none;
+      font-family: var(--font); font-size: 14px; font-weight: 500;
+      color: var(--g600); padding: 6px 10px;
+      border-radius: 6px; transition: color .15s, background .15s;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--black); background: var(--g100); }
+    .nav-link svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    .theme-toggle {
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: 1.5px solid var(--g200); border-radius: 8px;
+      color: var(--g600); cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .theme-toggle:hover { border-color: var(--black); color: var(--black); background: var(--g100); }
+    .theme-toggle svg { width: 15px; height: 15px; }
+    .icon-sun  { display: none; }
+    .icon-moon { display: block; }
+    [data-theme="dark"] .icon-sun  { display: block; }
+    [data-theme="dark"] .icon-moon { display: none; }
+
+    /* ============================================================
+       Page switcher
+    ============================================================ */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ============================================================
+       Hero
+    ============================================================ */
+    .hero {
+      padding: 80px 0 64px;
+      border-bottom: 1px solid var(--g200);
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 6vw, 68px);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      margin-bottom: 20px;
+      color: var(--black);
+    }
+    .hero p {
+      font-size: 16px; line-height: 1.7;
+      margin-bottom: 44px; max-width: 420px;
+      color: var(--g600);
+    }
+
+    /* ============================================================
+       Partner strip
+    ============================================================ */
+    .partners-strip {
+      border-bottom: 1px solid var(--g200);
+      padding: 28px 0;
+      overflow: hidden;
+    }
+    .partners-label {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--g400); text-align: center;
+      margin-bottom: 20px;
+    }
+    .partners-track-wrap { overflow: hidden; }
+    .partners-track {
+      display: flex; align-items: center; gap: 48px;
+      animation: scroll-left 22s linear infinite;
+      width: max-content;
+    }
+    .partners-track:hover { animation-play-state: paused; }
+
+    @keyframes scroll-left {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .partner-item {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--g400);
+      font-size: 13px; font-weight: 600;
+      filter: grayscale(1); opacity: .5;
+      transition: filter .2s, opacity .2s; white-space: nowrap;
+    }
+    .partner-item:hover { filter: grayscale(0); opacity: 1; }
+    .partner-item img {
+      width: 22px; height: 22px;
+      object-fit: contain; border-radius: 4px;
+    }
+
+    /* ============================================================
+       Search
+    ============================================================ */
+    .search-block { display: flex; flex-direction: column; gap: 14px; }
+    .input-row { display: flex; gap: 10px; }
+    .keyword-input {
+      flex: 1; height: 48px;
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      font-family: var(--font); font-size: 15px; padding: 0 16px;
+      outline: none; background: var(--white); color: var(--black);
+      transition: border-color .15s, background .2s;
+    }
+    .keyword-input:focus { border-color: var(--black); }
+    .keyword-input::placeholder { color: var(--g400); }
+
+    .btn-primary {
+      height: 48px; padding: 0 24px;
+      background: var(--black); color: var(--white);
+      border: none; border-radius: var(--radius);
+      font-size: 14px; font-weight: 600; white-space: nowrap;
+      letter-spacing: -.01em; transition: opacity .15s;
+    }
+    .btn-primary:hover  { opacity: .82; }
+    .btn-primary:active { opacity: .65; }
+    .btn-primary:disabled { opacity: .38; cursor: not-allowed; }
+
+    .btn-secondary {
+      height: 38px; padding: 0 16px;
+      background: var(--white); color: var(--black);
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      font-size: 13px; font-weight: 500; transition: border-color .15s, background .2s;
+    }
+    .btn-secondary:hover { border-color: var(--black); }
+
+    .kbd-hint {
+      font-size: 11px; color: var(--g400);
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .kbd {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 18px; padding: 0 5px; min-width: 18px;
+      background: var(--g100); border: 1px solid var(--g200);
+      border-radius: 4px; font-family: var(--font-mono);
+      font-size: 10px; color: var(--g600); font-weight: 600;
+    }
+
+    /* ============================================================
+       Chips
+    ============================================================ */
+    .categories { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      height: 34px; padding: 0 14px;
+      display: inline-flex; align-items: center;
+      border: 1.5px solid var(--g200); border-radius: 100px;
+      font-size: 13px; font-weight: 500; color: var(--g600);
+      background: var(--white); transition: all .15s; user-select: none;
+    }
+    .chip:hover { border-color: var(--black); color: var(--black); }
+    .chip.active { background: var(--black); color: var(--white); border-color: var(--black); }
+
+    /* ============================================================
+       Results
+    ============================================================ */
+    .results-section { padding: 56px 0; display: none; }
+    .results-section.visible { display: block; }
+    .results-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+    }
+    .results-title {
+      font-family: var(--font-display);
+      font-size: 20px; font-weight: 700; letter-spacing: -.035em;
+      color: var(--black);
+    }
+    .results-meta  { font-size: 13px; color: var(--g400); margin-top: 3px; }
+
+    .results-right { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+
+    .tld-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tld-btn {
+      height: 30px; padding: 0 12px;
+      border: 1.5px solid var(--g200); border-radius: 100px;
+      font-size: 12px; font-weight: 600; color: var(--g600);
+      background: var(--white); transition: all .15s; letter-spacing: .02em;
+    }
+    .tld-btn:hover { border-color: var(--black); color: var(--black); }
+    .tld-btn.active { background: var(--black); color: var(--white); border-color: var(--black); }
+
+    .results-controls { display: flex; gap: 6px; }
+    .ctrl-btn {
+      height: 30px; padding: 0 12px;
+      border: 1.5px solid var(--g200); border-radius: 100px;
+      font-size: 12px; font-weight: 600; color: var(--g600);
+      background: var(--white); display: flex; align-items: center; gap: 5px;
+      transition: all .15s;
+    }
+    .ctrl-btn:hover { border-color: var(--black); color: var(--black); }
+    .ctrl-btn.active-avail { background: #edfbee; color: #166534; border-color: #86efac; }
+    .ctrl-btn.active-sort  { background: var(--black); color: var(--white); border-color: var(--black); }
+    .ctrl-btn svg { width: 11px; height: 11px; flex-shrink: 0; }
+
+    .domain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(264px, 1fr));
+      gap: 12px;
+    }
+
+    /* ============================================================
+       Domain card
+    ============================================================ */
+    .domain-card {
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      padding: 18px 18px 14px; background: var(--white);
+      display: flex; flex-direction: column; gap: 10px;
+      transition: border-color .15s, box-shadow .15s, background .2s;
+    }
+    .domain-card:hover { border-color: #c0c0c0; box-shadow: 0 2px 16px rgba(0,0,0,.06); }
+    [data-theme="dark"] .domain-card:hover { box-shadow: 0 2px 16px rgba(0,0,0,.4); border-color: var(--g400); }
+
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .domain-name { font-size: 16px; font-weight: 700; letter-spacing: -.025em; word-break: break-all; color: var(--black); }
+    .domain-tld  { color: var(--g400); font-weight: 400; }
+
+    .status-badge {
+      font-size: 10px; font-weight: 700; padding: 3px 8px;
+      border-radius: 100px; white-space: nowrap; flex-shrink: 0;
+      letter-spacing: .04em; text-transform: uppercase;
+    }
+    .status-available { background: #edfbee; color: #166534; }
+    .status-taken     { background: var(--g100); color: var(--g400); }
+    .status-premium   { background: #fefce8; color: #854d0e; }
+
+    .domain-meta { font-size: 10px; font-weight: 600; color: var(--g400); font-family: var(--font-mono); }
+
+    .card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .btn-save {
+      height: 32px; padding: 0 12px;
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      font-size: 12px; font-weight: 500; color: var(--g600);
+      background: var(--white); transition: all .15s;
+    }
+    .btn-save:hover { border-color: var(--black); color: var(--black); }
+    .btn-save.saved { border-color: var(--black); color: var(--black); font-weight: 700; background: var(--g50); }
+
+    .btn-copy-domain {
+      height: 32px; padding: 0 12px;
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      font-size: 12px; font-weight: 500; color: var(--g600);
+      background: var(--white); transition: all .15s;
+    }
+    .btn-copy-domain:hover { border-color: var(--black); color: var(--black); }
+    .btn-copy-domain.copied { border-color: #166534; color: #166534; background: #edfbee; }
+
+    .btn-register {
+      height: 32px; padding: 0 12px;
+      border: 1.5px solid #86efac; border-radius: var(--radius);
+      font-size: 12px; font-weight: 600; color: #166534;
+      background: #edfbee; display: flex; align-items: center; gap: 4px;
+      text-decoration: none; transition: all .15s;
+    }
+    .btn-register:hover { border-color: #16a34a; background: #dcfce7; }
+    .btn-register svg { width: 10px; height: 10px; }
+
+    .btn-starter {
+      height: 32px; padding: 0 12px;
+      border: none; border-radius: var(--radius);
+      font-size: 12px; font-weight: 600; color: var(--white);
+      background: var(--black); transition: opacity .15s;
+    }
+    .btn-starter:hover { opacity: .76; }
+
+    /* ============================================================
+       Saved section
+    ============================================================ */
+    .saved-section { padding: 40px 0 0; display: none; }
+    .saved-section.visible { display: block; }
+    .saved-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--g400);
+    }
+    .btn-clear {
+      font-size: 11px; font-weight: 600; color: var(--g400);
+      background: none; border: none; transition: color .15s;
+    }
+    .btn-clear:hover { color: #dc2626; }
+
+    /* ============================================================
+       Loading / empty
+    ============================================================ */
+    .generating {
+      grid-column: 1/-1; text-align: center; padding: 60px 0;
+      font-size: 14px; color: var(--g400);
+    }
+    .dot-pulse::after {
+      content: ''; animation: dots 1.4s infinite;
+    }
+    @keyframes dots {
+      0%  { content: '.'; }
+      33% { content: '..'; }
+      66% { content: '...'; }
+    }
+    .empty-state { grid-column: 1/-1; text-align: center; padding: 60px 0; font-size: 14px; color: var(--g400); }
+
+    /* ============================================================
+       Modal
+    ============================================================ */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,.5); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; padding: 24px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--white); border-radius: 14px;
+      width: 100%; max-width: 580px; max-height: 92vh; overflow-y: auto;
+      border: 1.5px solid var(--g200);
+    }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 28px 0;
+      position: sticky; top: 0; background: var(--white); z-index: 1;
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 700; letter-spacing: -.03em;
+      color: var(--black);
+    }
+    .modal-close {
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      border: none; background: var(--g100); border-radius: 50%;
+      font-size: 14px; color: var(--g600); transition: background .15s; flex-shrink: 0;
+    }
+    .modal-close:hover { background: var(--g200); color: var(--black); }
+    .modal-body { padding: 20px 28px 32px; }
+
+    /* ============================================================
+       Starter modal internals
+    ============================================================ */
+    .starter-row { margin-bottom: 20px; }
+    .field-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--g400); margin-bottom: 5px;
+    }
+    .field-value { font-size: 15px; font-weight: 700; letter-spacing: -.02em; color: var(--black); }
+    .template-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 24px; }
+    .tpl-opt {
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      padding: 12px 14px; cursor: pointer; transition: all .15s; user-select: none;
+      background: var(--white);
+    }
+    .tpl-opt:hover { border-color: var(--g800); }
+    .tpl-opt.selected { border-color: var(--black); background: var(--g50); }
+    .tpl-opt:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
+    .tpl-name { font-size: 13px; font-weight: 700; letter-spacing: -.01em; color: var(--black); }
+    .tpl-desc { font-size: 11px; color: var(--g400); margin-top: 2px; }
+    .file-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
+    .file-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; background: var(--g100); border-radius: var(--radius);
+    }
+    .file-name { font-size: 12px; font-weight: 500; font-family: var(--font-mono); color: var(--black); }
+    .file-size { font-size: 11px; color: var(--g400); }
+    hr.divider { border: none; border-top: 1px solid var(--g200); margin: 24px 0; }
+    .export-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .gh-title { font-size: 14px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 16px; color: var(--black); }
+    .gh-field { margin-bottom: 12px; }
+    .gh-value { font-size: 13px; color: var(--g800); }
+    .code-block {
+      background: var(--g100); border-radius: var(--radius);
+      padding: 14px 16px; font-family: var(--font-mono);
+      font-size: 11.5px; line-height: 1.8; color: var(--g800);
+      white-space: pre; overflow-x: auto; margin-bottom: 10px;
+    }
+    .gh-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .btn-copy {
+      height: 36px; padding: 0 16px;
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      font-size: 12px; font-weight: 600; color: var(--g600);
+      background: var(--white); transition: all .15s;
+    }
+    .btn-copy:hover  { border-color: var(--black); color: var(--black); }
+    .btn-copy.copied { border-color: #166534; color: #166534; }
+
+    .btn-gh-create {
+      height: 36px; padding: 0 16px;
+      border: none; border-radius: var(--radius);
+      font-size: 12px; font-weight: 600; color: #fff;
+      background: #24292f; display: inline-flex; align-items: center; gap: 6px;
+      text-decoration: none; transition: opacity .15s;
+    }
+    .btn-gh-create:hover { opacity: .85; }
+    .btn-gh-create svg { width: 14px; height: 14px; }
+
+    /* ============================================================
+       About modal
+    ============================================================ */
+    .about-body { padding: 24px 28px 32px; }
+    .about-body p { font-size: 15px; line-height: 1.75; color: var(--g600); }
+    .about-body p + p { margin-top: 14px; }
+
+    /* ============================================================
+       TOKEN PAGE
+    ============================================================ */
+    .token-page { padding: 72px 0 100px; }
+    .token-hero { max-width: 680px; margin-bottom: 72px; }
+    .token-hero .token-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--g400); margin-bottom: 20px;
+    }
+    .token-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 800; letter-spacing: -.04em; line-height: 1.05;
+      color: var(--black); margin-bottom: 20px;
+    }
+    .token-hero p { font-size: 17px; line-height: 1.75; color: var(--g600); max-width: 520px; }
+
+    .token-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+      gap: 20px; margin-bottom: 64px;
+    }
+    .token-card {
+      border: 1.5px solid var(--g200); border-radius: 10px;
+      padding: 28px 24px; background: var(--white);
+      transition: background .2s, border-color .2s;
+    }
+    .token-card-icon {
+      width: 40px; height: 40px;
+      background: var(--g100); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .token-card-icon svg { width: 20px; height: 20px; color: var(--black); }
+    .token-card h3 {
+      font-family: var(--font-display);
+      font-size: 16px; font-weight: 700; letter-spacing: -.025em;
+      margin-bottom: 8px; color: var(--black);
+    }
+    .token-card p { font-size: 14px; line-height: 1.7; color: var(--g600); }
+    .token-card .token-detail {
+      margin-top: 14px; font-size: 13px; font-weight: 600;
+      color: var(--black); display: flex; align-items: center; gap: 6px;
+    }
+
+    .token-launch {
+      border: 1.5px solid var(--black); border-radius: 10px;
+      padding: 36px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap; margin-bottom: 64px;
+    }
+    .token-launch-left h2 {
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 700; letter-spacing: -.035em;
+      margin-bottom: 8px; color: var(--black);
+    }
+    .token-launch-left p { font-size: 15px; line-height: 1.65; max-width: 420px; }
+
+    .token-mechanics { margin-bottom: 64px; }
+    .token-mechanics h2 {
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 700; letter-spacing: -.035em;
+      margin-bottom: 32px; color: var(--black);
+    }
+    .mechanic-row {
+      display: flex;
+      border: 1.5px solid var(--g200); border-radius: 10px;
+      overflow: hidden; flex-wrap: wrap;
+    }
+    .mechanic-item {
+      flex: 1; min-width: 200px; padding: 24px;
+      border-right: 1px solid var(--g200);
+    }
+    .mechanic-item:last-child { border-right: none; }
+    .mechanic-num {
+      font-family: var(--font-display);
+      font-size: 30px; font-weight: 800;
+      color: var(--black); margin-bottom: 6px; letter-spacing: -.04em;
+    }
+    .mechanic-label { font-size: 13px; font-weight: 600; color: var(--black); margin-bottom: 4px; }
+    .mechanic-desc  { font-size: 12px; color: var(--g400); line-height: 1.5; }
+
+    .token-faq { margin-bottom: 48px; }
+    .token-faq h2 {
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 700; letter-spacing: -.035em;
+      margin-bottom: 24px; color: var(--black);
+    }
+    .faq-item { border-top: 1px solid var(--g200); padding: 20px 0; }
+    .faq-q { font-size: 15px; font-weight: 600; color: var(--black); margin-bottom: 8px; }
+    .faq-a { font-size: 14px; line-height: 1.7; color: var(--g600); }
+
+    /* ============================================================
+       Footer
+    ============================================================ */
+    footer { border-top: 1px solid var(--g200); padding: 56px 0 32px; }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 17px; font-weight: 800; letter-spacing: -.04em;
+      color: var(--black); margin-bottom: 6px;
+    }
+    .footer-tag   { font-size: 13px; color: var(--g400); line-height: 1.6; margin-bottom: 16px; }
+    .footer-copy  { font-size: 12px; color: var(--g400); }
+    .footer-col-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .09em; color: var(--g400); margin-bottom: 14px;
+    }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-link {
+      font-size: 13px; font-weight: 500; color: var(--g600);
+      text-decoration: none; background: none; border: none;
+      font-family: var(--font); cursor: pointer; text-align: left;
+      padding: 0; transition: color .15s;
+    }
+    .footer-link:hover { color: var(--black); }
+    .footer-x {
+      display: flex; align-items: center; gap: 6px;
+      text-decoration: none; color: var(--g600);
+      font-size: 13px; font-weight: 500; transition: color .15s;
+    }
+    .footer-x:hover { color: var(--black); }
+    .footer-x svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .footer-info-row { display: flex; flex-direction: column; gap: 8px; }
+    .footer-info-item { font-size: 13px; color: var(--g600); line-height: 1.55; }
+    .footer-info-item strong { color: var(--black); font-weight: 600; display: block; font-size: 12px; }
+    .footer-bottom {
+      border-top: 1px solid var(--g200); padding-top: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom-copy { font-size: 12px; color: var(--g400); }
+    .footer-badge-wrap { display: flex; align-items: center; }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+
+    .badge-light { display: block; }
+    .badge-dark  { display: none; }
+    [data-theme="dark"] .badge-light { display: none; }
+    [data-theme="dark"] .badge-dark  { display: block; }
+
+    /* ============================================================
+       Animations
+    ============================================================ */
+    .fade-in { animation: fadeUp .32s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: .08s; }
+    .reveal-delay-2 { transition-delay: .16s; }
+    .reveal-delay-3 { transition-delay: .24s; }
+    .reveal-delay-4 { transition-delay: .32s; }
+
+    /* page transitions */
+    .page { display: none; animation: none; }
+    .page.active { display: block; animation: pageFadeIn .3s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes pageFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero gradient shimmer */
+    .hero { position: relative; overflow: hidden; }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 80% 60% at 60% -20%, rgba(0,0,0,.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    [data-theme="dark"] .hero::before {
+      background: radial-gradient(ellipse 80% 60% at 60% -20%, rgba(255,255,255,.04) 0%, transparent 70%);
+    }
+    .hero .container { position: relative; z-index: 1; }
+
+    /* Animated generate button pulse */
+    @keyframes btnPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(10,10,10,.18); }
+      50%      { box-shadow: 0 0 0 8px rgba(10,10,10,0); }
+    }
+    .btn-primary:not(:disabled):hover { animation: btnPulse .6s ease; }
+
+    /* Improved domain card */
+    .domain-card {
+      transition: border-color .2s, box-shadow .2s, transform .2s cubic-bezier(.22,1,.36,1), background .2s;
+    }
+    .domain-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0,0,0,.09);
+    }
+    [data-theme="dark"] .domain-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.5); }
+
+    /* Stagger cards */
+    .domain-card:nth-child(1)  { animation-delay: .03s; }
+    .domain-card:nth-child(2)  { animation-delay: .06s; }
+    .domain-card:nth-child(3)  { animation-delay: .09s; }
+    .domain-card:nth-child(4)  { animation-delay: .12s; }
+    .domain-card:nth-child(5)  { animation-delay: .15s; }
+    .domain-card:nth-child(6)  { animation-delay: .18s; }
+    .domain-card:nth-child(7)  { animation-delay: .21s; }
+    .domain-card:nth-child(8)  { animation-delay: .24s; }
+    .domain-card:nth-child(9)  { animation-delay: .27s; }
+    .domain-card:nth-child(n+10) { animation-delay: .3s; }
+
+    /* ============================================================
+       Stats strip
+    ============================================================ */
+    .stats-strip {
+      border-bottom: 1px solid var(--g200);
+      padding: 32px 0;
+    }
+    .stats-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 24px;
+    }
+    .stat-item { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; min-width: 120px; }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 4vw, 38px); font-weight: 800;
+      letter-spacing: -.04em; color: var(--black);
+      line-height: 1;
+    }
+    .stat-label { font-size: 12px; font-weight: 500; color: var(--g400); text-align: center; }
+    .stat-divider { width: 1px; height: 40px; background: var(--g200); flex-shrink: 0; }
+    @media (max-width: 640px) { .stat-divider { display: none; } .stat-item { min-width: 80px; } }
+
+    /* ============================================================
+       TEAM PAGE
+    ============================================================ */
+    .team-page { padding: 72px 0 100px; }
+
+    .team-hero { max-width: 600px; margin-bottom: 64px; }
+    .team-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--g400); margin-bottom: 18px;
+    }
+    .team-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 5vw, 56px);
+      font-weight: 800; letter-spacing: -.04em; line-height: 1.06;
+      color: var(--black); margin-bottom: 16px;
+    }
+    .team-hero p { font-size: 16px; line-height: 1.75; color: var(--g600); max-width: 480px; }
+
+    .team-section-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--g400); margin-bottom: 24px;
+    }
+
+    /* Leadership */
+    .team-leadership { margin-bottom: 64px; }
+    .team-leadership-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .team-card {
+      border: 1.5px solid var(--g200); border-radius: 12px;
+      padding: 32px 28px;
+      background: var(--white);
+      transition: border-color .2s, box-shadow .2s, transform .22s cubic-bezier(.22,1,.36,1), background .2s;
+      position: relative; overflow: hidden;
+    }
+    .team-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--black); opacity: 0;
+      transition: opacity .2s;
+    }
+    .team-card:hover { border-color: #c0c0c0; box-shadow: 0 8px 40px rgba(0,0,0,.08); transform: translateY(-2px); }
+    .team-card:hover::before { opacity: 1; }
+    [data-theme="dark"] .team-card:hover { box-shadow: 0 8px 40px rgba(0,0,0,.5); }
+
+    .team-card-founder { border-color: var(--g800); }
+    .team-card-founder::before { opacity: 1; }
+
+    .team-avatar {
+      width: 68px; height: 68px; border-radius: 50%;
+      background: var(--g100); border: 2px solid var(--g200);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 24px; font-weight: 800;
+      color: var(--black); margin-bottom: 20px;
+      overflow: hidden; flex-shrink: 0; position: relative;
+    }
+    .team-card-founder .team-avatar {
+      background: var(--black); color: var(--white);
+      border-color: var(--black);
+    }
+    .team-avatar img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; border-radius: 50%;
+    }
+
+    .team-role-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; padding: 4px 10px; border-radius: 100px;
+      margin-bottom: 12px;
+    }
+    .badge-founder { background: var(--black); color: var(--white); }
+    .badge-cofounder { background: var(--g100); color: var(--g600); border: 1px solid var(--g200); }
+
+    .team-name {
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 800; letter-spacing: -.03em;
+      color: var(--black); margin-bottom: 4px;
+    }
+    .team-title { font-size: 13px; font-weight: 600; color: var(--g400); margin-bottom: 14px; }
+    .team-bio { font-size: 14px; line-height: 1.72; color: var(--g600); margin-bottom: 20px; }
+
+    .team-socials { display: flex; align-items: center; gap: 8px; }
+    .team-x-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      text-decoration: none; color: var(--g600);
+      font-size: 13px; font-weight: 600;
+      padding: 6px 12px; border-radius: 8px;
+      border: 1.5px solid var(--g200);
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    .team-x-link:hover { color: var(--black); border-color: var(--black); background: var(--g50); }
+    .team-x-link svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+    /* Values section */
+    .team-values { margin-bottom: 64px; }
+    .team-values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+      gap: 1px; border: 1px solid var(--g200); border-radius: 10px; overflow: hidden;
+    }
+    .value-item {
+      padding: 24px; background: var(--white);
+      transition: background .2s;
+    }
+    .value-item:hover { background: var(--g50); }
+    .value-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--g100); display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .value-icon svg { width: 18px; height: 18px; color: var(--black); }
+    .value-title { font-size: 14px; font-weight: 700; color: var(--black); margin-bottom: 6px; letter-spacing: -.01em; }
+    .value-desc  { font-size: 13px; line-height: 1.65; color: var(--g600); }
+
+    /* Join CTA */
+    .team-join {
+      border: 1.5px solid var(--g200); border-radius: 12px;
+      padding: 40px 36px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap;
+      background: var(--g50);
+    }
+    .team-join h2 {
+      font-family: var(--font-display); font-size: 20px; font-weight: 800;
+      letter-spacing: -.03em; margin-bottom: 8px; color: var(--black);
+    }
+    .team-join p { font-size: 14px; color: var(--g600); max-width: 380px; }
+    .team-join-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; flex-shrink: 0; }
+
+    @media (max-width: 640px) {
+      .team-leadership-grid { grid-template-columns: 1fr; }
+      .team-card { padding: 24px 20px; }
+      .team-join { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* ============================================================
+       Toast
+    ============================================================ */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--black); color: var(--white);
+      font-size: 13px; font-weight: 500; padding: 10px 20px;
+      border-radius: 100px; z-index: 999;
+      opacity: 0; transition: opacity .2s; pointer-events: none; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
+
+    /* ============================================================
+       Skeleton loader
+    ============================================================ */
+    .skeleton-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+      gap: 12px;
+    }
+    .skeleton-card {
+      border: 1.5px solid var(--g200); border-radius: 8px;
+      padding: 18px 16px;
+    }
+    .skeleton-line {
+      border-radius: 4px; height: 12px; margin-bottom: 8px;
+      background: linear-gradient(90deg, var(--g100) 25%, var(--g50) 50%, var(--g100) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+    }
+    [data-theme="dark"] .skeleton-line {
+      background: linear-gradient(90deg, var(--g800) 25%, #333 50%, var(--g800) 75%);
+      background-size: 200% 100%;
+    }
+    .skeleton-line.sk-big   { height: 17px; margin-bottom: 10px; width: 70%; }
+    .skeleton-line.sk-half  { width: 45%; }
+    .skeleton-line.sk-third { width: 28%; }
+    .sk-actions { display: flex; gap: 6px; margin-top: 12px; }
+    .sk-actions .skeleton-line { height: 26px; width: 54px; margin-bottom: 0; border-radius: 6px; }
+    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+    /* ============================================================
+       Domain score badge
+    ============================================================ */
+    .score-badge {
+      display: inline-flex; align-items: center;
+      font-size: 9px; font-weight: 800; letter-spacing: .05em;
+      padding: 2px 5px; border-radius: 4px; line-height: 1;
+      vertical-align: middle; margin-left: 5px;
+    }
+    .score-a { background: #dcfce7; color: #15803d; }
+    .score-b { background: #fef9c3; color: #92400e; }
+    .score-c { background: var(--g100); color: var(--g600); }
+    [data-theme="dark"] .score-a { background: #14532d; color: #86efac; }
+    [data-theme="dark"] .score-b { background: #451a03; color: #fde68a; }
+    [data-theme="dark"] .score-c { background: var(--g800); color: var(--g400); }
+
+    /* Available domain highlight */
+    .domain-card[data-avail="true"] {
+      border-left: 3px solid #22c55e;
+    }
+    [data-theme="dark"] .domain-card[data-avail="true"] { border-left-color: #16a34a; }
+
+    /* ============================================================
+       Search history
+    ============================================================ */
+    .search-history {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 10px; flex-wrap: wrap; min-height: 0;
+    }
+    .search-history:empty { display: none; }
+    .history-label {
+      font-size: 11px; font-weight: 600; color: var(--g400);
+      text-transform: uppercase; letter-spacing: .07em; flex-shrink: 0;
+    }
+    .history-chip {
+      font-size: 12px; font-weight: 500; color: var(--g600);
+      background: var(--g50); border: 1px solid var(--g200);
+      border-radius: 100px; padding: 3px 10px; cursor: pointer;
+      font-family: var(--font); transition: color .13s, border-color .13s, background .13s;
+    }
+    .history-chip:hover { color: var(--black); border-color: var(--g400); background: var(--white); }
+
+    /* ============================================================
+       Mobile
+    ============================================================ */
+    @media (max-width: 640px) {
+      .hero { padding: 52px 0 44px; }
+      .input-row { flex-direction: column; }
+      .btn-primary { height: 44px; }
+      .domain-grid { grid-template-columns: 1fr; }
+      .template-grid { grid-template-columns: 1fr; }
+      .results-header { flex-direction: column; align-items: flex-start; }
+      .results-right  { align-items: flex-start; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .modal { border-radius: 10px; }
+      .modal-header { padding: 20px 20px 0; }
+      .modal-body { padding: 16px 20px 28px; }
+      .about-body { padding: 20px 20px 28px; }
+      .token-launch { flex-direction: column; }
+      .mechanic-item { border-right: none; border-bottom: 1px solid var(--g200); }
+      .mechanic-item:last-child { border-bottom: none; }
+      .nav-link span { display: none; }
+      .kbd-hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <a href="#" class="logo" id="logoLink" aria-label="Nomio home">
+        <!-- N mark -->
+        <svg class="logo-mark" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="30" height="30" fill="var(--black)"/>
+          <path d="M5.5 5.5L5.5 24.5L10 24.5L10 13.5L20 24.5L24.5 24.5L24.5 5.5L20 5.5L20 16.5L10 5.5Z" fill="var(--white)"/>
+        </svg>
+        <!-- Custom SVG wordmark -->
+        <svg class="logo-wordmark" viewBox="0 0 86 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Nomio">
+          <path d="M1 1h3.2L10.4 13V1h3V17H10.2L4 5.2V17H1V1z" fill="var(--black)"/>
+          <path d="M16.5 9c0-4.6 2.4-7.4 6.5-7.4s6.5 2.8 6.5 7.4-2.4 7.4-6.5 7.4S16.5 13.6 16.5 9zm10 0c0-3.1-1.2-4.8-3.5-4.8S19.5 5.9 19.5 9s1.2 4.8 3.5 4.8 3.5-1.7 3.5-4.8z" fill="var(--black)"/>
+          <path d="M33 1.8h2.8l.2 1.6c.8-1.2 2-1.8 3.4-1.8 1.5 0 2.6.7 3.2 1.9.8-1.2 2.1-1.9 3.6-1.9 2.6 0 4 1.6 4 4.6V17h-2.9V6.5c0-1.6-.7-2.5-2-2.5-1.4 0-2.2 1-2.2 2.7V17h-2.9V6.5c0-1.6-.7-2.5-2-2.5-1.4 0-2.2 1-2.2 2.7V17H33V1.8z" fill="var(--black)"/>
+          <path d="M55 0a1.8 1.8 0 110 3.6A1.8 1.8 0 0155 0zm-1.4 5.6h2.9V17h-2.9V5.6z" fill="var(--black)"/>
+          <path d="M60.5 11.3c0-3.6 2.1-5.9 5.5-5.9s5.5 2.3 5.5 5.9-2.1 5.9-5.5 5.9-5.5-2.3-5.5-5.9zm8.1 0c0-2.2-.9-3.5-2.6-3.5s-2.6 1.3-2.6 3.5.9 3.5 2.6 3.5 2.6-1.3 2.6-3.5z" fill="var(--black)"/>
+        </svg>
+      </a>
+
+      <div class="nav-right">
+        <button class="nav-link" id="navTeam" aria-label="Team page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="18" cy="9" r="2.5"/><path d="M15.5 20c0-2.5 1.8-4.5 4-4.8"/></svg>
+          <span>Team</span>
+        </button>
+        <button class="nav-link" id="navToken" aria-label="Token page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M14.5 7.5H10a2.5 2.5 0 100 5h4a2.5 2.5 0 110 5H9.5"/><path d="M12 6v1.5M12 16.5V18"/></svg>
+          <span>Token</span>
+        </button>
+        <button class="nav-link" id="openAbout" aria-label="About Nomio">About</button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg class="icon-sun"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== PAGE: HOME ===================== -->
+<div class="page active" id="pageHome">
+
+  <section class="hero">
+    <div class="container">
+      <h1>Find a name.<br>Start a project.</h1>
+      <p>Discover brandable domains and generate project starters in minutes. No fluff, just the tools to get moving.</p>
+
+      <div class="search-block">
+        <div class="input-row">
+          <input type="text" class="keyword-input" id="keywordInput"
+            placeholder="video, finance, agent, studio..."
+            maxlength="64" autocomplete="off" spellcheck="false" aria-label="Keyword" />
+          <button class="btn-primary" id="generateBtn">Generate Domains</button>
+        </div>
+        <div class="kbd-hint">
+          Press <kbd class="kbd">/</kbd> to focus &nbsp;·&nbsp; <kbd class="kbd">Enter</kbd> to generate
+        </div>
+        <div class="search-history" id="searchHistory"></div>
+
+        <div class="categories" id="chips" role="group" aria-label="Categories">
+          <button class="chip" data-cat="AI">AI</button>
+          <button class="chip" data-cat="SaaS">SaaS</button>
+          <button class="chip" data-cat="Dev Tools">Dev Tools</button>
+          <button class="chip" data-cat="Media">Media</button>
+          <button class="chip" data-cat="Finance">Finance</button>
+          <button class="chip" data-cat="Healthcare">Health</button>
+          <button class="chip" data-cat="Crypto">Crypto</button>
+          <button class="chip" data-cat="Ecommerce">Commerce</button>
+          <button class="chip" data-cat="Security">Security</button>
+          <button class="chip" data-cat="Education">EdTech</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats strip -->
+  <div class="stats-strip reveal">
+    <div class="container">
+      <div class="stats-inner">
+        <div class="stat-item">
+          <span class="stat-num" data-count="72">72</span>
+          <span class="stat-label">Names per search</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num" data-count="9">9</span>
+          <span class="stat-label">TLDs supported</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num" data-count="6">6</span>
+          <span class="stat-label">Starter templates</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">0<span style="font-size:.55em;letter-spacing:0">s</span></span>
+          <span class="stat-label">Time to first idea</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Partner strip -->
+  <div class="partners-strip">
+    <div class="container">
+      <p class="partners-label">Built to work with the tools you already use</p>
+    </div>
+    <div class="partners-track-wrap">
+      <div class="partners-track" id="partnersTrack"></div>
+    </div>
+  </div>
+
+  <!-- Saved -->
+  <section class="saved-section" id="savedSection" aria-label="Saved domains">
+    <div class="container">
+      <div class="saved-header">
+        <p class="section-label" id="savedLabel">Saved</p>
+        <button class="btn-clear" id="clearSaved">Clear all</button>
+      </div>
+      <div class="domain-grid" id="savedGrid"></div>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section class="results-section" id="resultsSection" aria-label="Domain results">
+    <div class="container">
+      <div class="results-header">
+        <div>
+          <p class="results-title" id="resultsTitle">Results</p>
+          <p class="results-meta" id="resultsMeta"></p>
+        </div>
+        <div class="results-right">
+          <div class="tld-filters" id="tldFilters" role="group" aria-label="Filter by TLD">
+            <button class="tld-btn active" data-tld="all">All</button>
+            <button class="tld-btn" data-tld=".com">.com</button>
+            <button class="tld-btn" data-tld=".io">.io</button>
+            <button class="tld-btn" data-tld=".ai">.ai</button>
+            <button class="tld-btn" data-tld=".app">.app</button>
+            <button class="tld-btn" data-tld=".co">.co</button>
+            <button class="tld-btn" data-tld=".dev">.dev</button>
+            <button class="tld-btn" data-tld=".xyz">.xyz</button>
+            <button class="tld-btn" data-tld=".net">.net</button>
+            <button class="tld-btn" data-tld=".fun">.fun</button>
+          </div>
+          <div class="results-controls">
+            <button class="ctrl-btn" id="availToggle">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2,6 5,9 10,3"/></svg>
+              Available only
+            </button>
+            <button class="ctrl-btn" id="sortBtn">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="3" x2="10" y2="3"/><line x1="2" y1="6" x2="7" y2="6"/><line x1="2" y1="9" x2="5" y2="9"/></svg>
+              Best first
+            </button>
+            <button class="ctrl-btn" id="regenerateBtn">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2a5 5 0 11-3 9"/><polyline points="7,9 9.5,11.5 12,9"/></svg>
+              Regenerate
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="domain-grid" id="domainGrid"></div>
+    </div>
+  </section>
+
+</div><!-- /pageHome -->
+
+<!-- ===================== PAGE: TOKEN ===================== -->
+<div class="page" id="pageToken">
+  <div class="container">
+    <div class="token-page">
+
+      <div class="token-hero">
+        <div class="token-eyebrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M14.5 7.5H10a2.5 2.5 0 100 5h4a2.5 2.5 0 110 5H9.5"/><path d="M12 6v1.5M12 16.5V18"/></svg>
+          $NOMIO Token
+        </div>
+        <h1>Own a piece of the name economy.</h1>
+        <p>Nomio is where builders go to find names and ship projects. $NOMIO is how that community grows together — powering access, rewarding contribution, and getting rarer with every transaction.</p>
+      </div>
+
+      <div class="token-mechanics">
+        <h2>How it works</h2>
+        <div class="mechanic-row">
+          <div class="mechanic-item">
+            <div class="mechanic-num">$10</div>
+            <div class="mechanic-label">One premium pack</div>
+            <div class="mechanic-desc">Pay $10 worth of $NOMIO to unlock 10 premium domain generations with deeper scoring and richer starter kits.</div>
+          </div>
+          <div class="mechanic-item">
+            <div class="mechanic-num">10x</div>
+            <div class="mechanic-label">Generations per pack</div>
+            <div class="mechanic-desc">Each pack gives you 10 premium runs. Use them across any keyword, category, or TLD you want.</div>
+          </div>
+          <div class="mechanic-item">
+            <div class="mechanic-num">10%</div>
+            <div class="mechanic-label">Auto-burned per purchase</div>
+            <div class="mechanic-desc">Every time someone buys premium access, 10% of the $NOMIO used is permanently removed from circulation. No exceptions, no overrides.</div>
+          </div>
+          <div class="mechanic-item">
+            <div class="mechanic-num">+$NOMIO</div>
+            <div class="mechanic-label">Rewards for builders</div>
+            <div class="mechanic-desc">Active users earn $NOMIO back through referrals, daily usage, and community contributions. The more you build, the more you earn.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="token-grid">
+        <div class="token-card">
+          <div class="token-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3>Premium Access</h3>
+          <p>The free tier gets you a solid set of domain ideas every day. Premium goes further: trademark proximity checks, smarter name scoring, and extended starter kits ready to push to GitHub.</p>
+          <div class="token-detail">$10 = 10 premium generations</div>
+        </div>
+        <div class="token-card">
+          <div class="token-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12L6 18M12 12l6 6M20 4H4"/></svg>
+          </div>
+          <h3>Deflationary by Design</h3>
+          <p>10% of every premium purchase is burned automatically and immediately. There is no manual process, no team approval. It just disappears. Every transaction makes the remaining supply a little smaller.</p>
+          <div class="token-detail">10% burn on every purchase</div>
+        </div>
+        <div class="token-card">
+          <div class="token-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </div>
+          <h3>Earn as You Build</h3>
+          <p>Nomio rewards the people who actually use it. Refer a builder who goes premium, you earn. Stay active every week, you earn. Get featured as a top contributor, you earn more. Simple.</p>
+          <div class="token-detail">Referrals, usage, contributions</div>
+        </div>
+        <div class="token-card">
+          <div class="token-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <h3>No Supply Drama</h3>
+          <p>We are not announcing a total supply right now. What we can tell you is that the burn mechanics mean less $NOMIO exists every single day. The economics are built into the product, not onto it.</p>
+          <div class="token-detail">Burns every day, automatically</div>
+        </div>
+      </div>
+
+      <div class="token-launch">
+        <div class="token-launch-left">
+          <h2>$NOMIO launches on EasyA Kickstart</h2>
+          <p>EasyA Kickstart is where community-driven crypto projects get their start. That is where $NOMIO will be listed first. Follow <a href="https://x.com/lucasreedxx" target="_blank" rel="noopener" style="color:var(--black);font-weight:600;text-decoration:underline;text-underline-offset:3px;">@lucasreedxx</a> for the exact date.</p>
+        </div>
+        <a href="https://kickstart.easya.io/" target="_blank" rel="noopener" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;height:48px;padding:0 24px;flex-shrink:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+          View on EasyA Kickstart
+        </a>
+      </div>
+
+      <div class="token-faq">
+        <h2>Questions</h2>
+        <div class="faq-item">
+          <p class="faq-q">When does $NOMIO launch?</p>
+          <p class="faq-a">We are not giving a hard date yet. What we know is the listing will happen on EasyA Kickstart. Follow @lucasreedxx on X and you will know as soon as we do.</p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">What is the total supply?</p>
+          <p class="faq-a">We are not releasing supply figures before the launch. The burn mechanics are designed to make that number go down over time regardless of where it starts. We will share more details closer to the Kickstart listing.</p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">Do I need $NOMIO to use Nomio?</p>
+          <p class="faq-a">No. The free tier works without any token. $NOMIO unlocks premium features — deeper generation, better scoring, extended starters. You only need it if you want more.</p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">How does the burn actually work?</p>
+          <p class="faq-a">When you pay for a premium pack, 90% of the $NOMIO you spend goes to the platform and 10% is sent to a dead wallet automatically. It is written into the transaction logic. There is no team involved in triggering it.</p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">Can I earn $NOMIO without buying it?</p>
+          <p class="faq-a">Yes. Nomio has a rewards layer for active builders. Referring someone who goes premium earns you $NOMIO. Consistent weekly usage earns small amounts. Top contributors get featured and earn more. We will publish the full reward structure with the launch.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div><!-- /pageToken -->
+
+<!-- ===================== PAGE: TEAM ===================== -->
+<div class="page" id="pageTeam">
+  <div class="container">
+    <div class="team-page">
+
+      <div class="team-hero reveal">
+        <div class="team-eyebrow">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="18" cy="9" r="2.5"/><path d="M15.5 20c0-2.5 1.8-4.5 4-4.8"/></svg>
+          The Team
+        </div>
+        <h1>Built by people<br>who actually ship.</h1>
+        <p>Nomio was born from a genuine frustration with slow, overcrowded domain tools. We are a small founding team that builds and uses what we make, every day.</p>
+      </div>
+
+      <!-- Leadership -->
+      <div class="team-leadership">
+        <p class="team-section-label reveal">Leadership</p>
+        <div class="team-leadership-grid">
+
+          <!-- Lucas Reed — Founder -->
+          <div class="team-card team-card-founder reveal reveal-delay-1">
+            <div class="team-avatar">
+              <img src="https://unavatar.io/twitter/lucasreedxx" alt="Lucas Reed" onerror="this.remove()"/>L</div>
+            <span class="team-role-badge badge-founder">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+              Founder
+            </span>
+            <div class="team-name">Lucas Reed</div>
+            <div class="team-title">Founder &amp; CEO</div>
+            <div class="team-bio">Lucas started Nomio after spending too many late nights trying to find the right name for a side project. He leads product vision, growth, and the $NOMIO token strategy. When he's not building, he's writing about startup naming and brand strategy.</div>
+            <div class="team-socials">
+              <a class="team-x-link" href="https://x.com/lucasreedxx" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                @lucasreedxx
+              </a>
+            </div>
+          </div>
+
+          <!-- Alexander Rothr — Co-Founder -->
+          <div class="team-card reveal reveal-delay-2">
+            <div class="team-avatar">
+              <img src="https://unavatar.io/twitter/AlexanderRothr" alt="Alexander Rothr" onerror="this.remove()"/>A</div>
+            <span class="team-role-badge badge-cofounder">Co-Founder</span>
+            <div class="team-name">Alexander Rothr</div>
+            <div class="team-title">Co-Founder &amp; CTO</div>
+            <div class="team-bio">Alexander handles architecture, engineering, and the systems that make Nomio fast. He built the original name generator, the starter kit engine, and the Vercel deployment pipeline. He's obsessed with things that are both simple and powerful.</div>
+            <div class="team-socials">
+              <a class="team-x-link" href="https://x.com/AlexanderRothr" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                @AlexanderRothr
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Values -->
+      <div class="team-values reveal">
+        <p class="team-section-label" style="margin-bottom:20px">What we stand for</p>
+        <div class="team-values-grid">
+          <div class="value-item">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div class="value-title">Ship fast</div>
+            <div class="value-desc">Ideas are cheap. The name, the domain, the first commit: those are the real start. We remove every blocker between idea and launch.</div>
+          </div>
+          <div class="value-item">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            </div>
+            <div class="value-title">No fluff</div>
+            <div class="value-desc">Every feature earns its place. We cut anything that slows you down or exists just to look impressive. Simple tools compound.</div>
+          </div>
+          <div class="value-item">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <div class="value-title">Community first</div>
+            <div class="value-desc">The $NOMIO token isn't an afterthought. It ties platform growth to the people who actually use it. Builders benefit when Nomio grows.</div>
+          </div>
+          <div class="value-item">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            </div>
+            <div class="value-title">Transparency</div>
+            <div class="value-desc">Burn mechanics are on-chain and automatic. Reward rules are published. No black boxes, no discretionary decisions. What you see is what it does.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Join CTA -->
+      <div class="team-join reveal">
+        <div>
+          <h2>Want to build with us?</h2>
+          <p>We are always looking for sharp people who care about the craft: designers, engineers, and operators who want to work on something genuinely useful.</p>
+        </div>
+        <div class="team-join-actions">
+          <a class="team-x-link" href="https://x.com/lucasreedxx" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            Reach out on X
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div><!-- /pageTeam -->
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+
+      <!-- Col 1: Brand -->
+      <div>
+        <div class="footer-brand">Nomio</div>
+        <div class="footer-tag">Find a name.<br>Start a project.</div>
+        <div class="footer-copy">nomio.uk</div>
+      </div>
+
+      <!-- Col 2: Product links -->
+      <div>
+        <div class="footer-col-label">Product</div>
+        <div class="footer-links">
+          <button class="footer-link" id="footerHome">Home</button>
+          <button class="footer-link" id="footerToken">Token</button>
+          <button class="footer-link" id="footerTeam">Team</button>
+          <button class="footer-link" id="footerAbout">About</button>
+        </div>
+      </div>
+
+      <!-- Col 3: Follow -->
+      <div>
+        <div class="footer-col-label">Follow</div>
+        <div class="footer-links">
+          <a class="footer-x" href="https://x.com/lucasreedxx" target="_blank" rel="noopener" aria-label="Lucas Reed on X">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            @lucasreedxx
+          </a>
+          <a class="footer-x" href="https://x.com/AlexanderRothr" target="_blank" rel="noopener" aria-label="Alexander Rothr on X">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            @AlexanderRothr
+          </a>
+        </div>
+      </div>
+
+      <!-- Col 4: Pricing & Hours -->
+      <div>
+        <div class="footer-col-label">Info</div>
+        <div class="footer-info-row">
+          <div class="footer-info-item">
+            <strong>Pricing</strong>
+            Free to use. Premium access costs $10 in $NOMIO per pack.
+          </div>
+          <div class="footer-info-item">
+            <strong>Working hours</strong>
+            Mon to Fri, UTC. Replies within 24 hours.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span class="footer-bottom-copy">&copy; 2025 Nomio. All rights reserved.</span>
+      <div class="footer-badge-wrap">
+        <a href="https://orynth.dev/projects/nomio" target="_blank" rel="noopener">
+          <img class="badge-light" src="https://orynth.dev/api/badge/nomio?theme=light&style=default" alt="Featured on Orynth" width="120" height="36" />
+          <img class="badge-dark"  src="https://orynth.dev/api/badge/nomio?theme=dark&style=default"  alt="Featured on Orynth" width="120" height="36" />
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== STARTER MODAL ===================== -->
+<div class="modal-overlay" id="starterModal" role="dialog" aria-modal="true" aria-labelledby="starterTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="starterTitle">Generate Starter</span>
+      <button class="modal-close" id="closeStarter" aria-label="Close">&#x2715;</button>
+    </div>
+    <div class="modal-body" id="starterBody"></div>
+  </div>
+</div>
+
+<!-- ===================== ABOUT MODAL ===================== -->
+<div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="aboutTitle">About Nomio</span>
+      <button class="modal-close" id="closeAbout" aria-label="Close">&#x2715;</button>
+    </div>
+    <div class="about-body">
+      <p>Nomio started from a simple frustration: finding a good domain name takes way too long. You open a tab, type something, it's taken. Try again. Taken. Add a number. Ugly. Start over.</p>
+      <p>We built Nomio to make that part fast. Type a word, get fifty real name ideas across every major TLD, see what's available, save the ones you like, and generate a starter kit for the ones that stick — all in a few clicks.</p>
+      <p>It's a tool for people who want to ship, not spend their afternoon in a domain registrar search box.</p>
+      <p>The $NOMIO token adds a community layer. Active builders earn. Premium access costs a small amount of $NOMIO. A portion of every transaction is burned permanently. The goal is to tie the growth of the platform to the people who actually use it.</p>
+      <p>We're a small team building something we genuinely use ourselves. That's about it.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TOAST ===================== -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ===================== SCRIPT ===================== -->
+<script>
+/* =====================================================
+   Theme — runs before paint to avoid flash
+===================================================== */
+(function () {
+  const t = localStorage.getItem('nomio-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', t);
+})();
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('nomio-theme', next);
+});
+
+/* =====================================================
+   Partners
+===================================================== */
+const PARTNERS = [
+  { name:'GitHub',     logo:'https://cdn.simpleicons.org/github/0a0a0a',     url:'https://github.com' },
+  { name:'Vercel',     logo:'https://cdn.simpleicons.org/vercel/0a0a0a',     url:'https://vercel.com' },
+  { name:'Cloudflare', logo:'https://cdn.simpleicons.org/cloudflare/f48120', url:'https://cloudflare.com' },
+  { name:'Namecheap',  logo:'https://cdn.simpleicons.org/namecheap/de3723',  url:'https://namecheap.com' },
+  { name:'Netlify',    logo:'https://cdn.simpleicons.org/netlify/00c7b7',    url:'https://netlify.com' },
+  { name:'Supabase',   logo:'https://cdn.simpleicons.org/supabase/3ecf8e',   url:'https://supabase.com' },
+  { name:'Railway',    logo:'https://cdn.simpleicons.org/railway/0b0d0e',    url:'https://railway.app' },
+  { name:'EasyA',      logo:'https://cdn.simpleicons.org/ethereum/343434',   url:'https://easya.io' },
+  { name:'Porkbun',    logo:'https://cdn.simpleicons.org/porkbun/ee4f96',    url:'https://porkbun.com' },
+];
+(function buildPartners() {
+  const track = document.getElementById('partnersTrack');
+  [...PARTNERS, ...PARTNERS].forEach(p => {
+    const a = Object.assign(document.createElement('a'), { href:p.url, target:'_blank', rel:'noopener', className:'partner-item' });
+    a.innerHTML = `<img src="${p.logo}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'"><span>${p.name}</span>`;
+    track.appendChild(a);
+  });
+})();
+
+/* =====================================================
+   Page routing
+===================================================== */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(attachReveal, 50);
+}
+document.getElementById('navToken').addEventListener('click', () => showPage('pageToken'));
+document.getElementById('navTeam').addEventListener('click',  () => showPage('pageTeam'));
+document.getElementById('logoLink').addEventListener('click', e => { e.preventDefault(); showPage('pageHome'); });
+document.getElementById('footerHome').addEventListener('click',  () => showPage('pageHome'));
+document.getElementById('footerToken').addEventListener('click', () => showPage('pageToken'));
+document.getElementById('footerTeam').addEventListener('click',  () => showPage('pageTeam'));
+document.getElementById('footerAbout').addEventListener('click', () => {
+  document.getElementById('aboutModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+});
+
+/* =====================================================
+   Scroll reveal (IntersectionObserver)
+===================================================== */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(el => {
+    if (el.isIntersecting) {
+      el.target.classList.add('visible');
+      revealObserver.unobserve(el.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+function attachReveal() {
+  document.querySelectorAll('.reveal').forEach(el => {
+    revealObserver.observe(el);
+  });
+}
+attachReveal();
+
+/* =====================================================
+   Animated counter for stats
+===================================================== */
+function animateCount(el, target, duration) {
+  const start = performance.now();
+  const from = 0;
+  function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    el.textContent = Math.round(from + (target - from) * ease);
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.stat-num[data-count]').forEach(el => {
+        const target = parseInt(el.dataset.count, 10);
+        animateCount(el, target, 900);
+      });
+      statObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+const statsStrip = document.querySelector('.stats-strip');
+if (statsStrip) statObserver.observe(statsStrip);
+
+/* =====================================================
+   Constants
+===================================================== */
+const PREFIXES = [
+  'nova','flux','neo','arc','core','base','hub','kit','lab','net',
+  'next','open','pro','rapid','smart','super','ultra','uni','zero',
+  'go','my','get','use','run','re','up','on','do','be',
+  'ping','sync','link','node','flow','edge','mesh','wave','bold',
+  'swift','crisp','sharp','deep','high','micro','poly','meta','hyper','sub'
+];
+const SUFFIXES = [
+  'ly','ify','iq','io','ai','hq','kit','lab','hub','app',
+  'base','flow','stack','desk','pro','ora','aro','ex','ive','ix',
+  'ium','ery','fy','zy','sy','co','ro','vo','ivo','ato',
+  'works','space','studio','zone','spot','pad','vault','grid','loop','cast'
+];
+const BLENDS = [
+  'ora','ova','era','ara','ila','ela','uri','ini','ani','eno',
+  'omo','ato','eto','ito','uto','ario','orio','urio','avia','exo',
+  'ola','ula','ala','elia','oria','aria','ura','ira','ino','evo'
+];
+const CAT_KEYWORDS = {
+  'AI':         ['neural','cogni','sage','think','auto','intel','mind','geni','infer','deep'],
+  'SaaS':       ['stack','dash','pipe','flow','layer','sync','relay','orbit','desk','hub'],
+  'Dev Tools':  ['forge','build','deploy','hook','pack','sdk','push','lint','relay','compile'],
+  'Finance':    ['ledg','fund','vault','pay','cash','trade','yield','asset','cap','bank'],
+  'Healthcare': ['med','care','vital','well','pulse','remedy','heal','dose','cure','clinic'],
+  'Crypto':     ['chain','token','hash','defi','stake','mint','dao','swap','block','nodes'],
+  'Media':      ['cast','stream','reel','pulse','wave','frame','feed','vibe','story','spark'],
+  'Ecommerce':  ['shop','cart','market','sell','pick','list','drop','ship','buy','bazaar'],
+  'Security':   ['guard','shield','lock','auth','key','cert','safe','proxy','zero','scan'],
+  'Education':  ['learn','teach','mentor','skill','quiz','study','course','tutor','nota','know'],
+};
+const TEMPLATES = [
+  { id:'landing',   name:'Landing Page',     desc:'Single page marketing site' },
+  { id:'saas',      name:'SaaS',             desc:'Dashboard + auth scaffold'  },
+  { id:'nextjs',    name:'Next.js App',       desc:'Full-stack Next.js starter' },
+  { id:'directory', name:'Directory',         desc:'Listing and search app'     },
+  { id:'ai-tool',   name:'AI Tool',           desc:'AI-powered utility app'     },
+  { id:'chrome',    name:'Chrome Extension',  desc:'Browser extension starter'  },
+];
+const TLD_WEIGHTS = [['.com',5],['.io',3],['.ai',3],['.app',2],['.co',2],['.dev',2],['.xyz',2],['.net',1],['.fun',1]];
+
+/* =====================================================
+   State
+===================================================== */
+let allDomains    = [];
+let savedDomains  = loadSaved();
+let savedIds      = new Set(savedDomains.map(d => d.id));
+let activeTld     = 'all';
+let activeCategory = null;
+let currentDomain  = null;
+let selectedTpl    = TEMPLATES[0];
+let showAvailOnly  = false;
+let sortBest       = false;
+
+/* =====================================================
+   Persistence
+===================================================== */
+function loadSaved() {
+  try { return JSON.parse(localStorage.getItem('nomio-saved') || '[]'); }
+  catch { return []; }
+}
+function persistSaved() {
+  localStorage.setItem('nomio-saved', JSON.stringify(savedDomains));
+}
+
+/* =====================================================
+   Utilities
+===================================================== */
+const cap  = s => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+const rand = a => a[Math.floor(Math.random() * a.length)];
+const slug = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* =====================================================
+   Domain generation
+===================================================== */
+/* =====================================================
+   Domain scoring
+===================================================== */
+function scoreD(d) {
+  const TLD_SCORE = { '.com':30, '.io':22, '.ai':22, '.app':18, '.co':18, '.dev':18, '.xyz':10, '.net':12, '.fun':10 };
+  let s = (TLD_SCORE[d.tld] || 5);
+  const l = d.name.length;
+  if (l <= 5)       s += 35;
+  else if (l <= 7)  s += 25;
+  else if (l <= 10) s += 15;
+  else if (l <= 12) s += 5;
+  if (d.status === 'available') s += 40;
+  else if (d.status === 'premium') s += 10;
+  return Math.min(99, s);
+}
+function scoreLabel(s) {
+  if (s >= 78) return { label: 'A+', cls: 'score-a' };
+  if (s >= 60) return { label: 'A',  cls: 'score-a' };
+  if (s >= 42) return { label: 'B',  cls: 'score-b' };
+  return              { label: 'C',  cls: 'score-c' };
+}
+
+function makeName(kw, catWords) {
+  const k = kw.length > 6 ? kw.slice(0, 6) : kw;
+  const alt = catWords && catWords.length && Math.random() < 0.42 ? rand(catWords) : null;
+  const w = alt || k;
+  switch (Math.floor(Math.random() * 8)) {
+    case 0: return cap(w) + rand(SUFFIXES);
+    case 1: return cap(rand(PREFIXES)) + cap(w.slice(0, 5));
+    case 2: return cap(k.slice(0, 4)) + rand(BLENDS);
+    case 3: return cap(rand(PREFIXES)) + rand(BLENDS);
+    case 4: return cap(w) + 'hq';
+    case 5: return cap(k.slice(0, 3)) + cap(rand(PREFIXES));
+    case 6: return cap(rand(PREFIXES)) + cap(w.slice(0, 4));
+    case 7: return cap(w.slice(0, 5)) + cap(rand(BLENDS).slice(0, 3));
+    default: return cap(w) + rand(SUFFIXES);
+  }
+}
+function pickTld() {
+  const pool = [];
+  TLD_WEIGHTS.forEach(([t, w]) => { for (let i = 0; i < w; i++) pool.push(t); });
+  return rand(pool);
+}
+function getStatus() {
+  const r = Math.random();
+  return r < 0.33 ? 'available' : r < 0.80 ? 'taken' : 'premium';
+}
+function generateDomains(keyword) {
+  const kw = slug(keyword) || 'build';
+  const catWords = activeCategory ? (CAT_KEYWORDS[activeCategory] || []) : [];
+  const seen = new Set(); const out = [];
+  let tries = 0;
+  while (out.length < 72 && tries < 600) {
+    tries++;
+    const name = makeName(kw, catWords); const tld = pickTld(); const full = name.toLowerCase() + tld;
+    if (seen.has(full) || name.length < 3 || name.length > 14) continue;
+    seen.add(full);
+    const d = { id: full, name, tld, full, status: getStatus(), score: 0 };
+    d.score = scoreD(d);
+    out.push(d);
+  }
+  return out;
+}
+
+/* =====================================================
+   Filtering & sorting
+===================================================== */
+function getDisplayList() {
+  let list = activeTld === 'all' ? allDomains : allDomains.filter(d => d.tld === activeTld);
+  if (showAvailOnly) list = list.filter(d => d.status === 'available');
+  if (sortBest) list = [...list].sort((a, b) => {
+    const rank = { available: 0, premium: 1, taken: 2 };
+    if (rank[a.status] !== rank[b.status]) return rank[a.status] - rank[b.status];
+    return a.name.length - b.name.length;
+  });
+  return list;
+}
+
+/* =====================================================
+   Render domain card
+===================================================== */
+function getRegistrarUrl(d) {
+  return `https://www.namecheap.com/domains/registration/results/?domain=${encodeURIComponent(d.full)}`;
+}
+
+function renderCard(domain, container) {
+  const isSaved = savedIds.has(domain.id);
+  const card = document.createElement('div');
+  card.className = 'domain-card fade-in';
+  card.dataset.id = domain.id;
+  if (domain.status === 'available') card.dataset.avail = 'true';
+
+  const registerBtn = domain.status === 'available'
+    ? `<a class="btn-register" href="${getRegistrarUrl(domain)}" target="_blank" rel="noopener" title="Register on Namecheap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+        Register
+       </a>`
+    : '';
+  const shareXUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(`Found ${domain.full} on Nomio. What a name! nomio.uk`)}`;
+  const sl = scoreLabel(domain.score || scoreD(domain));
+
+  card.innerHTML = `
+    <div class="card-top">
+      <span class="domain-name">${domain.name}<span class="domain-tld">${domain.tld}</span><span class="score-badge ${sl.cls}">${sl.label}</span></span>
+      <span class="status-badge status-${domain.status}">${cap(domain.status)}</span>
+    </div>
+    <div class="domain-meta">${domain.name.length + domain.tld.length} chars</div>
+    <div class="card-actions">
+      <button class="btn-save${isSaved ? ' saved' : ''}" data-id="${domain.id}">${isSaved ? 'Saved' : 'Save'}</button>
+      <button class="btn-copy-domain" data-domain="${domain.full}">Copy</button>
+      ${registerBtn}
+      <a class="btn-copy-domain" href="${shareXUrl}" target="_blank" rel="noopener" title="Share on X" style="display:inline-flex;align-items:center;gap:4px;text-decoration:none;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        Share
+      </a>
+      <button class="btn-starter">Starter</button>
+    </div>`;
+
+  card.querySelector('.btn-save').addEventListener('click', () => toggleSave(domain));
+  card.querySelector('.btn-copy-domain').addEventListener('click', e => {
+    const btn = e.currentTarget;
+    navigator.clipboard.writeText(domain.full).catch(() => {});
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1800);
+  });
+  card.querySelector('.btn-starter').addEventListener('click', () => openStarter(domain));
+  container.appendChild(card);
+}
+
+function renderGrid(list) {
+  const grid = document.getElementById('domainGrid');
+  grid.innerHTML = '';
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-state">${showAvailOnly ? 'No available domains here. Try a different TLD or turn off the filter.' : 'No domains match this filter.'}</div>`;
+    return;
+  }
+  list.forEach(d => renderCard(d, grid));
+  const avail = list.filter(d => d.status === 'available').length;
+  document.getElementById('resultsMeta').textContent = `${list.length} names · ${avail} available`;
+}
+
+function renderSaved() {
+  const sec  = document.getElementById('savedSection');
+  const lbl  = document.getElementById('savedLabel');
+  const grid = document.getElementById('savedGrid');
+  if (!savedDomains.length) { sec.classList.remove('visible'); return; }
+  sec.classList.add('visible');
+  lbl.textContent = `Saved (${savedDomains.length})`;
+  grid.innerHTML = '';
+  savedDomains.forEach(d => renderCard(d, grid));
+}
+
+/* =====================================================
+   Save / unsave
+===================================================== */
+function toggleSave(domain) {
+  if (savedIds.has(domain.id)) {
+    savedIds.delete(domain.id);
+    savedDomains = savedDomains.filter(d => d.id !== domain.id);
+    showToast('Removed from saved');
+  } else {
+    savedIds.add(domain.id);
+    savedDomains.push(domain);
+    showToast('Saved');
+  }
+  persistSaved();
+  document.querySelectorAll(`.btn-save[data-id="${domain.id}"]`).forEach(btn => {
+    const on = savedIds.has(domain.id);
+    btn.textContent = on ? 'Saved' : 'Save';
+    btn.classList.toggle('saved', on);
+  });
+  renderSaved();
+}
+
+/* =====================================================
+   Generate flow
+===================================================== */
+/* =====================================================
+   Search history
+===================================================== */
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem('nomio-history') || '[]'); }
+  catch { return []; }
+}
+function saveHistory(kw) {
+  if (!kw || kw.length < 2) return;
+  const h = loadHistory().filter(x => x !== kw).slice(0, 4);
+  h.unshift(kw);
+  localStorage.setItem('nomio-history', JSON.stringify(h));
+}
+function renderHistory() {
+  const h = loadHistory();
+  const wrap = document.getElementById('searchHistory');
+  if (!wrap) return;
+  if (!h.length) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `<span class="history-label">Recent:</span>` +
+    h.map(kw => `<button class="history-chip">${kw}</button>`).join('');
+  wrap.querySelectorAll('.history-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('keywordInput').value = btn.textContent;
+      generate();
+    });
+  });
+}
+
+function skeletonHTML() {
+  const card = () => `<div class="skeleton-card">
+    <div class="skeleton-line sk-big"></div>
+    <div class="skeleton-line sk-half"></div>
+    <div class="sk-actions">
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+    </div>
+  </div>`;
+  return `<div class="skeleton-grid">${Array(12).fill(0).map(card).join('')}</div>`;
+}
+
+function generate() {
+  const kw  = document.getElementById('keywordInput').value.trim() || 'build';
+  const btn = document.getElementById('generateBtn');
+  const sec = document.getElementById('resultsSection');
+  sec.classList.add('visible');
+  document.getElementById('domainGrid').innerHTML = skeletonHTML();
+  document.getElementById('resultsTitle').textContent = `Results for "${kw}"`;
+  document.getElementById('resultsMeta').textContent = '';
+  btn.disabled = true;
+  saveHistory(kw);
+  renderHistory();
+  setTimeout(() => {
+    allDomains = generateDomains(kw);
+    activeTld  = 'all';
+    document.querySelectorAll('.tld-btn').forEach(b => b.classList.toggle('active', b.dataset.tld === 'all'));
+    renderGrid(getDisplayList());
+    btn.disabled = false;
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 550);
+}
+
+/* =====================================================
+   Starter files
+===================================================== */
+const taglines = {
+  landing:   n => `The home for ${n}.`,
+  saas:      n => `${n} makes your workflow faster.`,
+  nextjs:    n => `${n} — built with Next.js.`,
+  directory: n => `Find everything on ${n}.`,
+  'ai-tool': n => `${n} puts AI to work.`,
+  chrome:    n => `${n} lives in your browser.`,
+};
+function getTag(name, tpl) { return (taglines[tpl.id] || (n => `${n}.`))(name); }
+
+function buildFiles(domain, tpl) {
+  const tag  = getTag(domain.name, tpl);
+  const L    = domain.name.charAt(0).toUpperCase();
+  const name = domain.name;
+  const full = domain.full;
+
+  const readme = `# ${name}\n\n${tag}\n\nLive: [${full}](https://${full})\n\nGenerated by [Nomio](https://nomio.uk).\n\n## Getting started\n\n\`\`\`bash\nnpm install\nnpm run dev\n\`\`\`\n`;
+
+  let mainFile, mainFileName, mainFileMime;
+  if (tpl.id === 'nextjs') {
+    mainFileName = 'pages/index.js';
+    mainFileMime = 'text/javascript';
+    mainFile = `// pages/index.js — Next.js starter for ${name}\nexport default function Home() {\n  return (\n    <main style={{fontFamily:'system-ui',display:'flex',alignItems:'center',justifyContent:'center',minHeight:'100vh'}}>\n      <div style={{textAlign:'center'}}>\n        <h1 style={{fontSize:'clamp(2rem,8vw,4rem)',fontWeight:800,letterSpacing:'-.04em'}}>${name}</h1>\n        <p style={{color:'#666',marginTop:'12px',fontSize:'1.1rem'}}>${tag}</p>\n      </div>\n    </main>\n  );\n}\n`;
+  } else if (tpl.id === 'chrome') {
+    mainFileName = 'popup.html';
+    mainFileMime = 'text/html';
+    mainFile = `<!DOCTYPE html>\n<html lang="en">\n<head><meta charset="UTF-8"/><title>${name}</title>\n<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;width:320px;padding:24px}h1{font-size:20px;font-weight:800;letter-spacing:-.03em}p{color:#666;font-size:13px;margin-top:8px}</style></head>\n<body><h1>${name}</h1><p>${tag}</p></body>\n</html>`;
+  } else {
+    mainFileName = 'index.html';
+    mainFileMime = 'text/html';
+    mainFile = `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8"/>\n  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>\n  <title>${name}</title>\n  <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#fff}h1{font-size:clamp(32px,8vw,64px);font-weight:800;letter-spacing:-.04em}p{color:#666;font-size:18px;margin-top:12px}</style>\n</head>\n<body><div style="text-align:center;padding:24px"><h1>${name}</h1><p>${tag}</p></div></body>\n</html>`;
+  }
+
+  const fav  = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#000"/><text x="16" y="23" font-family="system-ui" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">${L}</text></svg>`;
+  const logo = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="8" fill="#000"/><text x="32" y="45" font-family="system-ui" font-size="38" font-weight="700" fill="#fff" text-anchor="middle">${L}</text></svg>`;
+  const brand = JSON.stringify({ name, domain: full, tagline: tag, template: tpl.id, generated: new Date().toISOString().slice(0, 10) }, null, 2);
+
+  const files = [
+    { name: 'README.md',    content: readme,    mime: 'text/markdown' },
+    { name: mainFileName,   content: mainFile,  mime: mainFileMime },
+    { name: 'favicon.svg',  content: fav,       mime: 'image/svg+xml' },
+    { name: 'logo.svg',     content: logo,      mime: 'image/svg+xml' },
+    { name: 'brand.json',   content: brand,     mime: 'application/json' },
+  ];
+
+  if (tpl.id === 'chrome') {
+    const manifest = JSON.stringify({ manifest_version: 3, name, version: '1.0', description: tag, action: { default_popup: 'popup.html' } }, null, 2);
+    files.push({ name: 'manifest.json', content: manifest, mime: 'application/json' });
+  }
+
+  return files;
+}
+
+function gitCmds(domain) {
+  return `git init\ngit add .\ngit commit -m "Initial commit: ${domain.name}"\ngit branch -M main\ngit remote add origin https://github.com/YOUR_USERNAME/${domain.name.toLowerCase()}\ngit push -u origin main`;
+}
+function ghNewUrl(domain) {
+  return `https://github.com/new?name=${encodeURIComponent(domain.name.toLowerCase())}&description=${encodeURIComponent(getTag(domain.name, selectedTpl))}&visibility=public`;
+}
+
+/* =====================================================
+   Starter modal
+===================================================== */
+function openStarter(domain) {
+  currentDomain = domain; selectedTpl = TEMPLATES[0];
+  renderStarter();
+  document.getElementById('starterModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function renderStarter() {
+  const domain = currentDomain; const tpl = selectedTpl;
+  const files  = buildFiles(domain, tpl);
+  const cmds   = gitCmds(domain);
+  const tag    = getTag(domain.name, tpl);
+  const body   = document.getElementById('starterBody');
+
+  body.innerHTML = `
+    <div class="starter-row"><p class="field-label">Domain</p><p class="field-value">${domain.full}</p></div>
+    <div class="starter-row"><p class="field-label">Brand Name</p><p class="field-value">${domain.name}</p></div>
+    <div class="starter-row"><p class="field-label">Tagline</p><p class="field-value">${tag}</p></div>
+    <p class="field-label" style="margin-bottom:8px">Template</p>
+    <div class="template-grid" id="tplGrid">
+      ${TEMPLATES.map(t => `<div class="tpl-opt${t.id === tpl.id ? ' selected' : ''}" data-tid="${t.id}" role="button" tabindex="0">
+        <p class="tpl-name">${t.name}</p><p class="tpl-desc">${t.desc}</p>
+      </div>`).join('')}
+    </div>
+    <p class="field-label" style="margin-bottom:8px">Generated Files</p>
+    <div class="file-list">
+      ${files.map(f => `<div class="file-item"><span class="file-name">${f.name}</span><span class="file-size">${(f.content.length / 1024).toFixed(1)} KB</span></div>`).join('')}
+    </div>
+    <hr class="divider"/>
+    <div class="export-row">
+      <button class="btn-secondary" id="dlReadme">README</button>
+      <button class="btn-secondary" id="dlJson">brand.json</button>
+      <button class="btn-secondary" id="dlZip">Download ZIP</button>
+    </div>
+    <hr class="divider"/>
+    <p class="gh-title">GitHub Export</p>
+    <div class="gh-field"><p class="field-label">Repository Name</p><p class="gh-value">${domain.name.toLowerCase()}</p></div>
+    <div class="gh-field"><p class="field-label">Suggested Description</p><p class="gh-value">${tag}</p></div>
+    <p class="field-label" style="margin-bottom:6px">Push Commands</p>
+    <div class="code-block">${cmds}</div>
+    <div class="gh-actions">
+      <button class="btn-copy" id="copyGit">Copy Commands</button>
+      <a class="btn-gh-create" href="${ghNewUrl(domain)}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        Create on GitHub
+      </a>
+    </div>`;
+
+  body.querySelectorAll('.tpl-opt').forEach(opt => {
+    const sel = () => { selectedTpl = TEMPLATES.find(t => t.id === opt.dataset.tid); renderStarter(); };
+    opt.addEventListener('click', sel);
+    opt.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sel(); } });
+  });
+  body.querySelector('#dlReadme').addEventListener('click', () => dlFile('README.md', files[0].content, files[0].mime));
+  body.querySelector('#dlJson').addEventListener('click',   () => { const f = files.find(x => x.name === 'brand.json'); dlFile(f.name, f.content, f.mime); });
+  body.querySelector('#dlZip').addEventListener('click',    () => dlZip(domain, files));
+  body.querySelector('#copyGit').addEventListener('click',  e => copyText(cmds, e.currentTarget));
+}
+
+/* =====================================================
+   Downloads
+===================================================== */
+function dlFile(name, content, mime) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type: mime }));
+  a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  showToast(`Downloading ${name}`);
+}
+async function dlZip(domain, files) {
+  const btn = document.getElementById('dlZip');
+  btn.textContent = 'Creating…'; btn.disabled = true;
+  try {
+    if (typeof JSZip === 'undefined') throw new Error('no jszip');
+    const zip = new JSZip();
+    files.forEach(f => zip.file(f.name, f.content));
+    const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${domain.name.toLowerCase()}-starter.zip`;
+    a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    showToast('ZIP downloaded');
+  } catch {
+    dlFile(`${domain.name.toLowerCase()}-starter.txt`,
+      files.map(f => `=== ${f.name} ===\n${f.content}`).join('\n\n'), 'text/plain');
+  } finally {
+    btn.textContent = 'Download ZIP'; btn.disabled = false;
+  }
+}
+async function copyText(text, btn) {
+  const orig = btn.textContent;
+  try { await navigator.clipboard.writeText(text); }
+  catch {
+    const ta = Object.assign(document.createElement('textarea'), { value: text, style: 'position:fixed;opacity:0' });
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  btn.textContent = 'Copied!'; btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1800);
+}
+
+/* =====================================================
+   Events
+===================================================== */
+document.getElementById('generateBtn').addEventListener('click', generate);
+document.getElementById('keywordInput').addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
+
+// / to focus search
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    e.preventDefault();
+    document.getElementById('keywordInput').focus();
+  }
+  if (e.key === 'Escape') { closeStarter(); closeAbout(); }
+});
+
+document.getElementById('chips').addEventListener('click', e => {
+  const chip = e.target.closest('.chip'); if (!chip) return;
+  if (activeCategory === chip.dataset.cat) {
+    activeCategory = null; chip.classList.remove('active');
+  } else {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active'); activeCategory = chip.dataset.cat;
+    const inp = document.getElementById('keywordInput');
+    if (!inp.value.trim()) inp.value = chip.dataset.cat.toLowerCase().split(' ')[0];
+  }
+});
+
+document.getElementById('tldFilters').addEventListener('click', e => {
+  const btn = e.target.closest('.tld-btn'); if (!btn) return;
+  activeTld = btn.dataset.tld;
+  document.querySelectorAll('.tld-btn').forEach(b => b.classList.toggle('active', b === btn));
+  if (allDomains.length) renderGrid(getDisplayList());
+});
+
+document.getElementById('availToggle').addEventListener('click', () => {
+  showAvailOnly = !showAvailOnly;
+  document.getElementById('availToggle').classList.toggle('active-avail', showAvailOnly);
+  if (allDomains.length) renderGrid(getDisplayList());
+});
+
+document.getElementById('sortBtn').addEventListener('click', () => {
+  sortBest = !sortBest;
+  document.getElementById('sortBtn').classList.toggle('active-sort', sortBest);
+  if (allDomains.length) renderGrid(getDisplayList());
+});
+
+document.getElementById('regenerateBtn').addEventListener('click', () => {
+  const kw = document.getElementById('keywordInput').value.trim() || 'build';
+  const grid = document.getElementById('domainGrid');
+  grid.innerHTML = `<div class="generating"><span class="dot-pulse">Regenerating</span></div>`;
+  setTimeout(() => {
+    allDomains = generateDomains(kw);
+    activeTld = 'all';
+    document.querySelectorAll('.tld-btn').forEach(b => b.classList.toggle('active', b.dataset.tld === 'all'));
+    renderGrid(getDisplayList());
+  }, 500);
+});
+
+document.getElementById('clearSaved').addEventListener('click', () => {
+  if (!savedDomains.length) return;
+  savedDomains = []; savedIds.clear(); persistSaved();
+  renderSaved(); showToast('Saved list cleared');
+});
+
+document.getElementById('closeStarter').addEventListener('click', closeStarter);
+document.getElementById('starterModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeStarter(); });
+function closeStarter() { document.getElementById('starterModal').classList.remove('open'); document.body.style.overflow = ''; }
+
+document.getElementById('openAbout').addEventListener('click', () => { document.getElementById('aboutModal').classList.add('open'); document.body.style.overflow = 'hidden'; });
+document.getElementById('closeAbout').addEventListener('click', closeAbout);
+document.getElementById('aboutModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeAbout(); });
+function closeAbout() { document.getElementById('aboutModal').classList.remove('open'); document.body.style.overflow = ''; }
+
+// Restore saved + history on load
+renderSaved();
+renderHistory();
+</script>
+</body>
+</html>
