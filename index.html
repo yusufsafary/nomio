@@ -16,14 +16,11 @@
   <meta property="og:image" content="https://nomio.uk/og.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='black'/%3E%3Cpath d='M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z' fill='white'/%3E%3C/svg%3E" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
 
   <style>
-    /* ============================================================
-       Reset & Tokens
-    ============================================================ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -35,11 +32,15 @@
       --g400:   #a3a3a3;
       --g600:   #525252;
       --g800:   #262626;
-      --radius: 7px;
+      --radius: 8px;
       --font:         'Plus Jakarta Sans', system-ui, sans-serif;
       --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
       --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
       --ease:         cubic-bezier(.4,0,.2,1);
+      --ease-spring:  cubic-bezier(.22,1,.36,1);
+      /* accent gradient */
+      --grad: linear-gradient(135deg, #0a0a0a 0%, #3b3b3b 100%);
+      --glow: 0 0 60px rgba(0,0,0,.08), 0 2px 20px rgba(0,0,0,.06);
     }
 
     [data-theme="dark"] {
@@ -51,6 +52,7 @@
       --g400:   #5a5a5a;
       --g600:   #a0a0a0;
       --g800:   #d0d0d0;
+      --glow: 0 0 60px rgba(255,255,255,.04), 0 2px 20px rgba(0,0,0,.4);
     }
 
     html { font-size: 16px; scroll-behavior: smooth; }
@@ -60,29 +62,29 @@
       color: var(--black);
       line-height: 1.55;
       -webkit-font-smoothing: antialiased;
-      transition: background .2s var(--ease), color .2s var(--ease);
+      transition: background .25s var(--ease), color .25s var(--ease);
     }
     p { color: var(--g600); }
     button { font-family: var(--font); cursor: pointer; }
     a { color: inherit; }
 
-    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+    .container { max-width: 980px; margin: 0 auto; padding: 0 24px; }
 
     /* ============================================================
-       Header
+       Header — upgraded with subtle glow line
     ============================================================ */
     header {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,.95);
-      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(20px) saturate(180%);
       border-bottom: 1px solid var(--g200);
-      transition: background .2s var(--ease), border-color .2s var(--ease);
+      transition: background .25s var(--ease), border-color .25s var(--ease);
     }
-    [data-theme="dark"] header { background: rgba(13,13,13,.95); }
+    [data-theme="dark"] header { background: rgba(13,13,13,.92); }
 
     .header-inner {
       display: flex; align-items: center; justify-content: space-between;
-      height: 56px;
+      height: 58px;
     }
     .logo {
       display: flex; align-items: center; gap: 10px;
@@ -96,21 +98,21 @@
       display: flex; align-items: center; gap: 5px;
       background: none; border: none; text-decoration: none;
       font-family: var(--font); font-size: 14px; font-weight: 500;
-      color: var(--g600); padding: 6px 10px;
-      border-radius: 6px; transition: color .15s, background .15s;
+      color: var(--g600); padding: 6px 12px;
+      border-radius: 8px; transition: color .15s, background .15s;
       white-space: nowrap;
     }
     .nav-link:hover { color: var(--black); background: var(--g100); }
     .nav-link svg { width: 14px; height: 14px; flex-shrink: 0; }
 
     .theme-toggle {
-      width: 34px; height: 34px;
+      width: 36px; height: 36px;
       display: flex; align-items: center; justify-content: center;
-      background: none; border: 1.5px solid var(--g200); border-radius: 8px;
+      background: none; border: 1.5px solid var(--g200); border-radius: 9px;
       color: var(--g600); cursor: pointer;
-      transition: border-color .15s, color .15s, background .15s;
+      transition: border-color .15s, color .15s, background .15s, transform .15s;
     }
-    .theme-toggle:hover { border-color: var(--black); color: var(--black); background: var(--g100); }
+    .theme-toggle:hover { border-color: var(--black); color: var(--black); background: var(--g100); transform: rotate(15deg); }
     .theme-toggle svg { width: 15px; height: 15px; }
     .icon-sun  { display: none; }
     .icon-moon { display: block; }
@@ -121,104 +123,158 @@
        Page switcher
     ============================================================ */
     .page { display: none; }
-    .page.active { display: block; }
+    .page.active { display: block; animation: pageFadeIn .35s var(--ease-spring) both; }
+    @keyframes pageFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
     /* ============================================================
-       Hero
+       HERO — SPECTACULAR UPGRADE
     ============================================================ */
     .hero {
-      padding: 80px 0 64px;
+      position: relative;
+      padding: 100px 0 80px;
       border-bottom: 1px solid var(--g200);
+      overflow: hidden;
     }
+
+    /* Animated mesh background */
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      overflow: hidden;
+    }
+    .hero-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.07;
+      animation: orbFloat 12s ease-in-out infinite;
+    }
+    .hero-orb-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, #000 0%, transparent 70%);
+      top: -200px; right: -100px;
+      animation-duration: 14s;
+    }
+    .hero-orb-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #555 0%, transparent 70%);
+      bottom: -100px; left: -50px;
+      animation-duration: 10s; animation-delay: -4s;
+    }
+    [data-theme="dark"] .hero-orb { opacity: 0.15; }
+    [data-theme="dark"] .hero-orb-1 { background: radial-gradient(circle, #fff 0%, transparent 70%); }
+    [data-theme="dark"] .hero-orb-2 { background: radial-gradient(circle, #aaa 0%, transparent 70%); }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%  { transform: translate(30px, -20px) scale(1.05); }
+      66%  { transform: translate(-20px, 15px) scale(0.97); }
+    }
+
+    /* Floating domain pills in background */
+    .hero-pills {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      overflow: hidden;
+    }
+    .hero-pill {
+      position: absolute;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+      color: var(--g400); background: var(--g50);
+      border: 1px solid var(--g200); border-radius: 100px;
+      padding: 4px 12px; white-space: nowrap;
+      opacity: 0; animation: pillFloat 20s ease-in-out infinite;
+    }
+    @keyframes pillFloat {
+      0%   { opacity: 0; transform: translateY(30px); }
+      10%  { opacity: 0.6; }
+      80%  { opacity: 0.4; }
+      100% { opacity: 0; transform: translateY(-60px); }
+    }
+
+    .hero .container { position: relative; z-index: 1; }
+
+    /* Eyebrow label */
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--g400);
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--black); animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
+    }
+
     .hero h1 {
       font-family: var(--font-display);
-      font-size: clamp(36px, 6vw, 68px);
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      line-height: 1.08;
-      margin-bottom: 20px;
+      font-size: clamp(44px, 7vw, 80px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.04;
+      margin-bottom: 24px;
       color: var(--black);
     }
-    .hero p {
-      font-size: 16px; line-height: 1.7;
-      margin-bottom: 44px; max-width: 420px;
+    .hero h1 .h1-line2 {
+      display: block;
+      background: linear-gradient(90deg, var(--black) 0%, var(--g600) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    [data-theme="dark"] .hero h1 .h1-line2 {
+      background: linear-gradient(90deg, #f0f0f0 0%, #888 100%);
+      -webkit-background-clip: text; background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 17px; line-height: 1.7;
+      margin-bottom: 48px; max-width: 480px;
       color: var(--g600);
     }
 
-    /* ============================================================
-       Partner strip
-    ============================================================ */
-    .partners-strip {
-      border-bottom: 1px solid var(--g200);
-      padding: 28px 0;
-      overflow: hidden;
-    }
-    .partners-label {
-      font-size: 11px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .1em;
-      color: var(--g400); text-align: center;
-      margin-bottom: 20px;
-    }
-    .partners-track-wrap { overflow: hidden; }
-    .partners-track {
-      display: flex; align-items: center; gap: 48px;
-      animation: scroll-left 22s linear infinite;
-      width: max-content;
-    }
-    .partners-track:hover { animation-play-state: paused; }
-
-    @keyframes scroll-left {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    .partner-item {
-      display: flex; align-items: center; gap: 8px;
-      text-decoration: none; color: var(--g400);
-      font-size: 13px; font-weight: 600;
-      filter: grayscale(1); opacity: .5;
-      transition: filter .2s, opacity .2s; white-space: nowrap;
-    }
-    .partner-item:hover { filter: grayscale(0); opacity: 1; }
-    .partner-item img {
-      width: 22px; height: 22px;
-      object-fit: contain; border-radius: 4px;
-    }
-
-    /* ============================================================
-       Search
-    ============================================================ */
-    .search-block { display: flex; flex-direction: column; gap: 16px; }
+    /* Search block — upgraded */
+    .search-block { display: flex; flex-direction: column; gap: 16px; max-width: 620px; }
     .input-row {
       display: flex; gap: 0;
-      border: 1.5px solid var(--g200); border-radius: 14px;
+      border: 1.5px solid var(--g200); border-radius: 16px;
       overflow: hidden; background: var(--white);
-      box-shadow: 0 2px 20px rgba(0,0,0,.05);
-      transition: border-color .2s, box-shadow .2s;
+      box-shadow: 0 4px 32px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04);
+      transition: border-color .2s, box-shadow .25s;
     }
     .input-row:focus-within {
       border-color: var(--black);
-      box-shadow: 0 0 0 3px rgba(0,0,0,.07), 0 2px 20px rgba(0,0,0,.07);
+      box-shadow: 0 0 0 3px rgba(0,0,0,.08), 0 8px 40px rgba(0,0,0,.10);
     }
-    [data-theme="dark"] .input-row:focus-within { box-shadow: 0 0 0 3px rgba(255,255,255,.1); }
+    [data-theme="dark"] .input-row { box-shadow: 0 4px 32px rgba(0,0,0,.4); }
+    [data-theme="dark"] .input-row:focus-within { box-shadow: 0 0 0 3px rgba(255,255,255,.1), 0 8px 40px rgba(0,0,0,.5); }
+
     .keyword-input {
-      flex: 1; height: 62px;
+      flex: 1; height: 66px;
       border: none;
-      font-family: var(--font); font-size: 16px; padding: 0 22px;
+      font-family: var(--font); font-size: 17px; font-weight: 500; padding: 0 24px;
       outline: none; background: transparent; color: var(--black);
     }
-    .keyword-input::placeholder { color: var(--g400); }
+    .keyword-input::placeholder { color: var(--g400); font-weight: 400; }
 
     .btn-primary {
-      height: 62px; padding: 0 30px;
+      height: 66px; padding: 0 32px;
       background: var(--black); color: var(--white);
       border: none; border-radius: 0;
-      font-size: 14px; font-weight: 600; white-space: nowrap;
-      letter-spacing: -.01em; transition: opacity .15s;
-      border-left: 1.5px solid rgba(255,255,255,.08);
+      font-size: 14px; font-weight: 700; white-space: nowrap;
+      letter-spacing: -.01em; transition: opacity .15s, background .2s;
+      border-left: 1.5px solid rgba(255,255,255,.1);
+      position: relative; overflow: hidden;
     }
-    .btn-primary:hover  { opacity: .82; }
-    .btn-primary:active { opacity: .65; }
+    .btn-primary::after {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(255,255,255,.1); opacity: 0;
+      transition: opacity .15s;
+    }
+    .btn-primary:hover::after { opacity: 1; }
+    .btn-primary:active { opacity: .8; }
     .btn-primary:disabled { opacity: .38; cursor: not-allowed; }
 
     .btn-secondary {
@@ -242,7 +298,7 @@
     }
 
     /* ============================================================
-       Chips
+       Chips — upgraded pill style
     ============================================================ */
     .categories { display: flex; flex-wrap: wrap; gap: 8px; }
     .chip {
@@ -250,23 +306,88 @@
       display: inline-flex; align-items: center;
       border: 1.5px solid var(--g200); border-radius: 100px;
       font-size: 13px; font-weight: 500; color: var(--g600);
-      background: var(--white); transition: all .15s; user-select: none;
+      background: var(--white); transition: all .18s; user-select: none;
+      cursor: pointer;
     }
-    .chip:hover { border-color: var(--black); color: var(--black); }
-    .chip.active { background: var(--black); color: var(--white); border-color: var(--black); }
+    .chip:hover { border-color: var(--black); color: var(--black); transform: translateY(-1px); }
+    .chip.active {
+      background: var(--black); color: var(--white); border-color: var(--black);
+      box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    }
+
+    /* ============================================================
+       Stats strip — bigger and bolder
+    ============================================================ */
+    .stats-strip {
+      border-bottom: 1px solid var(--g200);
+      padding: 40px 0;
+      background: var(--g50);
+    }
+    [data-theme="dark"] .stats-strip { background: var(--g50); }
+    .stats-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 24px;
+    }
+    .stat-item { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; min-width: 120px; }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(30px, 4.5vw, 48px); font-weight: 800;
+      letter-spacing: -.05em; color: var(--black);
+      line-height: 1;
+    }
+    .stat-label { font-size: 12px; font-weight: 600; color: var(--g400); text-align: center; letter-spacing: .02em; text-transform: uppercase; }
+    .stat-divider { width: 1px; height: 48px; background: var(--g200); flex-shrink: 0; }
+    @media (max-width: 640px) { .stat-divider { display: none; } .stat-item { min-width: 80px; } }
+
+    /* ============================================================
+       Partner strip
+    ============================================================ */
+    .partners-strip {
+      border-bottom: 1px solid var(--g200);
+      padding: 28px 0;
+      overflow: hidden;
+    }
+    .partners-label {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--g400); text-align: center;
+      margin-bottom: 20px;
+    }
+    .partners-track-wrap { overflow: hidden; mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); }
+    .partners-track {
+      display: flex; align-items: center; gap: 48px;
+      animation: scroll-left 22s linear infinite;
+      width: max-content;
+    }
+    .partners-track:hover { animation-play-state: paused; }
+
+    @keyframes scroll-left {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .partner-item {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--g400);
+      font-size: 13px; font-weight: 600;
+      filter: grayscale(1); opacity: .45;
+      transition: filter .2s, opacity .2s, transform .2s; white-space: nowrap;
+    }
+    .partner-item:hover { filter: grayscale(0); opacity: 1; transform: scale(1.05); }
+    .partner-item img { width: 22px; height: 22px; object-fit: contain; border-radius: 4px; }
 
     /* ============================================================
        Results
     ============================================================ */
-    .results-section { padding: 56px 0; display: none; }
+    .results-section { padding: 64px 0; display: none; }
     .results-section.visible { display: block; }
     .results-header {
       display: flex; align-items: flex-start; justify-content: space-between;
-      margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 12px;
     }
     .results-title {
       font-family: var(--font-display);
-      font-size: 20px; font-weight: 700; letter-spacing: -.035em;
+      font-size: 22px; font-weight: 800; letter-spacing: -.04em;
       color: var(--black);
     }
     .results-meta  { font-size: 13px; color: var(--g400); margin-top: 3px; }
@@ -298,28 +419,32 @@
 
     .domain-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(264px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
     }
 
     /* ============================================================
-       Domain card
+       Domain card — upgraded hover & layout
     ============================================================ */
     .domain-card {
-      border: 1.5px solid var(--g200); border-radius: var(--radius);
-      padding: 18px 18px 14px; background: var(--white);
-      display: flex; flex-direction: column; gap: 10px;
-      transition: border-color .15s, box-shadow .15s, background .2s;
+      border: 1.5px solid var(--g200); border-radius: 12px;
+      padding: 20px 20px 16px; background: var(--white);
+      display: flex; flex-direction: column; gap: 12px;
+      transition: border-color .2s, box-shadow .25s, transform .25s var(--ease-spring), background .2s;
     }
-    .domain-card:hover { border-color: #c0c0c0; box-shadow: 0 2px 16px rgba(0,0,0,.06); }
-    [data-theme="dark"] .domain-card:hover { box-shadow: 0 2px 16px rgba(0,0,0,.4); border-color: var(--g400); }
+    .domain-card:hover {
+      border-color: #b0b0b0;
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-4px);
+    }
+    [data-theme="dark"] .domain-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,.5); border-color: var(--g400); }
 
     .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-    .domain-name { font-size: 16px; font-weight: 700; letter-spacing: -.025em; word-break: break-all; color: var(--black); }
+    .domain-name { font-size: 17px; font-weight: 800; letter-spacing: -.03em; word-break: break-all; color: var(--black); }
     .domain-tld  { color: var(--g400); font-weight: 400; }
 
     .status-badge {
-      font-size: 10px; font-weight: 700; padding: 3px 8px;
+      font-size: 10px; font-weight: 700; padding: 3px 9px;
       border-radius: 100px; white-space: nowrap; flex-shrink: 0;
       letter-spacing: .04em; text-transform: uppercase;
     }
@@ -327,12 +452,22 @@
     .status-taken     { background: var(--g100); color: var(--g400); }
     .status-premium   { background: #fefce8; color: #854d0e; }
 
+    .score-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 26px; height: 18px; padding: 0 5px;
+      border-radius: 5px; font-size: 10px; font-weight: 800; letter-spacing: .02em;
+      margin-left: 5px; vertical-align: middle;
+    }
+    .score-a { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .score-b { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+    .score-c { background: var(--g100); color: var(--g400); border: 1px solid var(--g200); }
+
     .domain-meta { font-size: 10px; font-weight: 600; color: var(--g400); font-family: var(--font-mono); }
 
     .card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
     .btn-save {
-      height: 32px; padding: 0 12px;
-      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      height: 30px; padding: 0 12px;
+      border: 1.5px solid var(--g200); border-radius: 7px;
       font-size: 12px; font-weight: 500; color: var(--g600);
       background: var(--white); transition: all .15s;
     }
@@ -340,8 +475,8 @@
     .btn-save.saved { border-color: var(--black); color: var(--black); font-weight: 700; background: var(--g50); }
 
     .btn-copy-domain {
-      height: 32px; padding: 0 12px;
-      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      height: 30px; padding: 0 12px;
+      border: 1.5px solid var(--g200); border-radius: 7px;
       font-size: 12px; font-weight: 500; color: var(--g600);
       background: var(--white); transition: all .15s;
     }
@@ -349,8 +484,8 @@
     .btn-copy-domain.copied { border-color: #166534; color: #166534; background: #edfbee; }
 
     .btn-register {
-      height: 32px; padding: 0 12px;
-      border: 1.5px solid #86efac; border-radius: var(--radius);
+      height: 30px; padding: 0 12px;
+      border: 1.5px solid #86efac; border-radius: 7px;
       font-size: 12px; font-weight: 600; color: #166534;
       background: #edfbee; display: flex; align-items: center; gap: 4px;
       text-decoration: none; transition: all .15s;
@@ -359,19 +494,19 @@
     .btn-register svg { width: 10px; height: 10px; }
 
     .btn-starter {
-      height: 32px; padding: 0 12px;
-      border: none; border-radius: var(--radius);
-      font-size: 12px; font-weight: 600; color: var(--white);
-      background: var(--black); transition: opacity .15s;
+      height: 30px; padding: 0 12px;
+      border: none; border-radius: 7px;
+      font-size: 12px; font-weight: 700; color: var(--white);
+      background: var(--black); transition: opacity .15s, transform .15s;
     }
-    .btn-starter:hover { opacity: .76; }
+    .btn-starter:hover { opacity: .8; transform: scale(1.03); }
 
     /* ============================================================
        Saved section
     ============================================================ */
     .saved-section { padding: 40px 0 0; display: none; }
     .saved-section.visible { display: block; }
-    .saved-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .saved-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
     .section-label {
       font-size: 11px; font-weight: 700; text-transform: uppercase;
       letter-spacing: .08em; color: var(--g400);
@@ -383,35 +518,64 @@
     .btn-clear:hover { color: #dc2626; }
 
     /* ============================================================
-       Loading / empty
+       Loading / empty / skeleton
     ============================================================ */
     .generating {
       grid-column: 1/-1; text-align: center; padding: 60px 0;
       font-size: 14px; color: var(--g400);
     }
-    .dot-pulse::after {
-      content: ''; animation: dots 1.4s infinite;
-    }
-    @keyframes dots {
-      0%  { content: '.'; }
-      33% { content: '..'; }
-      66% { content: '...'; }
-    }
+    .dot-pulse::after { content: ''; animation: dots 1.4s infinite; }
+    @keyframes dots { 0%{content:'.';} 33%{content:'..';} 66%{content:'...';} }
     .empty-state { grid-column: 1/-1; text-align: center; padding: 60px 0; font-size: 14px; color: var(--g400); }
+
+    .skeleton-grid { display: contents; }
+    .skeleton-card {
+      border: 1.5px solid var(--g200); border-radius: 12px;
+      padding: 20px; background: var(--white); display: flex; flex-direction: column; gap: 10px;
+    }
+    .skeleton-line {
+      height: 12px; background: var(--g100); border-radius: 6px;
+      animation: shimmer 1.5s ease-in-out infinite;
+    }
+    .sk-big { height: 20px; width: 70%; }
+    .sk-half { width: 35%; }
+    .sk-actions { display: flex; gap: 8px; }
+    .sk-actions .skeleton-line { width: 60px; flex-shrink: 0; }
+    @keyframes shimmer {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .4; }
+    }
+
+    /* Search history chips */
+    .search-history { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .history-label { font-size: 11px; color: var(--g400); font-weight: 600; }
+    .history-chip {
+      height: 26px; padding: 0 10px;
+      border: 1px solid var(--g200); border-radius: 100px;
+      font-size: 11px; font-weight: 500; color: var(--g600);
+      background: var(--white); transition: all .12s; cursor: pointer;
+    }
+    .history-chip:hover { border-color: var(--black); color: var(--black); }
 
     /* ============================================================
        Modal
     ============================================================ */
     .modal-overlay {
       position: fixed; inset: 0; z-index: 200;
-      background: rgba(0,0,0,.5); backdrop-filter: blur(4px);
+      background: rgba(0,0,0,.55); backdrop-filter: blur(8px);
       display: none; align-items: center; justify-content: center; padding: 24px;
     }
-    .modal-overlay.open { display: flex; }
+    .modal-overlay.open { display: flex; animation: modalIn .2s var(--ease-spring) both; }
+    @keyframes modalIn { from { opacity: 0; } to { opacity: 1; } }
     .modal {
-      background: var(--white); border-radius: 14px;
-      width: 100%; max-width: 580px; max-height: 92vh; overflow-y: auto;
+      background: var(--white); border-radius: 16px;
+      width: 100%; max-width: 600px; max-height: 92vh; overflow-y: auto;
       border: 1.5px solid var(--g200);
+      animation: modalSlideIn .28s var(--ease-spring) both;
+    }
+    @keyframes modalSlideIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
     .modal-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -420,20 +584,20 @@
     }
     .modal-title {
       font-family: var(--font-display);
-      font-size: 18px; font-weight: 700; letter-spacing: -.03em;
+      font-size: 18px; font-weight: 800; letter-spacing: -.03em;
       color: var(--black);
     }
     .modal-close {
       width: 30px; height: 30px;
       display: flex; align-items: center; justify-content: center;
       border: none; background: var(--g100); border-radius: 50%;
-      font-size: 14px; color: var(--g600); transition: background .15s; flex-shrink: 0;
+      font-size: 14px; color: var(--g600); transition: background .15s, transform .15s; flex-shrink: 0;
     }
-    .modal-close:hover { background: var(--g200); color: var(--black); }
+    .modal-close:hover { background: var(--g200); color: var(--black); transform: rotate(90deg); }
     .modal-body { padding: 20px 28px 32px; }
 
     /* ============================================================
-       Starter modal internals
+       Starter modal internals — upgraded
     ============================================================ */
     .starter-row { margin-bottom: 20px; }
     .field-label {
@@ -443,19 +607,18 @@
     .field-value { font-size: 15px; font-weight: 700; letter-spacing: -.02em; color: var(--black); }
     .template-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 24px; }
     .tpl-opt {
-      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      border: 1.5px solid var(--g200); border-radius: 10px;
       padding: 12px 14px; cursor: pointer; transition: all .15s; user-select: none;
       background: var(--white);
     }
-    .tpl-opt:hover { border-color: var(--g800); }
-    .tpl-opt.selected { border-color: var(--black); background: var(--g50); }
-    .tpl-opt:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
+    .tpl-opt:hover { border-color: var(--g800); transform: translateY(-1px); }
+    .tpl-opt.selected { border-color: var(--black); background: var(--g50); box-shadow: 0 4px 12px rgba(0,0,0,.06); }
     .tpl-name { font-size: 13px; font-weight: 700; letter-spacing: -.01em; color: var(--black); }
     .tpl-desc { font-size: 11px; color: var(--g400); margin-top: 2px; }
     .file-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
     .file-item {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 14px; background: var(--g100); border-radius: var(--radius);
+      padding: 10px 14px; background: var(--g100); border-radius: 8px;
     }
     .file-name { font-size: 12px; font-weight: 500; font-family: var(--font-mono); color: var(--black); }
     .file-size { font-size: 11px; color: var(--g400); }
@@ -490,6 +653,41 @@
     .btn-gh-create:hover { opacity: .85; }
     .btn-gh-create svg { width: 14px; height: 14px; }
 
+    /* GitHub auto-create button */
+    .btn-gh-auto {
+      height: 36px; padding: 0 16px;
+      border: none; border-radius: var(--radius);
+      font-size: 12px; font-weight: 700; color: #fff;
+      background: linear-gradient(135deg, #238636, #196127);
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: opacity .15s, transform .15s; cursor: pointer;
+    }
+    .btn-gh-auto:hover { opacity: .9; transform: scale(1.02); }
+    .btn-gh-auto:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-gh-auto svg { width: 14px; height: 14px; }
+
+    /* Vercel deploy button */
+    .btn-vercel {
+      height: 36px; padding: 0 16px;
+      border: none; border-radius: var(--radius);
+      font-size: 12px; font-weight: 700; color: #fff;
+      background: #000;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: opacity .15s, transform .15s; cursor: pointer;
+    }
+    .btn-vercel:hover { opacity: .85; transform: scale(1.02); }
+    .btn-vercel:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-vercel svg { width: 14px; height: 14px; }
+
+    .deploy-status {
+      font-size: 12px; font-weight: 600; padding: 8px 14px;
+      border-radius: 8px; margin-top: 8px;
+      display: none;
+    }
+    .deploy-status.success { background: #edfbee; color: #166534; display: block; }
+    .deploy-status.error   { background: #fef2f2; color: #991b1b; display: block; }
+    .deploy-status.loading { background: var(--g100); color: var(--g600); display: block; }
+
     /* ============================================================
        About modal
     ============================================================ */
@@ -498,111 +696,146 @@
     .about-body p + p { margin-top: 14px; }
 
     /* ============================================================
-       TOKEN PAGE
+       TOKEN PAGE — spectacular upgrade
     ============================================================ */
-    .token-page { padding: 72px 0 100px; }
-    .token-hero { max-width: 680px; margin-bottom: 72px; }
-    .token-hero .token-eyebrow {
+    .token-page { padding: 80px 0 100px; }
+
+    .token-hero { max-width: 700px; margin-bottom: 80px; }
+    .token-eyebrow {
       display: inline-flex; align-items: center; gap: 8px;
       font-size: 12px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .1em; color: var(--g400); margin-bottom: 20px;
+      letter-spacing: .1em; color: var(--g400); margin-bottom: 24px;
     }
     .token-hero h1 {
       font-family: var(--font-display);
-      font-size: clamp(36px, 5vw, 60px);
-      font-weight: 800; letter-spacing: -.04em; line-height: 1.05;
+      font-size: clamp(38px, 5.5vw, 64px);
+      font-weight: 800; letter-spacing: -.04em; line-height: 1.04;
       color: var(--black); margin-bottom: 20px;
     }
-    .token-hero p { font-size: 17px; line-height: 1.75; color: var(--g600); max-width: 520px; }
+    .token-hero p { font-size: 17px; line-height: 1.75; color: var(--g600); max-width: 540px; }
 
+    /* Token mechanics — upgraded to big number blocks */
+    .token-mechanics { margin-bottom: 72px; }
+    .token-mechanics h2 {
+      font-family: var(--font-display);
+      font-size: 24px; font-weight: 800; letter-spacing: -.04em;
+      margin-bottom: 36px; color: var(--black);
+    }
+    .mechanic-row {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1px; background: var(--g200);
+      border-radius: 14px; overflow: hidden;
+    }
+    .mechanic-item {
+      padding: 28px 24px;
+      background: var(--white);
+      transition: background .2s;
+    }
+    .mechanic-item:hover { background: var(--g50); }
+    .mechanic-num {
+      font-family: var(--font-display);
+      font-size: 36px; font-weight: 800;
+      color: var(--black); margin-bottom: 6px; letter-spacing: -.05em;
+      line-height: 1;
+    }
+    .mechanic-label { font-size: 13px; font-weight: 700; color: var(--black); margin-bottom: 6px; }
+    .mechanic-desc  { font-size: 12px; color: var(--g400); line-height: 1.55; }
+
+    /* Token cards — upgraded */
     .token-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
-      gap: 20px; margin-bottom: 64px;
+      gap: 16px; margin-bottom: 72px;
     }
     .token-card {
-      border: 1.5px solid var(--g200); border-radius: 10px;
-      padding: 28px 24px; background: var(--white);
-      transition: background .2s, border-color .2s;
+      border: 1.5px solid var(--g200); border-radius: 14px;
+      padding: 30px 26px; background: var(--white);
+      transition: background .2s, border-color .2s, box-shadow .25s, transform .25s var(--ease-spring);
+    }
+    .token-card:hover {
+      border-color: #c0c0c0;
+      box-shadow: 0 8px 32px rgba(0,0,0,.07);
+      transform: translateY(-3px);
     }
     .token-card-icon {
-      width: 40px; height: 40px;
-      background: var(--g100); border-radius: 8px;
+      width: 44px; height: 44px;
+      background: var(--g100); border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
-    .token-card-icon svg { width: 20px; height: 20px; color: var(--black); }
+    .token-card-icon svg { width: 22px; height: 22px; color: var(--black); }
     .token-card h3 {
       font-family: var(--font-display);
-      font-size: 16px; font-weight: 700; letter-spacing: -.025em;
-      margin-bottom: 8px; color: var(--black);
+      font-size: 16px; font-weight: 800; letter-spacing: -.03em;
+      margin-bottom: 10px; color: var(--black);
     }
     .token-card p { font-size: 14px; line-height: 1.7; color: var(--g600); }
     .token-card .token-detail {
-      margin-top: 14px; font-size: 13px; font-weight: 600;
+      margin-top: 16px; font-size: 12px; font-weight: 700;
       color: var(--black); display: flex; align-items: center; gap: 6px;
+      font-family: var(--font-mono);
+      padding: 6px 10px; background: var(--g100); border-radius: 6px;
+      width: fit-content;
     }
 
+    /* Launch block */
     .token-launch {
-      border: 1.5px solid var(--black); border-radius: 10px;
-      padding: 36px 32px;
+      border: 1.5px solid var(--black); border-radius: 14px;
+      padding: 40px 36px;
       display: flex; align-items: center; justify-content: space-between;
-      gap: 24px; flex-wrap: wrap; margin-bottom: 64px;
+      gap: 24px; flex-wrap: wrap; margin-bottom: 72px;
+      background: var(--g50);
+      position: relative; overflow: hidden;
+    }
+    .token-launch::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--black);
     }
     .token-launch-left h2 {
       font-family: var(--font-display);
-      font-size: 22px; font-weight: 700; letter-spacing: -.035em;
-      margin-bottom: 8px; color: var(--black);
+      font-size: 24px; font-weight: 800; letter-spacing: -.04em;
+      margin-bottom: 10px; color: var(--black);
     }
-    .token-launch-left p { font-size: 15px; line-height: 1.65; max-width: 420px; }
+    .token-launch-left p { font-size: 15px; line-height: 1.65; max-width: 440px; }
 
-    .token-mechanics { margin-bottom: 64px; }
-    .token-mechanics h2 {
-      font-family: var(--font-display);
-      font-size: 22px; font-weight: 700; letter-spacing: -.035em;
-      margin-bottom: 32px; color: var(--black);
-    }
-    .mechanic-row {
-      display: flex;
-      border: 1.5px solid var(--g200); border-radius: 10px;
-      overflow: hidden; flex-wrap: wrap;
-    }
-    .mechanic-item {
-      flex: 1; min-width: 200px; padding: 24px;
-      border-right: 1px solid var(--g200);
-    }
-    .mechanic-item:last-child { border-right: none; }
-    .mechanic-num {
-      font-family: var(--font-display);
-      font-size: 30px; font-weight: 800;
-      color: var(--black); margin-bottom: 6px; letter-spacing: -.04em;
-    }
-    .mechanic-label { font-size: 13px; font-weight: 600; color: var(--black); margin-bottom: 4px; }
-    .mechanic-desc  { font-size: 12px; color: var(--g400); line-height: 1.5; }
-
+    /* FAQ */
     .token-faq { margin-bottom: 48px; }
     .token-faq h2 {
       font-family: var(--font-display);
-      font-size: 22px; font-weight: 700; letter-spacing: -.035em;
-      margin-bottom: 24px; color: var(--black);
+      font-size: 24px; font-weight: 800; letter-spacing: -.04em;
+      margin-bottom: 28px; color: var(--black);
     }
-    .faq-item { border-top: 1px solid var(--g200); padding: 20px 0; }
-    .faq-q { font-size: 15px; font-weight: 600; color: var(--black); margin-bottom: 8px; }
-    .faq-a { font-size: 14px; line-height: 1.7; color: var(--g600); }
+    .faq-item {
+      border-top: 1px solid var(--g200); padding: 22px 0;
+      cursor: pointer;
+    }
+    .faq-q {
+      font-size: 15px; font-weight: 700; color: var(--black);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px;
+    }
+    .faq-q svg { flex-shrink: 0; transition: transform .2s; }
+    .faq-item.open .faq-q svg { transform: rotate(180deg); }
+    .faq-a {
+      font-size: 14px; line-height: 1.7; color: var(--g600);
+      overflow: hidden; max-height: 0;
+      transition: max-height .3s ease, padding .3s;
+    }
+    .faq-item.open .faq-a { max-height: 200px; padding-top: 12px; }
 
     /* ============================================================
        Footer
     ============================================================ */
-    footer { border-top: 1px solid var(--g200); padding: 56px 0 32px; }
+    footer { border-top: 1px solid var(--g200); padding: 64px 0 36px; }
     .footer-grid {
       display: grid;
       grid-template-columns: 1.6fr 1fr 1fr 1fr;
       gap: 40px;
-      margin-bottom: 40px;
+      margin-bottom: 48px;
     }
     .footer-brand {
       font-family: var(--font-display);
-      font-size: 17px; font-weight: 800; letter-spacing: -.04em;
-      color: var(--black); margin-bottom: 6px;
+      font-size: 18px; font-weight: 800; letter-spacing: -.04em;
+      color: var(--black); margin-bottom: 8px;
     }
     .footer-tag   { font-size: 13px; color: var(--g400); line-height: 1.6; margin-bottom: 16px; }
     .footer-copy  { font-size: 12px; color: var(--g400); }
@@ -610,7 +843,7 @@
       font-size: 11px; font-weight: 700; text-transform: uppercase;
       letter-spacing: .09em; color: var(--g400); margin-bottom: 14px;
     }
-    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-links { display: flex; flex-direction: column; gap: 10px; }
     .footer-link {
       font-size: 13px; font-weight: 500; color: var(--g600);
       text-decoration: none; background: none; border: none;
@@ -629,7 +862,7 @@
     .footer-info-item { font-size: 13px; color: var(--g600); line-height: 1.55; }
     .footer-info-item strong { color: var(--black); font-weight: 600; display: block; font-size: 12px; }
     .footer-bottom {
-      border-top: 1px solid var(--g200); padding-top: 20px;
+      border-top: 1px solid var(--g200); padding-top: 22px;
       display: flex; align-items: center; justify-content: space-between;
       flex-wrap: wrap; gap: 12px;
     }
@@ -641,68 +874,29 @@
     @media (max-width: 480px) {
       .footer-grid { grid-template-columns: 1fr; gap: 24px; }
     }
-
     .badge-light { display: block; }
     .badge-dark  { display: none; }
     [data-theme="dark"] .badge-light { display: none; }
     [data-theme="dark"] .badge-dark  { display: block; }
 
     /* ============================================================
-       Animations
+       Animations — upgraded
     ============================================================ */
-    .fade-in { animation: fadeUp .32s cubic-bezier(.22,1,.36,1) both; }
+    .fade-in { animation: fadeUp .36s var(--ease-spring) both; }
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
+      from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
     .reveal {
-      opacity: 0; transform: translateY(20px);
-      transition: opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1);
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .6s var(--ease-spring), transform .6s var(--ease-spring);
     }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     .reveal-delay-1 { transition-delay: .08s; }
     .reveal-delay-2 { transition-delay: .16s; }
     .reveal-delay-3 { transition-delay: .24s; }
     .reveal-delay-4 { transition-delay: .32s; }
-
-    /* page transitions */
-    .page { display: none; animation: none; }
-    .page.active { display: block; animation: pageFadeIn .3s cubic-bezier(.22,1,.36,1) both; }
-    @keyframes pageFadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Hero gradient shimmer */
-    .hero { position: relative; overflow: hidden; }
-    .hero::before {
-      content: '';
-      position: absolute; inset: 0; z-index: 0;
-      background: radial-gradient(ellipse 80% 60% at 60% -20%, rgba(0,0,0,.04) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    [data-theme="dark"] .hero::before {
-      background: radial-gradient(ellipse 80% 60% at 60% -20%, rgba(255,255,255,.04) 0%, transparent 70%);
-    }
-    .hero .container { position: relative; z-index: 1; }
-
-    /* Animated generate button pulse */
-    @keyframes btnPulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(10,10,10,.18); }
-      50%      { box-shadow: 0 0 0 8px rgba(10,10,10,0); }
-    }
-    .btn-primary:not(:disabled):hover { animation: btnPulse .6s ease; }
-
-    /* Improved domain card */
-    .domain-card {
-      transition: border-color .2s, box-shadow .2s, transform .2s cubic-bezier(.22,1,.36,1), background .2s;
-    }
-    .domain-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 32px rgba(0,0,0,.09);
-    }
-    [data-theme="dark"] .domain-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.5); }
 
     /* Stagger cards */
     .domain-card:nth-child(1)  { animation-delay: .03s; }
@@ -711,49 +905,39 @@
     .domain-card:nth-child(4)  { animation-delay: .12s; }
     .domain-card:nth-child(5)  { animation-delay: .15s; }
     .domain-card:nth-child(6)  { animation-delay: .18s; }
-    .domain-card:nth-child(7)  { animation-delay: .21s; }
-    .domain-card:nth-child(8)  { animation-delay: .24s; }
-    .domain-card:nth-child(9)  { animation-delay: .27s; }
-    .domain-card:nth-child(n+10) { animation-delay: .3s; }
+    .domain-card:nth-child(n+7) { animation-delay: .21s; }
 
     /* ============================================================
-       Stats strip
+       Toast
     ============================================================ */
-    .stats-strip {
-      border-bottom: 1px solid var(--g200);
-      padding: 32px 0;
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--black); color: var(--white);
+      font-size: 13px; font-weight: 600;
+      padding: 10px 20px; border-radius: 100px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s, transform .25s var(--ease-spring);
+      z-index: 300; white-space: nowrap;
+      box-shadow: 0 8px 32px rgba(0,0,0,.25);
     }
-    .stats-inner {
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 24px;
-    }
-    .stat-item { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; min-width: 120px; }
-    .stat-num {
-      font-family: var(--font-display);
-      font-size: clamp(26px, 4vw, 38px); font-weight: 800;
-      letter-spacing: -.04em; color: var(--black);
-      line-height: 1;
-    }
-    .stat-label { font-size: 12px; font-weight: 500; color: var(--g400); text-align: center; }
-    .stat-divider { width: 1px; height: 40px; background: var(--g200); flex-shrink: 0; }
-    @media (max-width: 640px) { .stat-divider { display: none; } .stat-item { min-width: 80px; } }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* ============================================================
-       TEAM PAGE
+       TEAM PAGE — upgraded
     ============================================================ */
-    .team-page { padding: 72px 0 100px; }
+    .team-page { padding: 80px 0 100px; }
 
-    .team-hero { max-width: 600px; margin-bottom: 64px; }
+    .team-hero { max-width: 620px; margin-bottom: 72px; }
     .team-eyebrow {
       display: inline-flex; align-items: center; gap: 8px;
       font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .1em; color: var(--g400); margin-bottom: 18px;
+      letter-spacing: .1em; color: var(--g400); margin-bottom: 20px;
     }
     .team-hero h1 {
       font-family: var(--font-display);
-      font-size: clamp(34px, 5vw, 56px);
+      font-size: clamp(36px, 5.5vw, 60px);
       font-weight: 800; letter-spacing: -.04em; line-height: 1.06;
-      color: var(--black); margin-bottom: 16px;
+      color: var(--black); margin-bottom: 18px;
     }
     .team-hero p { font-size: 16px; line-height: 1.75; color: var(--g600); max-width: 480px; }
 
@@ -762,341 +946,187 @@
       letter-spacing: .1em; color: var(--g400); margin-bottom: 24px;
     }
 
-    /* Leadership */
-    .team-leadership { margin-bottom: 64px; }
+    .team-leadership { margin-bottom: 72px; }
     .team-leadership-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 20px;
     }
     .team-card {
-      border: 1.5px solid var(--g200); border-radius: 12px;
-      padding: 32px 28px;
+      border: 1.5px solid var(--g200); border-radius: 14px;
+      padding: 36px 30px;
       background: var(--white);
-      transition: border-color .2s, box-shadow .2s, transform .22s cubic-bezier(.22,1,.36,1), background .2s;
+      transition: border-color .2s, box-shadow .25s, transform .25s var(--ease-spring), background .2s;
       position: relative; overflow: hidden;
     }
-    .team-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: var(--black); opacity: 0;
-      transition: opacity .2s;
+    .team-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--black); opacity: 0; transition: opacity .2s;
     }
-    .team-card:hover { border-color: #c0c0c0; box-shadow: 0 8px 40px rgba(0,0,0,.08); transform: translateY(-2px); }
-    .team-card:hover::before { opacity: 1; }
-    [data-theme="dark"] .team-card:hover { box-shadow: 0 8px 40px rgba(0,0,0,.5); }
+    .team-card:hover { border-color: #b0b0b0; box-shadow: 0 12px 40px rgba(0,0,0,.08); transform: translateY(-3px); }
+    .team-card:hover::after { opacity: 1; }
+    [data-theme="dark"] .team-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,.5); }
 
     .team-card-founder { border-color: var(--g800); }
-    .team-card-founder::before { opacity: 1; }
+    .team-card-founder::after { opacity: 1; }
 
     .team-avatar {
-      width: 68px; height: 68px; border-radius: 50%;
+      width: 72px; height: 72px; border-radius: 50%;
       background: var(--g100); border: 2px solid var(--g200);
       display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display); font-size: 24px; font-weight: 800;
-      color: var(--black); margin-bottom: 20px;
+      font-family: var(--font-display); font-size: 26px; font-weight: 800;
+      color: var(--black); margin-bottom: 22px;
       overflow: hidden; flex-shrink: 0; position: relative;
     }
-    .team-card-founder .team-avatar {
-      background: var(--black); color: var(--white);
-      border-color: var(--black);
-    }
-    .team-avatar img {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover; border-radius: 50%;
-    }
+    .team-card-founder .team-avatar { border-color: var(--black); }
+    .team-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
     .team-role-badge {
       display: inline-flex; align-items: center; gap: 5px;
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .08em; padding: 4px 10px; border-radius: 100px;
-      margin-bottom: 12px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+      padding: 4px 10px; border-radius: 100px; margin-bottom: 14px;
     }
-    .badge-founder { background: var(--black); color: var(--white); }
-    .badge-cofounder { background: var(--g100); color: var(--g600); border: 1px solid var(--g200); }
+    .badge-founder   { background: #0a0a0a; color: #fff; }
+    .badge-cofounder { background: var(--g100); color: var(--g800); border: 1px solid var(--g200); }
 
-    .team-name {
-      font-family: var(--font-display);
-      font-size: 22px; font-weight: 800; letter-spacing: -.03em;
-      color: var(--black); margin-bottom: 4px;
-    }
-    .team-title { font-size: 13px; font-weight: 600; color: var(--g400); margin-bottom: 14px; }
-    .team-bio { font-size: 14px; line-height: 1.72; color: var(--g600); margin-bottom: 20px; }
-
-    .team-socials { display: flex; align-items: center; gap: 8px; }
+    .team-name  { font-size: 20px; font-weight: 800; letter-spacing: -.03em; color: var(--black); margin-bottom: 4px; }
+    .team-title { font-size: 13px; color: var(--g400); font-weight: 500; margin-bottom: 16px; }
+    .team-bio   { font-size: 14px; line-height: 1.7; color: var(--g600); margin-bottom: 20px; }
+    .team-socials { display: flex; gap: 8px; flex-wrap: wrap; }
     .team-x-link {
       display: inline-flex; align-items: center; gap: 6px;
-      text-decoration: none; color: var(--g600);
-      font-size: 13px; font-weight: 600;
-      padding: 6px 12px; border-radius: 8px;
-      border: 1.5px solid var(--g200);
-      transition: color .15s, border-color .15s, background .15s;
+      height: 34px; padding: 0 14px;
+      border: 1.5px solid var(--g200); border-radius: 8px;
+      font-size: 12px; font-weight: 600; color: var(--g600);
+      text-decoration: none; transition: all .15s;
     }
-    .team-x-link:hover { color: var(--black); border-color: var(--black); background: var(--g50); }
-    .team-x-link svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .team-x-link:hover { border-color: var(--black); color: var(--black); }
+    .team-x-link svg { width: 12px; height: 12px; }
 
-    /* Values section */
-    .team-values { margin-bottom: 64px; }
+    .team-values { margin-bottom: 72px; }
     .team-values-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
-      gap: 1px; border: 1px solid var(--g200); border-radius: 10px; overflow: hidden;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
     }
     .value-item {
-      padding: 24px; background: var(--white);
-      transition: background .2s;
+      padding: 24px; border: 1.5px solid var(--g200); border-radius: 12px;
+      background: var(--white); transition: all .2s;
     }
-    .value-item:hover { background: var(--g50); }
+    .value-item:hover { border-color: #c0c0c0; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.05); }
     .value-icon {
-      width: 36px; height: 36px; border-radius: 8px;
-      background: var(--g100); display: flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px;
+      background: var(--g100); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
       margin-bottom: 14px;
     }
     .value-icon svg { width: 18px; height: 18px; color: var(--black); }
-    .value-title { font-size: 14px; font-weight: 700; color: var(--black); margin-bottom: 6px; letter-spacing: -.01em; }
+    .value-title { font-size: 14px; font-weight: 800; letter-spacing: -.02em; color: var(--black); margin-bottom: 6px; }
     .value-desc  { font-size: 13px; line-height: 1.65; color: var(--g600); }
 
-    /* Join CTA */
     .team-join {
-      border: 1.5px solid var(--g200); border-radius: 12px;
-      padding: 40px 36px;
+      border: 1.5px solid var(--g200); border-radius: 14px;
+      padding: 40px 36px; background: var(--g50);
       display: flex; align-items: center; justify-content: space-between;
       gap: 24px; flex-wrap: wrap;
-      background: var(--g50);
     }
     .team-join h2 {
-      font-family: var(--font-display); font-size: 20px; font-weight: 800;
-      letter-spacing: -.03em; margin-bottom: 8px; color: var(--black);
+      font-family: var(--font-display);
+      font-size: 24px; font-weight: 800; letter-spacing: -.04em;
+      margin-bottom: 10px; color: var(--black);
     }
-    .team-join p { font-size: 14px; color: var(--g600); max-width: 380px; }
-    .team-join-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; flex-shrink: 0; }
-
-    @media (max-width: 640px) {
-      .team-leadership-grid { grid-template-columns: 1fr; }
-      .team-card { padding: 24px 20px; }
-      .team-join { flex-direction: column; align-items: flex-start; }
-    }
-
-    /* ============================================================
-       Toast
-    ============================================================ */
-    .toast {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: var(--black); color: var(--white);
-      font-size: 13px; font-weight: 500; padding: 10px 20px;
-      border-radius: 100px; z-index: 999;
-      opacity: 0; transition: opacity .2s; pointer-events: none; white-space: nowrap;
-    }
-    .toast.show { opacity: 1; }
-
-    /* ============================================================
-       Skeleton loader
-    ============================================================ */
-    .skeleton-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
-      gap: 12px;
-    }
-    .skeleton-card {
-      border: 1.5px solid var(--g200); border-radius: 8px;
-      padding: 18px 16px;
-    }
-    .skeleton-line {
-      border-radius: 4px; height: 12px; margin-bottom: 8px;
-      background: linear-gradient(90deg, var(--g100) 25%, var(--g50) 50%, var(--g100) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.4s ease-in-out infinite;
-    }
-    [data-theme="dark"] .skeleton-line {
-      background: linear-gradient(90deg, var(--g800) 25%, #333 50%, var(--g800) 75%);
-      background-size: 200% 100%;
-    }
-    .skeleton-line.sk-big   { height: 17px; margin-bottom: 10px; width: 70%; }
-    .skeleton-line.sk-half  { width: 45%; }
-    .skeleton-line.sk-third { width: 28%; }
-    .sk-actions { display: flex; gap: 6px; margin-top: 12px; }
-    .sk-actions .skeleton-line { height: 26px; width: 54px; margin-bottom: 0; border-radius: 6px; }
-    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
-
-    /* ============================================================
-       Domain score badge
-    ============================================================ */
-    .score-badge {
-      display: inline-flex; align-items: center;
-      font-size: 9px; font-weight: 800; letter-spacing: .05em;
-      padding: 2px 5px; border-radius: 4px; line-height: 1;
-      vertical-align: middle; margin-left: 5px;
-    }
-    .score-a { background: #dcfce7; color: #15803d; }
-    .score-b { background: #fef9c3; color: #92400e; }
-    .score-c { background: var(--g100); color: var(--g600); }
-    [data-theme="dark"] .score-a { background: #14532d; color: #86efac; }
-    [data-theme="dark"] .score-b { background: #451a03; color: #fde68a; }
-    [data-theme="dark"] .score-c { background: var(--g800); color: var(--g400); }
-
-    /* Available domain highlight */
-    .domain-card[data-avail="true"] {
-      border-left: 3px solid #22c55e;
-    }
-    [data-theme="dark"] .domain-card[data-avail="true"] { border-left-color: #16a34a; }
-
-    /* ============================================================
-       Brand button on domain cards
-    ============================================================ */
-    .btn-brand-card {
-      display: inline-flex; align-items: center; gap: 4px;
-      height: 30px; padding: 0 10px;
-      border: 1.5px solid var(--g200); border-radius: 6px;
-      font-size: 12px; font-weight: 600; color: var(--g600);
-      background: var(--white); cursor: pointer; font-family: var(--font);
-      transition: all .15s;
-    }
-    .btn-brand-card:hover { border-color: var(--black); color: var(--black); }
-    .btn-brand-card svg { width: 11px; height: 11px; }
+    .team-join p { font-size: 15px; line-height: 1.65; color: var(--g600); max-width: 440px; }
+    .team-join-actions { display: flex; gap: 10px; flex-shrink: 0; }
 
     /* ============================================================
        Brand Preview Modal
     ============================================================ */
-    #brandModal .modal {
-      max-width: 860px; width: 96vw; max-height: 93vh;
-      overflow: hidden; display: flex; flex-direction: column;
+    .brand-body { padding: 20px 24px 28px; }
+    .brand-layout {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
     }
-    .brand-body { overflow-y: auto; padding: 20px 28px 28px; flex: 1; }
+    @media (max-width: 560px) { .brand-layout { grid-template-columns: 1fr; } }
     .brand-section-label {
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .1em; color: var(--g400); margin-bottom: 12px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--g400); margin-bottom: 12px;
     }
-
-    /* 2-col layout */
-    .brand-layout { display: grid; grid-template-columns: 1fr 1.15fr; gap: 24px; }
-    @media (max-width: 660px) { .brand-layout { grid-template-columns: 1fr; } }
-
-    /* Logo variant grid */
-    .brand-logo-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; margin-bottom: 22px; }
+    .brand-logo-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
     .brand-logo-opt {
-      border: 2px solid var(--g200); border-radius: 10px;
-      padding: 14px 10px 10px; cursor: pointer;
-      display: flex; flex-direction: column; align-items: center; gap: 7px;
-      transition: border-color .15s, box-shadow .15s; background: var(--white);
+      border: 1.5px solid var(--g200); border-radius: 10px; padding: 12px;
+      cursor: pointer; transition: border-color .15s, background .15s;
+      display: flex; align-items: center; justify-content: space-between;
     }
-    .brand-logo-opt.bp-selected { border-color: var(--black); box-shadow: 0 0 0 1px var(--black); }
-    .brand-logo-opt:hover:not(.bp-selected) { border-color: var(--g400); }
-    .brand-logo-svg-wrap { width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    .brand-logo-svg-wrap svg { width: 100%; height: auto; max-height: 42px; }
-    .brand-logo-style-name { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--g400); }
+    .brand-logo-opt:hover { border-color: var(--g800); }
+    .brand-logo-opt.bp-selected { border-color: var(--black); background: var(--g50); }
+    .brand-logo-svg-wrap { max-width: 140px; overflow: hidden; }
+    .brand-logo-svg-wrap svg { width: 100%; height: auto; }
+    .brand-logo-style-name { font-size: 11px; font-weight: 600; color: var(--g400); white-space: nowrap; margin-left: 8px; }
 
-    /* Palette picker */
-    .brand-palette-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 22px; }
+    .brand-palette-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
     .brand-palette-opt {
-      border: 2px solid transparent; border-radius: 9px;
-      padding: 7px 10px; cursor: pointer;
-      display: flex; align-items: center; gap: 7px;
-      background: var(--g50); transition: border-color .15s;
+      border: 1.5px solid var(--g200); border-radius: 8px; padding: 8px 10px;
+      cursor: pointer; transition: border-color .15s; display: flex; align-items: center; gap: 6px;
     }
+    .brand-palette-opt:hover { border-color: var(--g800); }
     .brand-palette-opt.bp-selected { border-color: var(--black); }
-    .brand-palette-swatches { display: flex; }
-    .brand-palette-swatch {
-      width: 14px; height: 14px; border-radius: 50%;
-      margin-left: -4px; border: 2px solid var(--white);
-    }
-    .brand-palette-swatch:first-child { margin-left: 0; }
+    .brand-palette-swatches { display: flex; gap: 3px; }
+    .brand-palette-swatch { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(0,0,0,.08); }
     .brand-palette-name { font-size: 11px; font-weight: 600; color: var(--g600); }
 
-    /* Browser scene mockup */
-    .brand-scene-wrap { border: 1.5px solid var(--g200); border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+    .brand-meta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+    .brand-meta-item { flex: 1; min-width: 80px; }
+    .brand-meta-key { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--g400); margin-bottom: 3px; }
+    .brand-meta-val { font-size: 13px; font-weight: 600; color: var(--black); }
+
+    .brand-action-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-ba {
+      height: 34px; padding: 0 14px;
+      border: 1.5px solid var(--g200); border-radius: 8px;
+      font-size: 12px; font-weight: 600; color: var(--g600);
+      background: var(--white); display: inline-flex; align-items: center; gap: 5px;
+      cursor: pointer; transition: all .15s;
+    }
+    .btn-ba:hover { border-color: var(--black); color: var(--black); }
+    .btn-ba svg { width: 12px; height: 12px; }
+    .btn-ba-primary { background: var(--black); color: var(--white); border-color: var(--black); }
+    .btn-ba-primary:hover { opacity: .82; color: var(--white); }
+
+    .brand-scene-wrap {
+      border: 1.5px solid var(--g200); border-radius: 12px; overflow: hidden;
+    }
     .brand-scene-topbar {
-      background: var(--g50); padding: 7px 12px;
-      display: flex; align-items: center; gap: 9px;
-      border-bottom: 1px solid var(--g200);
+      height: 32px; background: var(--g100); border-bottom: 1px solid var(--g200);
+      display: flex; align-items: center; gap: 10px; padding: 0 12px;
     }
     .bs-traffic { display: flex; gap: 5px; }
-    .bs-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .bs-dot { width: 10px; height: 10px; border-radius: 50%; }
     .bs-addr {
-      flex: 1; height: 20px; background: var(--white);
-      border: 1px solid var(--g200); border-radius: 4px;
-      display: flex; align-items: center; padding: 0 8px;
-      font-size: 10px; font-family: var(--font-mono); color: var(--g400); gap: 4px;
+      display: flex; align-items: center; gap: 4px;
+      font-size: 10px; font-family: var(--font-mono); color: var(--g400);
     }
     .brand-scene-canvas {
-      padding: 40px 24px; min-height: 220px;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; transition: background .3s;
+      padding: 32px 20px; min-height: 160px; gap: 12px;
     }
-    .brand-scene-logo-inner svg { height: 44px; width: auto; display: block; }
-    .brand-scene-tagline { font-size: 13px; margin-top: 10px; transition: color .3s; font-weight: 400; }
+    .brand-scene-logo-inner { max-width: 180px; width: 100%; }
+    .brand-scene-logo-inner svg { width: 100%; height: auto; }
+    .brand-scene-tagline { font-size: 13px; text-align: center; }
     .brand-scene-cta {
-      margin-top: 18px; padding: 10px 24px;
-      border-radius: 8px; font-size: 13px; font-weight: 600;
-      border: none; cursor: default; transition: all .3s;
+      height: 36px; padding: 0 20px; border: none; border-radius: 8px;
+      font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer;
+      margin-top: 4px;
     }
-
-    /* Domain stats row */
-    .brand-meta-row {
-      display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
-    }
-    .brand-meta-item {
-      background: var(--g50); border: 1px solid var(--g200);
-      border-radius: 8px; padding: 10px 14px; flex: 1; min-width: 100px;
-    }
-    .brand-meta-key { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--g400); margin-bottom: 3px; }
-    .brand-meta-val { font-size: 16px; font-weight: 700; color: var(--black); letter-spacing: -.02em; }
-
-    /* Action row */
-    .brand-action-row { display: flex; gap: 9px; flex-wrap: wrap; }
-    .btn-ba {
-      height: 38px; padding: 0 16px;
-      border: 1.5px solid var(--g200); border-radius: 8px;
-      font-size: 13px; font-weight: 600; cursor: pointer;
-      font-family: var(--font); background: var(--white); color: var(--black);
-      display: inline-flex; align-items: center; gap: 6px; transition: all .15s;
-    }
-    .btn-ba:hover { border-color: var(--black); }
-    .btn-ba.btn-ba-primary { background: var(--black); color: var(--white); border-color: var(--black); }
-    .btn-ba.btn-ba-primary:hover { opacity: .82; }
-    .btn-ba svg { width: 13px; height: 13px; flex-shrink: 0; }
 
     /* ============================================================
-       Search history
-    ============================================================ */
-    .search-history {
-      display: flex; align-items: center; gap: 6px;
-      margin-top: 10px; flex-wrap: wrap; min-height: 0;
-    }
-    .search-history:empty { display: none; }
-    .history-label {
-      font-size: 11px; font-weight: 600; color: var(--g400);
-      text-transform: uppercase; letter-spacing: .07em; flex-shrink: 0;
-    }
-    .history-chip {
-      font-size: 12px; font-weight: 500; color: var(--g600);
-      background: var(--g50); border: 1px solid var(--g200);
-      border-radius: 100px; padding: 3px 10px; cursor: pointer;
-      font-family: var(--font); transition: color .13s, border-color .13s, background .13s;
-    }
-    .history-chip:hover { color: var(--black); border-color: var(--g400); background: var(--white); }
-
-    /* ============================================================
-       Mobile
+       Responsive
     ============================================================ */
     @media (max-width: 640px) {
-      .hero { padding: 52px 0 44px; }
-      .input-row { flex-direction: column; }
-      .btn-primary { height: 44px; }
-      .domain-grid { grid-template-columns: 1fr; }
-      .template-grid { grid-template-columns: 1fr; }
-      .results-header { flex-direction: column; align-items: flex-start; }
-      .results-right  { align-items: flex-start; }
-      .footer-inner { flex-direction: column; align-items: flex-start; }
-      .modal { border-radius: 10px; }
-      .modal-header { padding: 20px 20px 0; }
-      .modal-body { padding: 16px 20px 28px; }
-      .about-body { padding: 20px 20px 28px; }
-      .token-launch { flex-direction: column; }
-      .mechanic-item { border-right: none; border-bottom: 1px solid var(--g200); }
-      .mechanic-item:last-child { border-bottom: none; }
+      .hero { padding: 72px 0 56px; }
+      .hero h1 { font-size: clamp(36px, 10vw, 56px); }
       .nav-link span { display: none; }
-      .kbd-hint { display: none; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 36px; }
+      .hero-eyebrow { display: none; }
     }
   </style>
 </head>
@@ -1106,48 +1136,60 @@
 <header>
   <div class="container">
     <div class="header-inner">
-      <a href="#" class="logo" id="logoLink" aria-label="Nomio home">
-        <!-- N mark -->
-        <svg class="logo-mark" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect width="30" height="30" fill="var(--black)"/>
-          <path d="M5.5 5.5L5.5 24.5L10 24.5L10 13.5L20 24.5L24.5 24.5L24.5 5.5L20 5.5L20 16.5L10 5.5Z" fill="var(--white)"/>
+      <a class="logo" href="#" id="logoLink" aria-label="Nomio home">
+        <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" fill="var(--black)"/>
+          <path d="M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z" fill="var(--white)"/>
         </svg>
-        <!-- Custom SVG wordmark -->
-        <svg class="logo-wordmark" viewBox="0 0 86 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Nomio">
-          <path d="M1 1h3.2L10.4 13V1h3V17H10.2L4 5.2V17H1V1z" fill="var(--black)"/>
-          <path d="M16.5 9c0-4.6 2.4-7.4 6.5-7.4s6.5 2.8 6.5 7.4-2.4 7.4-6.5 7.4S16.5 13.6 16.5 9zm10 0c0-3.1-1.2-4.8-3.5-4.8S19.5 5.9 19.5 9s1.2 4.8 3.5 4.8 3.5-1.7 3.5-4.8z" fill="var(--black)"/>
-          <path d="M33 1.8h2.8l.2 1.6c.8-1.2 2-1.8 3.4-1.8 1.5 0 2.6.7 3.2 1.9.8-1.2 2.1-1.9 3.6-1.9 2.6 0 4 1.6 4 4.6V17h-2.9V6.5c0-1.6-.7-2.5-2-2.5-1.4 0-2.2 1-2.2 2.7V17h-2.9V6.5c0-1.6-.7-2.5-2-2.5-1.4 0-2.2 1-2.2 2.7V17H33V1.8z" fill="var(--black)"/>
-          <path d="M55 0a1.8 1.8 0 110 3.6A1.8 1.8 0 0155 0zm-1.4 5.6h2.9V17h-2.9V5.6z" fill="var(--black)"/>
-          <path d="M60.5 11.3c0-3.6 2.1-5.9 5.5-5.9s5.5 2.3 5.5 5.9-2.1 5.9-5.5 5.9-5.5-2.3-5.5-5.9zm8.1 0c0-2.2-.9-3.5-2.6-3.5s-2.6 1.3-2.6 3.5.9 3.5 2.6 3.5 2.6-1.3 2.6-3.5z" fill="var(--black)"/>
-        </svg>
+        <span style="font-size:17px;font-weight:800;letter-spacing:-.04em">Nomio</span>
       </a>
 
-      <div class="nav-right">
-        <button class="nav-link" id="navTeam" aria-label="Team page">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="18" cy="9" r="2.5"/><path d="M15.5 20c0-2.5 1.8-4.5 4-4.8"/></svg>
-          <span>Team</span>
-        </button>
-        <button class="nav-link" id="navToken" aria-label="Token page">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M14.5 7.5H10a2.5 2.5 0 100 5h4a2.5 2.5 0 110 5H9.5"/><path d="M12 6v1.5M12 16.5V18"/></svg>
+      <nav class="nav-right">
+        <button class="nav-link" id="navToken">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.5 7.5H10a2.5 2.5 0 100 5h4a2.5 2.5 0 110 5H9.5"/><path d="M12 6v1.5M12 16.5V18"/></svg>
           <span>Token</span>
         </button>
-        <button class="nav-link" id="openAbout" aria-label="About Nomio">About</button>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-          <svg class="icon-sun"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <button class="nav-link" id="navTeam">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="18" cy="9" r="2.5"/><path d="M15.5 20c0-2.5 1.8-4.5 4-4.8"/></svg>
+          <span>Team</span>
         </button>
-      </div>
+        <button class="nav-link" id="openAbout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <span>About</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        </button>
+      </nav>
     </div>
   </div>
 </header>
 
+<!-- ===================== PAGES ===================== -->
+<main>
+
 <!-- ===================== PAGE: HOME ===================== -->
 <div class="page active" id="pageHome">
 
+  <!-- HERO — UPGRADED -->
   <section class="hero">
+    <!-- Animated background -->
+    <div class="hero-bg">
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+    </div>
+    <!-- Floating domain pills -->
+    <div class="hero-pills" id="heroPills"></div>
+
     <div class="container">
-      <h1>Find a name.<br>Start a project.</h1>
-      <p>Discover brandable domains and generate project starters in minutes. No fluff, just the tools to get moving.</p>
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        Domain name generator &amp; project starter
+      </div>
+
+      <h1>Find a name.<br><span class="h1-line2">Start a project.</span></h1>
+      <p class="hero-desc">Discover brandable domains and generate project starters in minutes. No fluff, just the tools to get moving.</p>
 
       <div class="search-block">
         <div class="input-row">
@@ -1273,16 +1315,16 @@
   <div class="container">
     <div class="token-page">
 
-      <div class="token-hero">
+      <div class="token-hero reveal">
         <div class="token-eyebrow">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M14.5 7.5H10a2.5 2.5 0 100 5h4a2.5 2.5 0 110 5H9.5"/><path d="M12 6v1.5M12 16.5V18"/></svg>
           $NOMIO Token
         </div>
-        <h1>Own a piece of the name economy.</h1>
+        <h1>Own a piece of the<br>name economy.</h1>
         <p>Nomio is where builders go to find names and ship projects. $NOMIO is how that community grows together — powering access, rewarding contribution, and getting rarer with every transaction.</p>
       </div>
 
-      <div class="token-mechanics">
+      <div class="token-mechanics reveal">
         <h2>How it works</h2>
         <div class="mechanic-row">
           <div class="mechanic-item">
@@ -1301,7 +1343,7 @@
             <div class="mechanic-desc">Every time someone buys premium access, 10% of the $NOMIO used is permanently removed from circulation. No exceptions, no overrides.</div>
           </div>
           <div class="mechanic-item">
-            <div class="mechanic-num">+$NOMIO</div>
+            <div class="mechanic-num">+$NOM</div>
             <div class="mechanic-label">Rewards for builders</div>
             <div class="mechanic-desc">Active users earn $NOMIO back through referrals, daily usage, and community contributions. The more you build, the more you earn.</div>
           </div>
@@ -1309,7 +1351,7 @@
       </div>
 
       <div class="token-grid">
-        <div class="token-card">
+        <div class="token-card reveal reveal-delay-1">
           <div class="token-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
           </div>
@@ -1317,7 +1359,7 @@
           <p>The free tier gets you a solid set of domain ideas every day. Premium goes further: trademark proximity checks, smarter name scoring, and extended starter kits ready to push to GitHub.</p>
           <div class="token-detail">$10 = 10 premium generations</div>
         </div>
-        <div class="token-card">
+        <div class="token-card reveal reveal-delay-2">
           <div class="token-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12L6 18M12 12l6 6M20 4H4"/></svg>
           </div>
@@ -1325,7 +1367,7 @@
           <p>10% of every premium purchase is burned automatically and immediately. There is no manual process, no team approval. It just disappears. Every transaction makes the remaining supply a little smaller.</p>
           <div class="token-detail">10% burn on every purchase</div>
         </div>
-        <div class="token-card">
+        <div class="token-card reveal reveal-delay-3">
           <div class="token-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
           </div>
@@ -1333,7 +1375,7 @@
           <p>Nomio rewards the people who actually use it. Refer a builder who goes premium, you earn. Stay active every week, you earn. Get featured as a top contributor, you earn more. Simple.</p>
           <div class="token-detail">Referrals, usage, contributions</div>
         </div>
-        <div class="token-card">
+        <div class="token-card reveal reveal-delay-4">
           <div class="token-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
           </div>
@@ -1343,37 +1385,37 @@
         </div>
       </div>
 
-      <div class="token-launch">
+      <div class="token-launch reveal">
         <div class="token-launch-left">
           <h2>$NOMIO launches on EasyA Kickstart</h2>
-          <p>EasyA Kickstart is where community-driven crypto projects get their start. That is where $NOMIO will be listed first. Follow <a href="https://x.com/lucasreedxx" target="_blank" rel="noopener" style="color:var(--black);font-weight:600;text-decoration:underline;text-underline-offset:3px;">@lucasreedxx</a> for the exact date.</p>
+          <p>EasyA Kickstart is where community-driven crypto projects get their start. That is where $NOMIO will be listed first. Follow <a href="https://x.com/lucasreedxx" target="_blank" rel="noopener" style="color:var(--black);font-weight:700;text-decoration:underline;text-underline-offset:3px;">@lucasreedxx</a> for the exact date.</p>
         </div>
-        <a href="https://kickstart.easya.io/" target="_blank" rel="noopener" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;height:48px;padding:0 24px;flex-shrink:0;">
+        <a href="https://kickstart.easya.io/" target="_blank" rel="noopener" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;height:52px;padding:0 28px;border-radius:12px;flex-shrink:0;font-weight:700;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
           View on EasyA Kickstart
         </a>
       </div>
 
-      <div class="token-faq">
+      <div class="token-faq reveal">
         <h2>Questions</h2>
         <div class="faq-item">
-          <p class="faq-q">When does $NOMIO launch?</p>
+          <p class="faq-q">When does $NOMIO launch? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></p>
           <p class="faq-a">We are not giving a hard date yet. What we know is the listing will happen on EasyA Kickstart. Follow @lucasreedxx on X and you will know as soon as we do.</p>
         </div>
         <div class="faq-item">
-          <p class="faq-q">What is the total supply?</p>
+          <p class="faq-q">What is the total supply? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></p>
           <p class="faq-a">We are not releasing supply figures before the launch. The burn mechanics are designed to make that number go down over time regardless of where it starts. We will share more details closer to the Kickstart listing.</p>
         </div>
         <div class="faq-item">
-          <p class="faq-q">Do I need $NOMIO to use Nomio?</p>
+          <p class="faq-q">Do I need $NOMIO to use Nomio? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></p>
           <p class="faq-a">No. The free tier works without any token. $NOMIO unlocks premium features — deeper generation, better scoring, extended starters. You only need it if you want more.</p>
         </div>
         <div class="faq-item">
-          <p class="faq-q">How does the burn actually work?</p>
+          <p class="faq-q">How does the burn actually work? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></p>
           <p class="faq-a">When you pay for a premium pack, 90% of the $NOMIO you spend goes to the platform and 10% is sent to a dead wallet automatically. It is written into the transaction logic. There is no team involved in triggering it.</p>
         </div>
         <div class="faq-item">
-          <p class="faq-q">Can I earn $NOMIO without buying it?</p>
+          <p class="faq-q">Can I earn $NOMIO without buying it? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></p>
           <p class="faq-a">Yes. Nomio has a rewards layer for active builders. Referring someone who goes premium earns you $NOMIO. Consistent weekly usage earns small amounts. Top contributors get featured and earn more. We will publish the full reward structure with the launch.</p>
         </div>
       </div>
@@ -1396,12 +1438,9 @@
         <p>Nomio was born from a genuine frustration with slow, overcrowded domain tools. We are a small founding team that builds and uses what we make, every day.</p>
       </div>
 
-      <!-- Leadership -->
       <div class="team-leadership">
         <p class="team-section-label reveal">Leadership</p>
         <div class="team-leadership-grid">
-
-          <!-- Lucas Reed — Founder -->
           <div class="team-card team-card-founder reveal reveal-delay-1">
             <div class="team-avatar">
               <img src="https://unavatar.io/twitter/lucasreedxx" alt="Lucas Reed" onerror="this.remove()"/>L</div>
@@ -1420,7 +1459,6 @@
             </div>
           </div>
 
-          <!-- Alexander Rothr — Co-Founder -->
           <div class="team-card reveal reveal-delay-2">
             <div class="team-avatar">
               <img src="https://unavatar.io/twitter/AlexanderRothr" alt="Alexander Rothr" onerror="this.remove()"/>A</div>
@@ -1435,11 +1473,9 @@
               </a>
             </div>
           </div>
-
         </div>
       </div>
 
-      <!-- Values -->
       <div class="team-values reveal">
         <p class="team-section-label" style="margin-bottom:20px">What we stand for</p>
         <div class="team-values-grid">
@@ -1474,7 +1510,6 @@
         </div>
       </div>
 
-      <!-- Join CTA -->
       <div class="team-join reveal">
         <div>
           <h2>Want to build with us?</h2>
@@ -1496,15 +1531,11 @@
 <footer>
   <div class="container">
     <div class="footer-grid">
-
-      <!-- Col 1: Brand -->
       <div>
         <div class="footer-brand">Nomio</div>
         <div class="footer-tag">Find a name.<br>Start a project.</div>
         <div class="footer-copy">nomio.uk</div>
       </div>
-
-      <!-- Col 2: Product links -->
       <div>
         <div class="footer-col-label">Product</div>
         <div class="footer-links">
@@ -1514,23 +1545,19 @@
           <button class="footer-link" id="footerAbout">About</button>
         </div>
       </div>
-
-      <!-- Col 3: Follow -->
       <div>
         <div class="footer-col-label">Follow</div>
         <div class="footer-links">
-          <a class="footer-x" href="https://x.com/lucasreedxx" target="_blank" rel="noopener" aria-label="Lucas Reed on X">
+          <a class="footer-x" href="https://x.com/lucasreedxx" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             @lucasreedxx
           </a>
-          <a class="footer-x" href="https://x.com/AlexanderRothr" target="_blank" rel="noopener" aria-label="Alexander Rothr on X">
+          <a class="footer-x" href="https://x.com/AlexanderRothr" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             @AlexanderRothr
           </a>
         </div>
       </div>
-
-      <!-- Col 4: Pricing & Hours -->
       <div>
         <div class="footer-col-label">Info</div>
         <div class="footer-info-row">
@@ -1544,7 +1571,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
     <div class="footer-bottom">
@@ -1559,9 +1585,11 @@
   </div>
 </footer>
 
+</main>
+
 <!-- ===================== BRAND PREVIEW MODAL ===================== -->
 <div class="modal-overlay" id="brandModal" role="dialog" aria-modal="true" aria-labelledby="brandModalTitle">
-  <div class="modal">
+  <div class="modal" style="max-width:680px">
     <div class="modal-header">
       <div style="display:flex;align-items:baseline;gap:10px;">
         <span class="modal-title" id="brandModalTitle">Brand Preview</span>
@@ -1621,6 +1649,24 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 });
 
 /* =====================================================
+   Hero floating pills
+===================================================== */
+(function initHeroPills() {
+  const pills = ['nova.io','flux.ai','arc.dev','core.app','nexthq.co','buildio.app','launchpad.dev','forge.io','mesh.ai','edge.co'];
+  const container = document.getElementById('heroPills');
+  pills.forEach((text, i) => {
+    const el = document.createElement('span');
+    el.className = 'hero-pill';
+    el.textContent = text;
+    el.style.left = (5 + Math.random() * 85) + '%';
+    el.style.top  = (10 + Math.random() * 70) + '%';
+    el.style.animationDelay = (i * 2.1) + 's';
+    el.style.animationDuration = (16 + Math.random() * 8) + 's';
+    container.appendChild(el);
+  });
+})();
+
+/* =====================================================
    Partners
 ===================================================== */
 const PARTNERS = [
@@ -1664,6 +1710,17 @@ document.getElementById('footerAbout').addEventListener('click', () => {
 });
 
 /* =====================================================
+   FAQ accordion
+===================================================== */
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+/* =====================================================
    Scroll reveal (IntersectionObserver)
 ===================================================== */
 const revealObserver = new IntersectionObserver((entries) => {
@@ -1673,11 +1730,11 @@ const revealObserver = new IntersectionObserver((entries) => {
       revealObserver.unobserve(el.target);
     }
   });
-}, { threshold: 0.12 });
+}, { threshold: 0.10 });
 
 function attachReveal() {
   document.querySelectorAll('.reveal').forEach(el => {
-    revealObserver.observe(el);
+    if (!el.classList.contains('visible')) revealObserver.observe(el);
   });
 }
 attachReveal();
@@ -1687,11 +1744,10 @@ attachReveal();
 ===================================================== */
 function animateCount(el, target, duration) {
   const start = performance.now();
-  const from = 0;
   function step(now) {
     const t = Math.min((now - start) / duration, 1);
     const ease = 1 - Math.pow(1 - t, 3);
-    el.textContent = Math.round(from + (target - from) * ease);
+    el.textContent = Math.round(target * ease);
     if (t < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
@@ -1701,8 +1757,7 @@ const statObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.querySelectorAll('.stat-num[data-count]').forEach(el => {
-        const target = parseInt(el.dataset.count, 10);
-        animateCount(el, target, 900);
+        animateCount(el, parseInt(el.dataset.count, 10), 900);
       });
       statObserver.unobserve(entry.target);
     }
@@ -1795,10 +1850,7 @@ function showToast(msg) {
 }
 
 /* =====================================================
-   Domain generation
-===================================================== */
-/* =====================================================
-   Domain scoring
+   Domain generation & scoring
 ===================================================== */
 function scoreD(d) {
   const TLD_SCORE = { '.com':30, '.io':22, '.ai':22, '.app':18, '.co':18, '.dev':18, '.xyz':10, '.net':12, '.fun':10 };
@@ -1893,8 +1945,7 @@ function renderCard(domain, container) {
     ? `<a class="btn-register" href="${getRegistrarUrl(domain)}" target="_blank" rel="noopener" title="Register on Namecheap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
         Register
-       </a>`
-    : '';
+       </a>` : '';
   const shareXUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(`Found ${domain.full} on Nomio. What a name! nomio.uk`)}`;
   const sl = scoreLabel(domain.score || scoreD(domain));
 
@@ -1976,9 +2027,6 @@ function toggleSave(domain) {
   renderSaved();
 }
 
-/* =====================================================
-   Generate flow
-===================================================== */
 /* =====================================================
    Search history
 ===================================================== */
@@ -2064,16 +2112,13 @@ function buildFiles(domain, tpl) {
 
   let mainFile, mainFileName, mainFileMime;
   if (tpl.id === 'nextjs') {
-    mainFileName = 'pages/index.js';
-    mainFileMime = 'text/javascript';
+    mainFileName = 'pages/index.js'; mainFileMime = 'text/javascript';
     mainFile = `// pages/index.js — Next.js starter for ${name}\nexport default function Home() {\n  return (\n    <main style={{fontFamily:'system-ui',display:'flex',alignItems:'center',justifyContent:'center',minHeight:'100vh'}}>\n      <div style={{textAlign:'center'}}>\n        <h1 style={{fontSize:'clamp(2rem,8vw,4rem)',fontWeight:800,letterSpacing:'-.04em'}}>${name}</h1>\n        <p style={{color:'#666',marginTop:'12px',fontSize:'1.1rem'}}>${tag}</p>\n      </div>\n    </main>\n  );\n}\n`;
   } else if (tpl.id === 'chrome') {
-    mainFileName = 'popup.html';
-    mainFileMime = 'text/html';
+    mainFileName = 'popup.html'; mainFileMime = 'text/html';
     mainFile = `<!DOCTYPE html>\n<html lang="en">\n<head><meta charset="UTF-8"/><title>${name}</title>\n<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;width:320px;padding:24px}h1{font-size:20px;font-weight:800;letter-spacing:-.03em}p{color:#666;font-size:13px;margin-top:8px}</style></head>\n<body><h1>${name}</h1><p>${tag}</p></body>\n</html>`;
   } else {
-    mainFileName = 'index.html';
-    mainFileMime = 'text/html';
+    mainFileName = 'index.html'; mainFileMime = 'text/html';
     mainFile = `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8"/>\n  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>\n  <title>${name}</title>\n  <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#fff}h1{font-size:clamp(32px,8vw,64px);font-weight:800;letter-spacing:-.04em}p{color:#666;font-size:18px;margin-top:12px}</style>\n</head>\n<body><div style="text-align:center;padding:24px"><h1>${name}</h1><p>${tag}</p></div></body>\n</html>`;
   }
 
@@ -2093,7 +2138,6 @@ function buildFiles(domain, tpl) {
     const manifest = JSON.stringify({ manifest_version: 3, name, version: '1.0', description: tag, action: { default_popup: 'popup.html' } }, null, 2);
     files.push({ name: 'manifest.json', content: manifest, mime: 'application/json' });
   }
-
   return files;
 }
 
@@ -2102,6 +2146,39 @@ function gitCmds(domain) {
 }
 function ghNewUrl(domain) {
   return `https://github.com/new?name=${encodeURIComponent(domain.name.toLowerCase())}&description=${encodeURIComponent(getTag(domain.name, selectedTpl))}&visibility=public`;
+}
+
+/* =====================================================
+   GitHub auto-create (uses backend API with token)
+===================================================== */
+async function ghAutoCreate(domain, files, btnEl, statusEl) {
+  btnEl.disabled = true; btnEl.textContent = 'Creating repo…';
+  statusEl.className = 'deploy-status loading'; statusEl.textContent = 'Creating GitHub repository…';
+
+  const repoFiles = files.map(f => ({ path: f.name, content: f.content }));
+  try {
+    const res = await fetch('/api/nomio/github/create-repo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        repoName: domain.name.toLowerCase(),
+        description: getTag(domain.name, selectedTpl),
+        files: repoFiles,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    statusEl.className = 'deploy-status success';
+    statusEl.innerHTML = `Repo created: <a href="${data.repoUrl}" target="_blank" rel="noopener" style="color:#166534;font-weight:700;text-decoration:underline">${data.repoName}</a>`;
+    showToast('GitHub repo created!');
+  } catch (err) {
+    statusEl.className = 'deploy-status error';
+    statusEl.textContent = 'Error: ' + (err.message || 'Failed to create repo');
+    showToast('GitHub create failed');
+  } finally {
+    btnEl.disabled = false;
+    btnEl.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg> Auto-Create Repo`;
+  }
 }
 
 /* =====================================================
@@ -2149,10 +2226,15 @@ function renderStarter() {
     <div class="gh-actions">
       <button class="btn-copy" id="copyGit">Copy Commands</button>
       <a class="btn-gh-create" href="${ghNewUrl(domain)}" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-        Create on GitHub
+        <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        Open GitHub
       </a>
-    </div>`;
+      <button class="btn-gh-auto" id="ghAutoBtn">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        Auto-Create Repo
+      </button>
+    </div>
+    <div class="deploy-status" id="ghStatus"></div>`;
 
   body.querySelectorAll('.tpl-opt').forEach(opt => {
     const sel = () => { selectedTpl = TEMPLATES.find(t => t.id === opt.dataset.tid); renderStarter(); };
@@ -2163,6 +2245,11 @@ function renderStarter() {
   body.querySelector('#dlJson').addEventListener('click',   () => { const f = files.find(x => x.name === 'brand.json'); dlFile(f.name, f.content, f.mime); });
   body.querySelector('#dlZip').addEventListener('click',    () => dlZip(domain, files));
   body.querySelector('#copyGit').addEventListener('click',  e => copyText(cmds, e.currentTarget));
+  body.querySelector('#ghAutoBtn').addEventListener('click', () => {
+    const btn = body.querySelector('#ghAutoBtn');
+    const statusEl = body.querySelector('#ghStatus');
+    ghAutoCreate(domain, files, btn, statusEl);
+  });
 }
 
 /* =====================================================
@@ -2212,13 +2299,12 @@ async function copyText(text, btn) {
 document.getElementById('generateBtn').addEventListener('click', generate);
 document.getElementById('keywordInput').addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
 
-// / to focus search
 document.addEventListener('keydown', e => {
   if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
     e.preventDefault();
     document.getElementById('keywordInput').focus();
   }
-  if (e.key === 'Escape') { closeStarter(); closeAbout(); }
+  if (e.key === 'Escape') { closeStarter(); closeAbout(); closeBrand(); }
 });
 
 document.getElementById('chips').addEventListener('click', e => {
@@ -2255,7 +2341,7 @@ document.getElementById('sortBtn').addEventListener('click', () => {
 document.getElementById('regenerateBtn').addEventListener('click', () => {
   const kw = document.getElementById('keywordInput').value.trim() || 'build';
   const grid = document.getElementById('domainGrid');
-  grid.innerHTML = `<div class="generating"><span class="dot-pulse">Regenerating</span></div>`;
+  grid.innerHTML = skeletonHTML();
   setTimeout(() => {
     allDomains = generateDomains(kw);
     activeTld = 'all';
@@ -2295,27 +2381,14 @@ function makeBrandLogo(name, initial, style, pal) {
   const P = pal.primary, A = pal.accent, B = pal.bg;
   const textFill = pal.dark ? '#ffffff' : '#0a0a0a';
   const n = name.length > 10 ? name.slice(0, 10) : name;
-
   if (style === 0) {
-    return `<svg viewBox="0 0 220 66" xmlns="http://www.w3.org/2000/svg">
-      <rect x="1" y="1" width="64" height="64" rx="14" fill="${P}"/>
-      <text x="33" y="45" text-anchor="middle" font-family="system-ui,sans-serif" font-size="32" font-weight="900" fill="${B}">${initial}</text>
-      <text x="78" y="37" font-family="system-ui,sans-serif" font-size="21" font-weight="800" letter-spacing="-0.04em" fill="${textFill}">${n}</text>
-    </svg>`;
+    return `<svg viewBox="0 0 220 66" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="64" height="64" rx="14" fill="${P}"/><text x="33" y="45" text-anchor="middle" font-family="system-ui,sans-serif" font-size="32" font-weight="900" fill="${B}">${initial}</text><text x="78" y="37" font-family="system-ui,sans-serif" font-size="21" font-weight="800" letter-spacing="-0.04em" fill="${textFill}">${n}</text></svg>`;
   }
   if (style === 1) {
-    return `<svg viewBox="0 0 220 66" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="33" cy="33" r="30" fill="none" stroke="${P}" stroke-width="3.5"/>
-      <circle cx="33" cy="33" r="19" fill="${P}"/>
-      <text x="33" y="40" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" font-weight="900" fill="${B}">${initial}</text>
-      <text x="77" y="39" font-family="system-ui,sans-serif" font-size="21" font-weight="800" letter-spacing="-0.04em" fill="${textFill}">${n}</text>
-    </svg>`;
+    return `<svg viewBox="0 0 220 66" xmlns="http://www.w3.org/2000/svg"><circle cx="33" cy="33" r="30" fill="none" stroke="${P}" stroke-width="3.5"/><circle cx="33" cy="33" r="19" fill="${P}"/><text x="33" y="40" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" font-weight="900" fill="${B}">${initial}</text><text x="77" y="39" font-family="system-ui,sans-serif" font-size="21" font-weight="800" letter-spacing="-0.04em" fill="${textFill}">${n}</text></svg>`;
   }
   const wLength = Math.min(n.length * 15, 195);
-  return `<svg viewBox="0 0 220 66" xmlns="http://www.w3.org/2000/svg">
-    <text x="10" y="50" font-family="system-ui,sans-serif" font-size="42" font-weight="900" letter-spacing="-0.05em" fill="${P}">${n}</text>
-    <rect x="10" y="58" width="${wLength}" height="4" rx="2" fill="${A}"/>
-  </svg>`;
+  return `<svg viewBox="0 0 220 66" xmlns="http://www.w3.org/2000/svg"><text x="10" y="50" font-family="system-ui,sans-serif" font-size="42" font-weight="900" letter-spacing="-0.05em" fill="${P}">${n}</text><rect x="10" y="58" width="${wLength}" height="4" rx="2" fill="${A}"/></svg>`;
 }
 
 let brandDomain = null, brandStyle = 0, brandPalIdx = 0;
@@ -2345,9 +2418,7 @@ function renderBrandPreview() {
 
   const paletteHTML = BRAND_PALETTES.map((p, i) => `
     <div class="brand-palette-opt${i === brandPalIdx ? ' bp-selected' : ''}" data-bpal="${i}">
-      <div class="brand-palette-swatches">
-        ${p.swatches.map(c => `<div class="brand-palette-swatch" style="background:${c}"></div>`).join('')}
-      </div>
+      <div class="brand-palette-swatches">${p.swatches.map(c => `<div class="brand-palette-swatch" style="background:${c}"></div>`).join('')}</div>
       <span class="brand-palette-name">${p.name}</span>
     </div>`).join('');
 
@@ -2362,48 +2433,22 @@ function renderBrandPreview() {
         <p class="brand-section-label">Color Palette</p>
         <div class="brand-palette-row" id="bPaletteRow">${paletteHTML}</div>
         <div class="brand-meta-row">
-          <div class="brand-meta-item">
-            <div class="brand-meta-key">Domain</div>
-            <div class="brand-meta-val" style="font-size:14px">${d.full}</div>
-          </div>
-          <div class="brand-meta-item">
-            <div class="brand-meta-key">Score</div>
-            <div class="brand-meta-val"><span class="score-badge ${sl.cls}" style="font-size:13px;padding:3px 8px">${sl.label}</span></div>
-          </div>
-          <div class="brand-meta-item">
-            <div class="brand-meta-key">Status</div>
-            <div class="brand-meta-val" style="font-size:13px;text-transform:capitalize">${d.status}</div>
-          </div>
+          <div class="brand-meta-item"><div class="brand-meta-key">Domain</div><div class="brand-meta-val" style="font-size:14px">${d.full}</div></div>
+          <div class="brand-meta-item"><div class="brand-meta-key">Score</div><div class="brand-meta-val"><span class="score-badge ${sl.cls}" style="font-size:13px;padding:3px 8px">${sl.label}</span></div></div>
+          <div class="brand-meta-item"><div class="brand-meta-key">Status</div><div class="brand-meta-val" style="font-size:13px;text-transform:capitalize">${d.status}</div></div>
         </div>
         <div class="brand-action-row">
-          <button class="btn-ba" id="bDlSvg">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Download SVG
-          </button>
-          <button class="btn-ba" id="bCopyColors">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            Copy Colors
-          </button>
-          <button class="btn-ba btn-ba-primary" id="bOpenStarter">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            Starter Kit
-          </button>
+          <button class="btn-ba" id="bDlSvg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download SVG</button>
+          <button class="btn-ba" id="bCopyColors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy Colors</button>
+          <button class="btn-ba btn-ba-primary" id="bOpenStarter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Starter Kit</button>
         </div>
       </div>
-
       <div>
         <p class="brand-section-label">Live Preview</p>
         <div class="brand-scene-wrap">
           <div class="brand-scene-topbar">
-            <div class="bs-traffic">
-              <div class="bs-dot" style="background:#ff5f57"></div>
-              <div class="bs-dot" style="background:#febc2e"></div>
-              <div class="bs-dot" style="background:#28c840"></div>
-            </div>
-            <div class="bs-addr">
-              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              ${d.full}
-            </div>
+            <div class="bs-traffic"><div class="bs-dot" style="background:#ff5f57"></div><div class="bs-dot" style="background:#febc2e"></div><div class="bs-dot" style="background:#28c840"></div></div>
+            <div class="bs-addr"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>${d.full}</div>
           </div>
           <div class="brand-scene-canvas" style="background:${pal.bg}">
             <div class="brand-scene-logo-inner">${sceneLogo}</div>
@@ -2424,21 +2469,19 @@ function renderBrandPreview() {
   });
   document.getElementById('bDlSvg').addEventListener('click', () => {
     const svg = makeBrandLogo(d.name, initial, brandStyle, pal);
-    const full = `<?xml version="1.0" encoding="utf-8"?>${svg}`;
+    const full2 = `<?xml version="1.0" encoding="utf-8"?>${svg}`;
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([full], { type: 'image/svg+xml' }));
+    a.href = URL.createObjectURL(new Blob([full2], { type: 'image/svg+xml' }));
     a.download = `${d.name.toLowerCase()}-logo.svg`; a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     showToast(`Downloaded ${d.name.toLowerCase()}-logo.svg`);
   });
-  document.getElementById('bCopyColors').addEventListener('click', async e => {
+  document.getElementById('bCopyColors').addEventListener('click', async () => {
     const css = `--color-bg: ${pal.bg};\n--color-primary: ${pal.primary};\n--color-accent: ${pal.accent};`;
-    try { await navigator.clipboard.writeText(css); } catch { }
+    try { await navigator.clipboard.writeText(css); } catch {}
     showToast('Colors copied as CSS variables');
   });
-  document.getElementById('bOpenStarter').addEventListener('click', () => {
-    closeBrand(); openStarter(d);
-  });
+  document.getElementById('bOpenStarter').addEventListener('click', () => { closeBrand(); openStarter(d); });
 }
 
 function closeBrand() {
@@ -2448,7 +2491,7 @@ function closeBrand() {
 document.getElementById('closeBrand').addEventListener('click', closeBrand);
 document.getElementById('brandModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeBrand(); });
 
-// Restore saved + history on load
+// Init
 renderSaved();
 renderHistory();
 </script>
