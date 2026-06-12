@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,7 +14,7 @@
   <meta name="twitter:site" content="@yaroslavrasov" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='black'/%3E%3Cpath d='M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z' fill='white'/%3E%3C/svg%3E" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
 
@@ -34,9 +34,21 @@
       --g600:   #525252;
       --g800:   #262626;
       --radius: 7px;
-      --font:       'Plus Jakarta Sans', system-ui, sans-serif;
-      --font-serif: 'Fraunces', Georgia, serif;
-      --font-mono:  'JetBrains Mono', 'SF Mono', monospace;
+      --font:         'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-display: 'Syne', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+      --ease:         cubic-bezier(.4,0,.2,1);
+    }
+
+    [data-theme="dark"] {
+      --black:  #f0f0f0;
+      --white:  #0d0d0d;
+      --g50:    #141414;
+      --g100:   #1c1c1c;
+      --g200:   #2a2a2a;
+      --g400:   #5a5a5a;
+      --g600:   #a0a0a0;
+      --g800:   #d0d0d0;
     }
 
     html { font-size: 16px; scroll-behavior: smooth; }
@@ -46,6 +58,7 @@
       color: var(--black);
       line-height: 1.55;
       -webkit-font-smoothing: antialiased;
+      transition: background .2s var(--ease), color .2s var(--ease);
     }
     p { color: var(--g600); }
     button { font-family: var(--font); cursor: pointer; }
@@ -59,14 +72,16 @@
     header {
       position: sticky; top: 0; z-index: 100;
       background: rgba(255,255,255,.95);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--g200);
+      transition: background .2s var(--ease), border-color .2s var(--ease);
     }
+    [data-theme="dark"] header { background: rgba(13,13,13,.95); }
+
     .header-inner {
       display: flex; align-items: center; justify-content: space-between;
       height: 56px;
     }
-    /* Logo — custom SVG wordmark */
     .logo {
       display: flex; align-items: center; gap: 10px;
       text-decoration: none; color: var(--black);
@@ -84,8 +99,21 @@
       white-space: nowrap;
     }
     .nav-link:hover { color: var(--black); background: var(--g100); }
-    .nav-link.active { color: var(--black); font-weight: 600; }
     .nav-link svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    .theme-toggle {
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: 1.5px solid var(--g200); border-radius: 8px;
+      color: var(--g600); cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .theme-toggle:hover { border-color: var(--black); color: var(--black); background: var(--g100); }
+    .theme-toggle svg { width: 15px; height: 15px; }
+    .icon-sun  { display: none; }
+    .icon-moon { display: block; }
+    [data-theme="dark"] .icon-sun  { display: block; }
+    [data-theme="dark"] .icon-moon { display: none; }
 
     /* ============================================================
        Page switcher
@@ -101,13 +129,11 @@
       border-bottom: 1px solid var(--g200);
     }
     .hero h1 {
-      font-family: var(--font-serif);
-      font-size: clamp(44px, 7vw, 80px);
-      font-weight: 600;
-      font-style: italic;
-      font-variation-settings: 'opsz' 72, 'wght' 550;
-      letter-spacing: -0.02em;
-      line-height: 1.06;
+      font-family: var(--font-display);
+      font-size: clamp(46px, 7.5vw, 88px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.03;
       margin-bottom: 20px;
       color: var(--black);
     }
@@ -148,9 +174,8 @@
       display: flex; align-items: center; gap: 8px;
       text-decoration: none; color: var(--g400);
       font-size: 13px; font-weight: 600;
-      transition: color .2s; white-space: nowrap;
-      filter: grayscale(1); opacity: .55;
-      transition: filter .2s, opacity .2s;
+      filter: grayscale(1); opacity: .5;
+      transition: filter .2s, opacity .2s; white-space: nowrap;
     }
     .partner-item:hover { filter: grayscale(0); opacity: 1; }
     .partner-item img {
@@ -167,7 +192,8 @@
       flex: 1; height: 48px;
       border: 1.5px solid var(--g200); border-radius: var(--radius);
       font-family: var(--font); font-size: 15px; padding: 0 16px;
-      outline: none; transition: border-color .15s; background: var(--white);
+      outline: none; background: var(--white); color: var(--black);
+      transition: border-color .15s, background .2s;
     }
     .keyword-input:focus { border-color: var(--black); }
     .keyword-input::placeholder { color: var(--g400); }
@@ -187,9 +213,21 @@
       height: 38px; padding: 0 16px;
       background: var(--white); color: var(--black);
       border: 1.5px solid var(--g200); border-radius: var(--radius);
-      font-size: 13px; font-weight: 500; transition: border-color .15s;
+      font-size: 13px; font-weight: 500; transition: border-color .15s, background .2s;
     }
     .btn-secondary:hover { border-color: var(--black); }
+
+    .kbd-hint {
+      font-size: 11px; color: var(--g400);
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .kbd {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 18px; padding: 0 5px; min-width: 18px;
+      background: var(--g100); border: 1px solid var(--g200);
+      border-radius: 4px; font-family: var(--font-mono);
+      font-size: 10px; color: var(--g600); font-weight: 600;
+    }
 
     /* ============================================================
        Chips
@@ -211,11 +249,17 @@
     .results-section { padding: 56px 0; display: none; }
     .results-section.visible { display: block; }
     .results-header {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: flex-start; justify-content: space-between;
       margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
     }
-    .results-title { font-size: 19px; font-weight: 700; letter-spacing: -.02em; }
-    .results-meta  { font-size: 13px; color: var(--g400); }
+    .results-title {
+      font-family: var(--font-display);
+      font-size: 20px; font-weight: 700; letter-spacing: -.035em;
+      color: var(--black);
+    }
+    .results-meta  { font-size: 13px; color: var(--g400); margin-top: 3px; }
+
+    .results-right { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
 
     .tld-filters { display: flex; gap: 6px; flex-wrap: wrap; }
     .tld-btn {
@@ -226,6 +270,19 @@
     }
     .tld-btn:hover { border-color: var(--black); color: var(--black); }
     .tld-btn.active { background: var(--black); color: var(--white); border-color: var(--black); }
+
+    .results-controls { display: flex; gap: 6px; }
+    .ctrl-btn {
+      height: 30px; padding: 0 12px;
+      border: 1.5px solid var(--g200); border-radius: 100px;
+      font-size: 12px; font-weight: 600; color: var(--g600);
+      background: var(--white); display: flex; align-items: center; gap: 5px;
+      transition: all .15s;
+    }
+    .ctrl-btn:hover { border-color: var(--black); color: var(--black); }
+    .ctrl-btn.active-avail { background: #edfbee; color: #166534; border-color: #86efac; }
+    .ctrl-btn.active-sort  { background: var(--black); color: var(--white); border-color: var(--black); }
+    .ctrl-btn svg { width: 11px; height: 11px; flex-shrink: 0; }
 
     .domain-grid {
       display: grid;
@@ -238,14 +295,17 @@
     ============================================================ */
     .domain-card {
       border: 1.5px solid var(--g200); border-radius: var(--radius);
-      padding: 18px 18px 14px;
-      display: flex; flex-direction: column; gap: 12px;
-      transition: border-color .15s, box-shadow .15s;
+      padding: 18px 18px 14px; background: var(--white);
+      display: flex; flex-direction: column; gap: 10px;
+      transition: border-color .15s, box-shadow .15s, background .2s;
     }
     .domain-card:hover { border-color: #c0c0c0; box-shadow: 0 2px 16px rgba(0,0,0,.06); }
+    [data-theme="dark"] .domain-card:hover { box-shadow: 0 2px 16px rgba(0,0,0,.4); border-color: var(--g400); }
+
     .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-    .domain-name { font-size: 16px; font-weight: 700; letter-spacing: -.025em; word-break: break-all; }
+    .domain-name { font-size: 16px; font-weight: 700; letter-spacing: -.025em; word-break: break-all; color: var(--black); }
     .domain-tld  { color: var(--g400); font-weight: 400; }
+
     .status-badge {
       font-size: 10px; font-weight: 700; padding: 3px 8px;
       border-radius: 100px; white-space: nowrap; flex-shrink: 0;
@@ -254,7 +314,10 @@
     .status-available { background: #edfbee; color: #166534; }
     .status-taken     { background: var(--g100); color: var(--g400); }
     .status-premium   { background: #fefce8; color: #854d0e; }
-    .card-actions { display: flex; gap: 8px; }
+
+    .domain-meta { font-size: 10px; font-weight: 600; color: var(--g400); font-family: var(--font-mono); }
+
+    .card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
     .btn-save {
       height: 32px; padding: 0 12px;
       border: 1.5px solid var(--g200); border-radius: var(--radius);
@@ -263,6 +326,26 @@
     }
     .btn-save:hover { border-color: var(--black); color: var(--black); }
     .btn-save.saved { border-color: var(--black); color: var(--black); font-weight: 700; background: var(--g50); }
+
+    .btn-copy-domain {
+      height: 32px; padding: 0 12px;
+      border: 1.5px solid var(--g200); border-radius: var(--radius);
+      font-size: 12px; font-weight: 500; color: var(--g600);
+      background: var(--white); transition: all .15s;
+    }
+    .btn-copy-domain:hover { border-color: var(--black); color: var(--black); }
+    .btn-copy-domain.copied { border-color: #166534; color: #166534; background: #edfbee; }
+
+    .btn-register {
+      height: 32px; padding: 0 12px;
+      border: 1.5px solid #86efac; border-radius: var(--radius);
+      font-size: 12px; font-weight: 600; color: #166534;
+      background: #edfbee; display: flex; align-items: center; gap: 4px;
+      text-decoration: none; transition: all .15s;
+    }
+    .btn-register:hover { border-color: #16a34a; background: #dcfce7; }
+    .btn-register svg { width: 10px; height: 10px; }
+
     .btn-starter {
       height: 32px; padding: 0 12px;
       border: none; border-radius: var(--radius);
@@ -276,10 +359,16 @@
     ============================================================ */
     .saved-section { padding: 40px 0 0; display: none; }
     .saved-section.visible { display: block; }
+    .saved-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .section-label {
       font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .08em; color: var(--g400); margin-bottom: 14px;
+      letter-spacing: .08em; color: var(--g400);
     }
+    .btn-clear {
+      font-size: 11px; font-weight: 600; color: var(--g400);
+      background: none; border: none; transition: color .15s;
+    }
+    .btn-clear:hover { color: #dc2626; }
 
     /* ============================================================
        Loading / empty
@@ -303,20 +392,25 @@
     ============================================================ */
     .modal-overlay {
       position: fixed; inset: 0; z-index: 200;
-      background: rgba(0,0,0,.5);
+      background: rgba(0,0,0,.5); backdrop-filter: blur(4px);
       display: none; align-items: center; justify-content: center; padding: 24px;
     }
     .modal-overlay.open { display: flex; }
     .modal {
       background: var(--white); border-radius: 14px;
       width: 100%; max-width: 580px; max-height: 92vh; overflow-y: auto;
+      border: 1.5px solid var(--g200);
     }
     .modal-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 24px 28px 0;
       position: sticky; top: 0; background: var(--white); z-index: 1;
     }
-    .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -.025em; }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 700; letter-spacing: -.03em;
+      color: var(--black);
+    }
     .modal-close {
       width: 30px; height: 30px;
       display: flex; align-items: center; justify-content: center;
@@ -334,27 +428,28 @@
       font-size: 11px; font-weight: 700; text-transform: uppercase;
       letter-spacing: .08em; color: var(--g400); margin-bottom: 5px;
     }
-    .field-value { font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
+    .field-value { font-size: 15px; font-weight: 700; letter-spacing: -.02em; color: var(--black); }
     .template-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 24px; }
     .tpl-opt {
       border: 1.5px solid var(--g200); border-radius: var(--radius);
       padding: 12px 14px; cursor: pointer; transition: all .15s; user-select: none;
+      background: var(--white);
     }
     .tpl-opt:hover { border-color: var(--g800); }
     .tpl-opt.selected { border-color: var(--black); background: var(--g50); }
     .tpl-opt:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
-    .tpl-name { font-size: 13px; font-weight: 700; letter-spacing: -.01em; }
+    .tpl-name { font-size: 13px; font-weight: 700; letter-spacing: -.01em; color: var(--black); }
     .tpl-desc { font-size: 11px; color: var(--g400); margin-top: 2px; }
     .file-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
     .file-item {
       display: flex; align-items: center; justify-content: space-between;
       padding: 10px 14px; background: var(--g100); border-radius: var(--radius);
     }
-    .file-name { font-size: 12px; font-weight: 500; font-family: var(--font-mono); }
+    .file-name { font-size: 12px; font-weight: 500; font-family: var(--font-mono); color: var(--black); }
     .file-size { font-size: 11px; color: var(--g400); }
     hr.divider { border: none; border-top: 1px solid var(--g200); margin: 24px 0; }
     .export-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
-    .gh-title { font-size: 14px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 16px; }
+    .gh-title { font-size: 14px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 16px; color: var(--black); }
     .gh-field { margin-bottom: 12px; }
     .gh-value { font-size: 13px; color: var(--g800); }
     .code-block {
@@ -363,6 +458,7 @@
       font-size: 11.5px; line-height: 1.8; color: var(--g800);
       white-space: pre; overflow-x: auto; margin-bottom: 10px;
     }
+    .gh-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
     .btn-copy {
       height: 36px; padding: 0 16px;
       border: 1.5px solid var(--g200); border-radius: var(--radius);
@@ -371,6 +467,16 @@
     }
     .btn-copy:hover  { border-color: var(--black); color: var(--black); }
     .btn-copy.copied { border-color: #166534; color: #166534; }
+
+    .btn-gh-create {
+      height: 36px; padding: 0 16px;
+      border: none; border-radius: var(--radius);
+      font-size: 12px; font-weight: 600; color: #fff;
+      background: #24292f; display: inline-flex; align-items: center; gap: 6px;
+      text-decoration: none; transition: opacity .15s;
+    }
+    .btn-gh-create:hover { opacity: .85; }
+    .btn-gh-create svg { width: 14px; height: 14px; }
 
     /* ============================================================
        About modal
@@ -383,29 +489,19 @@
        TOKEN PAGE
     ============================================================ */
     .token-page { padding: 72px 0 100px; }
-
-    .token-hero {
-      max-width: 680px;
-      margin-bottom: 72px;
-    }
+    .token-hero { max-width: 680px; margin-bottom: 72px; }
     .token-hero .token-eyebrow {
       display: inline-flex; align-items: center; gap: 8px;
       font-size: 12px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .1em; color: var(--g400);
-      margin-bottom: 20px;
+      letter-spacing: .1em; color: var(--g400); margin-bottom: 20px;
     }
     .token-hero h1 {
-      font-family: var(--font-serif);
-      font-size: clamp(36px, 5vw, 58px);
-      font-weight: 600; font-style: italic;
-      font-variation-settings: 'opsz' 60, 'wght' 520;
-      letter-spacing: -.025em; line-height: 1.1;
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 800; letter-spacing: -.04em; line-height: 1.05;
       color: var(--black); margin-bottom: 20px;
     }
-    .token-hero p {
-      font-size: 17px; line-height: 1.75; color: var(--g600);
-      max-width: 520px;
-    }
+    .token-hero p { font-size: 17px; line-height: 1.75; color: var(--g600); max-width: 520px; }
 
     .token-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
@@ -413,7 +509,8 @@
     }
     .token-card {
       border: 1.5px solid var(--g200); border-radius: 10px;
-      padding: 28px 24px;
+      padding: 28px 24px; background: var(--white);
+      transition: background .2s, border-color .2s;
     }
     .token-card-icon {
       width: 40px; height: 40px;
@@ -423,76 +520,78 @@
     }
     .token-card-icon svg { width: 20px; height: 20px; color: var(--black); }
     .token-card h3 {
-      font-size: 16px; font-weight: 700; letter-spacing: -.02em;
+      font-family: var(--font-display);
+      font-size: 16px; font-weight: 700; letter-spacing: -.025em;
       margin-bottom: 8px; color: var(--black);
     }
     .token-card p { font-size: 14px; line-height: 1.7; color: var(--g600); }
     .token-card .token-detail {
-      margin-top: 14px;
-      font-size: 13px; font-weight: 600;
-      color: var(--black);
-      display: flex; align-items: center; gap: 6px;
+      margin-top: 14px; font-size: 13px; font-weight: 600;
+      color: var(--black); display: flex; align-items: center; gap: 6px;
     }
 
     .token-launch {
       border: 1.5px solid var(--black); border-radius: 10px;
       padding: 36px 32px;
       display: flex; align-items: center; justify-content: space-between;
-      gap: 24px; flex-wrap: wrap;
-      margin-bottom: 64px;
+      gap: 24px; flex-wrap: wrap; margin-bottom: 64px;
     }
     .token-launch-left h2 {
-      font-size: 22px; font-weight: 700; letter-spacing: -.025em;
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 700; letter-spacing: -.035em;
       margin-bottom: 8px; color: var(--black);
     }
     .token-launch-left p { font-size: 15px; line-height: 1.65; max-width: 420px; }
 
-    .token-mechanics {
-      margin-bottom: 64px;
-    }
+    .token-mechanics { margin-bottom: 64px; }
     .token-mechanics h2 {
-      font-size: 22px; font-weight: 700; letter-spacing: -.025em;
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 700; letter-spacing: -.035em;
       margin-bottom: 32px; color: var(--black);
     }
     .mechanic-row {
-      display: flex; gap: 0;
+      display: flex;
       border: 1.5px solid var(--g200); border-radius: 10px;
       overflow: hidden; flex-wrap: wrap;
     }
     .mechanic-item {
-      flex: 1; min-width: 200px;
-      padding: 24px;
+      flex: 1; min-width: 200px; padding: 24px;
       border-right: 1px solid var(--g200);
     }
     .mechanic-item:last-child { border-right: none; }
     .mechanic-num {
-      font-family: var(--font-mono);
-      font-size: 28px; font-weight: 500;
-      color: var(--black); margin-bottom: 6px; letter-spacing: -.02em;
+      font-family: var(--font-display);
+      font-size: 30px; font-weight: 800;
+      color: var(--black); margin-bottom: 6px; letter-spacing: -.04em;
     }
     .mechanic-label { font-size: 13px; font-weight: 600; color: var(--black); margin-bottom: 4px; }
     .mechanic-desc  { font-size: 12px; color: var(--g400); line-height: 1.5; }
 
     .token-faq { margin-bottom: 48px; }
     .token-faq h2 {
-      font-size: 22px; font-weight: 700; letter-spacing: -.025em;
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 700; letter-spacing: -.035em;
       margin-bottom: 24px; color: var(--black);
     }
-    .faq-item {
-      border-top: 1px solid var(--g200);
-      padding: 20px 0;
-    }
+    .faq-item { border-top: 1px solid var(--g200); padding: 20px 0; }
     .faq-q { font-size: 15px; font-weight: 600; color: var(--black); margin-bottom: 8px; }
     .faq-a { font-size: 14px; line-height: 1.7; color: var(--g600); }
 
     /* ============================================================
        Footer
     ============================================================ */
-    footer { border-top: 1px solid var(--g200); padding: 32px 0; margin-top: 0; }
-    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    footer { border-top: 1px solid var(--g200); padding: 40px 0; }
+    .footer-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 20px;
+    }
     .footer-left  { display: flex; align-items: center; gap: 16px; }
-    .footer-brand { font-size: 15px; font-weight: 800; letter-spacing: -.035em; }
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 17px; font-weight: 800; letter-spacing: -.04em; color: var(--black);
+    }
     .footer-tag   { font-size: 13px; color: var(--g400); }
+    .footer-right { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
     .footer-x {
       display: flex; align-items: center; gap: 6px;
       text-decoration: none; color: var(--g400);
@@ -500,6 +599,12 @@
     }
     .footer-x:hover { color: var(--black); }
     .footer-x svg { width: 14px; height: 14px; }
+
+    .orynth-badge img { display: block; }
+    .badge-light { display: block; }
+    .badge-dark  { display: none; }
+    [data-theme="dark"] .badge-light { display: none; }
+    [data-theme="dark"] .badge-dark  { display: block; }
 
     /* ============================================================
        Animations
@@ -532,6 +637,7 @@
       .domain-grid { grid-template-columns: 1fr; }
       .template-grid { grid-template-columns: 1fr; }
       .results-header { flex-direction: column; align-items: flex-start; }
+      .results-right  { align-items: flex-start; }
       .footer-inner { flex-direction: column; align-items: flex-start; }
       .modal { border-radius: 10px; }
       .modal-header { padding: 20px 20px 0; }
@@ -541,6 +647,7 @@
       .mechanic-item { border-right: none; border-bottom: 1px solid var(--g200); }
       .mechanic-item:last-child { border-bottom: none; }
       .nav-link span { display: none; }
+      .kbd-hint { display: none; }
     }
   </style>
 </head>
@@ -553,26 +660,21 @@
       <a href="#" class="logo" id="logoLink" aria-label="Nomio home">
         <!-- N mark -->
         <svg class="logo-mark" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect width="30" height="30" fill="#0a0a0a"/>
-          <path d="M5.5 5.5L5.5 24.5L10 24.5L10 13.5L20 24.5L24.5 24.5L24.5 5.5L20 5.5L20 16.5L10 5.5Z" fill="white"/>
+          <rect width="30" height="30" fill="var(--black)"/>
+          <path d="M5.5 5.5L5.5 24.5L10 24.5L10 13.5L20 24.5L24.5 24.5L24.5 5.5L20 5.5L20 16.5L10 5.5Z" fill="var(--white)"/>
         </svg>
-        <!-- Custom SVG wordmark — not a web font -->
+        <!-- Custom SVG wordmark -->
         <svg class="logo-wordmark" viewBox="0 0 86 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Nomio">
-          <!-- N -->
-          <path d="M1 1h3.2L10.4 13V1h3V17H10.2L4 5.2V17H1V1z" fill="#0a0a0a"/>
-          <!-- o -->
-          <path d="M16.5 9c0-4.6 2.4-7.4 6.5-7.4s6.5 2.8 6.5 7.4-2.4 7.4-6.5 7.4S16.5 13.6 16.5 9zm10 0c0-3.1-1.2-4.8-3.5-4.8S19.5 5.9 19.5 9s1.2 4.8 3.5 4.8 3.5-1.7 3.5-4.8z" fill="#0a0a0a"/>
-          <!-- m -->
-          <path d="M33 1.8h2.8l.2 1.6c.8-1.2 2-1.8 3.4-1.8 1.5 0 2.6.7 3.2 1.9.8-1.2 2.1-1.9 3.6-1.9 2.6 0 4 1.6 4 4.6V17h-2.9V6.5c0-1.6-.7-2.5-2-2.5-1.4 0-2.2 1-2.2 2.7V17h-2.9V6.5c0-1.6-.7-2.5-2-2.5-1.4 0-2.2 1-2.2 2.7V17H33V1.8z" fill="#0a0a0a"/>
-          <!-- i -->
-          <path d="M55 0a1.8 1.8 0 110 3.6A1.8 1.8 0 0155 0zm-1.4 5.6h2.9V17h-2.9V5.6z" fill="#0a0a0a"/>
-          <!-- o -->
-          <path d="M60.5 11.3c0-3.6 2.1-5.9 5.5-5.9s5.5 2.3 5.5 5.9-2.1 5.9-5.5 5.9-5.5-2.3-5.5-5.9zm8.1 0c0-2.2-.9-3.5-2.6-3.5s-2.6 1.3-2.6 3.5.9 3.5 2.6 3.5 2.6-1.3 2.6-3.5z" fill="#0a0a0a"/>
+          <path d="M1 1h3.2L10.4 13V1h3V17H10.2L4 5.2V17H1V1z" fill="var(--black)"/>
+          <path d="M16.5 9c0-4.6 2.4-7.4 6.5-7.4s6.5 2.8 6.5 7.4-2.4 7.4-6.5 7.4S16.5 13.6 16.5 9zm10 0c0-3.1-1.2-4.8-3.5-4.8S19.5 5.9 19.5 9s1.2 4.8 3.5 4.8 3.5-1.7 3.5-4.8z" fill="var(--black)"/>
+          <path d="M33 1.8h2.8l.2 1.6c.8-1.2 2-1.8 3.4-1.8 1.5 0 2.6.7 3.2 1.9.8-1.2 2.1-1.9 3.6-1.9 2.6 0 4 1.6 4 4.6V17h-2.9V6.5c0-1.6-.7-2.5-2-2.5-1.4 0-2.2 1-2.2 2.7V17h-2.9V6.5c0-1.6-.7-2.5-2-2.5-1.4 0-2.2 1-2.2 2.7V17H33V1.8z" fill="var(--black)"/>
+          <path d="M55 0a1.8 1.8 0 110 3.6A1.8 1.8 0 0155 0zm-1.4 5.6h2.9V17h-2.9V5.6z" fill="var(--black)"/>
+          <path d="M60.5 11.3c0-3.6 2.1-5.9 5.5-5.9s5.5 2.3 5.5 5.9-2.1 5.9-5.5 5.9-5.5-2.3-5.5-5.9zm8.1 0c0-2.2-.9-3.5-2.6-3.5s-2.6 1.3-2.6 3.5.9 3.5 2.6 3.5 2.6-1.3 2.6-3.5z" fill="var(--black)"/>
         </svg>
       </a>
 
       <div class="nav-right">
-        <a class="nav-x nav-link" href="https://x.com/yaroslavrasov" target="_blank" rel="noopener" aria-label="@yaroslavrasov on X">
+        <a class="nav-link" href="https://x.com/yaroslavrasov" target="_blank" rel="noopener" aria-label="@yaroslavrasov on X">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           <span>@yaroslavrasov</span>
         </a>
@@ -581,6 +683,10 @@
           <span>Token</span>
         </button>
         <button class="nav-link" id="openAbout" aria-label="About Nomio">About</button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg class="icon-sun"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -601,16 +707,21 @@
             maxlength="64" autocomplete="off" spellcheck="false" aria-label="Keyword" />
           <button class="btn-primary" id="generateBtn">Generate Domains</button>
         </div>
+        <div class="kbd-hint">
+          Press <kbd class="kbd">/</kbd> to focus &nbsp;·&nbsp; <kbd class="kbd">Enter</kbd> to generate
+        </div>
 
         <div class="categories" id="chips" role="group" aria-label="Categories">
           <button class="chip" data-cat="AI">AI</button>
           <button class="chip" data-cat="SaaS">SaaS</button>
-          <button class="chip" data-cat="Developer Tools">Developer Tools</button>
+          <button class="chip" data-cat="Dev Tools">Dev Tools</button>
           <button class="chip" data-cat="Media">Media</button>
           <button class="chip" data-cat="Finance">Finance</button>
-          <button class="chip" data-cat="Healthcare">Healthcare</button>
+          <button class="chip" data-cat="Healthcare">Health</button>
           <button class="chip" data-cat="Crypto">Crypto</button>
-          <button class="chip" data-cat="Ecommerce">Ecommerce</button>
+          <button class="chip" data-cat="Ecommerce">Commerce</button>
+          <button class="chip" data-cat="Security">Security</button>
+          <button class="chip" data-cat="Education">EdTech</button>
         </div>
       </div>
     </div>
@@ -622,16 +733,17 @@
       <p class="partners-label">Built to work with the tools you already use</p>
     </div>
     <div class="partners-track-wrap">
-      <div class="partners-track" id="partnersTrack">
-        <!-- duplicated for seamless loop -->
-      </div>
+      <div class="partners-track" id="partnersTrack"></div>
     </div>
   </div>
 
   <!-- Saved -->
   <section class="saved-section" id="savedSection" aria-label="Saved domains">
     <div class="container">
-      <p class="section-label" id="savedLabel">Saved</p>
+      <div class="saved-header">
+        <p class="section-label" id="savedLabel">Saved</p>
+        <button class="btn-clear" id="clearSaved">Clear all</button>
+      </div>
       <div class="domain-grid" id="savedGrid"></div>
     </div>
   </section>
@@ -644,13 +756,27 @@
           <p class="results-title" id="resultsTitle">Results</p>
           <p class="results-meta" id="resultsMeta"></p>
         </div>
-        <div class="tld-filters" id="tldFilters" role="group" aria-label="Filter by TLD">
-          <button class="tld-btn active" data-tld="all">All</button>
-          <button class="tld-btn" data-tld=".com">.com</button>
-          <button class="tld-btn" data-tld=".io">.io</button>
-          <button class="tld-btn" data-tld=".ai">.ai</button>
-          <button class="tld-btn" data-tld=".app">.app</button>
-          <button class="tld-btn" data-tld=".fun">.fun</button>
+        <div class="results-right">
+          <div class="tld-filters" id="tldFilters" role="group" aria-label="Filter by TLD">
+            <button class="tld-btn active" data-tld="all">All</button>
+            <button class="tld-btn" data-tld=".com">.com</button>
+            <button class="tld-btn" data-tld=".io">.io</button>
+            <button class="tld-btn" data-tld=".ai">.ai</button>
+            <button class="tld-btn" data-tld=".app">.app</button>
+            <button class="tld-btn" data-tld=".co">.co</button>
+            <button class="tld-btn" data-tld=".dev">.dev</button>
+            <button class="tld-btn" data-tld=".fun">.fun</button>
+          </div>
+          <div class="results-controls">
+            <button class="ctrl-btn" id="availToggle">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2,6 5,9 10,3"/></svg>
+              Available only
+            </button>
+            <button class="ctrl-btn" id="sortBtn">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="3" x2="10" y2="3"/><line x1="2" y1="6" x2="7" y2="6"/><line x1="2" y1="9" x2="5" y2="9"/></svg>
+              Best first
+            </button>
+          </div>
         </div>
       </div>
       <div class="domain-grid" id="domainGrid"></div>
@@ -664,7 +790,6 @@
   <div class="container">
     <div class="token-page">
 
-      <!-- Hero -->
       <div class="token-hero">
         <div class="token-eyebrow">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M14.5 7.5H10a2.5 2.5 0 100 5h4a2.5 2.5 0 110 5H9.5"/><path d="M12 6v1.5M12 16.5V18"/></svg>
@@ -674,7 +799,6 @@
         <p>Nomio is where builders go to find names and ship projects. $NOMIO is how that community grows together — powering access, rewarding contribution, and getting rarer with every transaction.</p>
       </div>
 
-      <!-- Mechanic numbers -->
       <div class="token-mechanics">
         <h2>How it works</h2>
         <div class="mechanic-row">
@@ -701,7 +825,6 @@
         </div>
       </div>
 
-      <!-- Cards -->
       <div class="token-grid">
         <div class="token-card">
           <div class="token-card-icon">
@@ -711,7 +834,6 @@
           <p>The free tier gets you a solid set of domain ideas every day. Premium goes further: trademark proximity checks, smarter name scoring, and extended starter kits ready to push to GitHub.</p>
           <div class="token-detail">$10 = 10 premium generations</div>
         </div>
-
         <div class="token-card">
           <div class="token-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12L6 18M12 12l6 6M20 4H4"/></svg>
@@ -720,7 +842,6 @@
           <p>10% of every premium purchase is burned automatically and immediately. There is no manual process, no team approval. It just disappears. Every transaction makes the remaining supply a little smaller.</p>
           <div class="token-detail">10% burn on every purchase</div>
         </div>
-
         <div class="token-card">
           <div class="token-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -729,7 +850,6 @@
           <p>Nomio rewards the people who actually use it. Refer a builder who goes premium, you earn. Stay active every week, you earn. Get featured as a top contributor, you earn more. Simple.</p>
           <div class="token-detail">Referrals, usage, contributions</div>
         </div>
-
         <div class="token-card">
           <div class="token-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
@@ -740,7 +860,6 @@
         </div>
       </div>
 
-      <!-- Launch CTA -->
       <div class="token-launch">
         <div class="token-launch-left">
           <h2>$NOMIO launches on EasyA Kickstart</h2>
@@ -752,30 +871,24 @@
         </a>
       </div>
 
-      <!-- FAQ -->
       <div class="token-faq">
         <h2>Questions</h2>
-
         <div class="faq-item">
           <p class="faq-q">When does $NOMIO launch?</p>
           <p class="faq-a">We are not giving a hard date yet. What we know is the listing will happen on EasyA Kickstart. Follow @yaroslavrasov on X and you will know as soon as we do.</p>
         </div>
-
         <div class="faq-item">
           <p class="faq-q">What is the total supply?</p>
           <p class="faq-a">We are not releasing supply figures before the launch. The burn mechanics are designed to make that number go down over time regardless of where it starts. We will share more details closer to the Kickstart listing.</p>
         </div>
-
         <div class="faq-item">
           <p class="faq-q">Do I need $NOMIO to use Nomio?</p>
           <p class="faq-a">No. The free tier works without any token. $NOMIO unlocks premium features — deeper generation, better scoring, extended starters. You only need it if you want more.</p>
         </div>
-
         <div class="faq-item">
           <p class="faq-q">How does the burn actually work?</p>
           <p class="faq-a">When you pay for a premium pack, 90% of the $NOMIO you spend goes to the platform and 10% is sent to a dead wallet automatically. It is written into the transaction logic. There is no team involved in triggering it.</p>
         </div>
-
         <div class="faq-item">
           <p class="faq-q">Can I earn $NOMIO without buying it?</p>
           <p class="faq-a">Yes. Nomio has a rewards layer for active builders. Referring someone who goes premium earns you $NOMIO. Consistent weekly usage earns small amounts. Top contributors get featured and earn more. We will publish the full reward structure with the launch.</p>
@@ -794,10 +907,18 @@
         <span class="footer-brand">Nomio</span>
         <span class="footer-tag">Built for builders.</span>
       </div>
-      <a class="footer-x" href="https://x.com/yaroslavrasov" target="_blank" rel="noopener" aria-label="@yaroslavrasov on X">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        @yaroslavrasov
-      </a>
+      <div class="footer-right">
+        <div class="orynth-badge">
+          <a href="https://orynth.dev/projects/nomio" target="_blank" rel="noopener">
+            <img class="badge-light" src="https://orynth.dev/api/badge/nomio?theme=light&style=default" alt="Featured on Orynth" width="130" height="40" />
+            <img class="badge-dark"  src="https://orynth.dev/api/badge/nomio?theme=dark&style=default"  alt="Featured on Orynth" width="130" height="40" />
+          </a>
+        </div>
+        <a class="footer-x" href="https://x.com/yaroslavrasov" target="_blank" rel="noopener" aria-label="@yaroslavrasov on X">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          @yaroslavrasov
+        </a>
+      </div>
     </div>
   </div>
 </footer>
@@ -836,34 +957,41 @@
 <!-- ===================== SCRIPT ===================== -->
 <script>
 /* =====================================================
-   Partners data
+   Theme — runs before paint to avoid flash
+===================================================== */
+(function () {
+  const t = localStorage.getItem('nomio-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', t);
+})();
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('nomio-theme', next);
+});
+
+/* =====================================================
+   Partners
 ===================================================== */
 const PARTNERS = [
-  { name:'GitHub',     logo:'https://cdn.simpleicons.org/github/0a0a0a',       url:'https://github.com' },
-  { name:'Vercel',     logo:'https://cdn.simpleicons.org/vercel/0a0a0a',       url:'https://vercel.com' },
-  { name:'Cloudflare', logo:'https://cdn.simpleicons.org/cloudflare/f48120',   url:'https://cloudflare.com' },
-  { name:'Namecheap',  logo:'https://cdn.simpleicons.org/namecheap/de3723',    url:'https://namecheap.com' },
-  { name:'Netlify',    logo:'https://cdn.simpleicons.org/netlify/00c7b7',      url:'https://netlify.com' },
-  { name:'Supabase',   logo:'https://cdn.simpleicons.org/supabase/3ecf8e',     url:'https://supabase.com' },
-  { name:'Railway',    logo:'https://cdn.simpleicons.org/railway/0b0d0e',      url:'https://railway.app' },
-  { name:'EasyA',      logo:'https://cdn.simpleicons.org/ethereum/343434',     url:'https://easya.io' },
-  { name:'Porkbun',    logo:'https://cdn.simpleicons.org/porkbun/ee4f96',      url:'https://porkbun.com' },
+  { name:'GitHub',     logo:'https://cdn.simpleicons.org/github/0a0a0a',     url:'https://github.com' },
+  { name:'Vercel',     logo:'https://cdn.simpleicons.org/vercel/0a0a0a',     url:'https://vercel.com' },
+  { name:'Cloudflare', logo:'https://cdn.simpleicons.org/cloudflare/f48120', url:'https://cloudflare.com' },
+  { name:'Namecheap',  logo:'https://cdn.simpleicons.org/namecheap/de3723',  url:'https://namecheap.com' },
+  { name:'Netlify',    logo:'https://cdn.simpleicons.org/netlify/00c7b7',    url:'https://netlify.com' },
+  { name:'Supabase',   logo:'https://cdn.simpleicons.org/supabase/3ecf8e',   url:'https://supabase.com' },
+  { name:'Railway',    logo:'https://cdn.simpleicons.org/railway/0b0d0e',    url:'https://railway.app' },
+  { name:'EasyA',      logo:'https://cdn.simpleicons.org/ethereum/343434',   url:'https://easya.io' },
+  { name:'Porkbun',    logo:'https://cdn.simpleicons.org/porkbun/ee4f96',    url:'https://porkbun.com' },
 ];
-
-function buildPartners() {
+(function buildPartners() {
   const track = document.getElementById('partnersTrack');
-  const all = [...PARTNERS, ...PARTNERS]; // duplicate for loop
-  all.forEach(p => {
-    const a = document.createElement('a');
-    a.href = p.url;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.className = 'partner-item';
+  [...PARTNERS, ...PARTNERS].forEach(p => {
+    const a = Object.assign(document.createElement('a'), { href:p.url, target:'_blank', rel:'noopener', className:'partner-item' });
     a.innerHTML = `<img src="${p.logo}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'"><span>${p.name}</span>`;
     track.appendChild(a);
   });
-}
-buildPartners();
+})();
 
 /* =====================================================
    Page routing
@@ -873,7 +1001,6 @@ function showPage(id) {
   document.getElementById(id).classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
 document.getElementById('navToken').addEventListener('click', () => showPage('pageToken'));
 document.getElementById('logoLink').addEventListener('click', e => { e.preventDefault(); showPage('pageHome'); });
 
@@ -883,134 +1010,210 @@ document.getElementById('logoLink').addEventListener('click', e => { e.preventDe
 const PREFIXES = [
   'nova','flux','neo','arc','core','base','hub','kit','lab','net',
   'next','open','pro','rapid','smart','super','ultra','uni','zero',
-  'go','my','get','use','run','re','up','on','do','be'
+  'go','my','get','use','run','re','up','on','do','be',
+  'ping','sync','link','node','flow','edge','mesh','wave','bold',
+  'swift','crisp','sharp','deep','high','micro','poly','meta','hyper','sub'
 ];
 const SUFFIXES = [
   'ly','ify','iq','io','ai','hq','kit','lab','hub','app',
   'base','flow','stack','desk','pro','ora','aro','ex','ive','ix',
-  'ium','ery','fy','zy','sy','co','ro','vo','ivo','ato'
+  'ium','ery','fy','zy','sy','co','ro','vo','ivo','ato',
+  'works','space','studio','zone','spot','pad','vault','grid','loop','cast'
 ];
 const BLENDS = [
   'ora','ova','era','ara','ila','ela','uri','ini','ani','eno',
-  'omo','ato','eto','ito','uto','ario','orio','urio','avia','exo'
+  'omo','ato','eto','ito','uto','ario','orio','urio','avia','exo',
+  'ola','ula','ala','elia','oria','aria','ura','ira','ino','evo'
 ];
 const TEMPLATES = [
-  { id:'landing',  name:'Landing Page',    desc:'Single page marketing site' },
-  { id:'saas',     name:'SaaS',            desc:'Dashboard + auth scaffold'  },
-  { id:'directory',name:'Directory',       desc:'Listing and search app'     },
-  { id:'ai-tool',  name:'AI Tool',         desc:'AI-powered utility app'     },
-  { id:'chrome',   name:'Chrome Extension',desc:'Browser extension starter'  }
+  { id:'landing',   name:'Landing Page',     desc:'Single page marketing site' },
+  { id:'saas',      name:'SaaS',             desc:'Dashboard + auth scaffold'  },
+  { id:'nextjs',    name:'Next.js App',       desc:'Full-stack Next.js starter' },
+  { id:'directory', name:'Directory',         desc:'Listing and search app'     },
+  { id:'ai-tool',   name:'AI Tool',           desc:'AI-powered utility app'     },
+  { id:'chrome',    name:'Chrome Extension',  desc:'Browser extension starter'  },
 ];
-const TLD_WEIGHTS = [['.com',4],['.io',3],['.ai',3],['.app',2],['.fun',1]];
+const TLD_WEIGHTS = [['.com',5],['.io',3],['.ai',3],['.app',2],['.co',2],['.dev',2],['.fun',1]];
 
 /* =====================================================
    State
 ===================================================== */
-let allDomains     = [];
-let savedIds       = new Set();
-let activeTld      = 'all';
+let allDomains    = [];
+let savedDomains  = loadSaved();
+let savedIds      = new Set(savedDomains.map(d => d.id));
+let activeTld     = 'all';
 let activeCategory = null;
 let currentDomain  = null;
 let selectedTpl    = TEMPLATES[0];
+let showAvailOnly  = false;
+let sortBest       = false;
+
+/* =====================================================
+   Persistence
+===================================================== */
+function loadSaved() {
+  try { return JSON.parse(localStorage.getItem('nomio-saved') || '[]'); }
+  catch { return []; }
+}
+function persistSaved() {
+  localStorage.setItem('nomio-saved', JSON.stringify(savedDomains));
+}
 
 /* =====================================================
    Utilities
 ===================================================== */
 const cap  = s => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
-const rand = a => a[Math.floor(Math.random()*a.length)];
-const slug = s => s.toLowerCase().replace(/[^a-z0-9]/g,'');
+const rand = a => a[Math.floor(Math.random() * a.length)];
+const slug = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 
+let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
 /* =====================================================
    Domain generation
 ===================================================== */
 function makeName(kw) {
-  const k = kw.length > 6 ? kw.slice(0,6) : kw;
-  switch (Math.floor(Math.random()*6)) {
+  const k = kw.length > 6 ? kw.slice(0, 6) : kw;
+  switch (Math.floor(Math.random() * 8)) {
     case 0: return cap(k) + rand(SUFFIXES);
     case 1: return cap(rand(PREFIXES)) + cap(k);
-    case 2: return cap(k.slice(0,4)) + rand(BLENDS);
+    case 2: return cap(k.slice(0, 4)) + rand(BLENDS);
     case 3: return cap(rand(PREFIXES)) + rand(BLENDS);
     case 4: return cap(k) + 'hq';
-    case 5: return cap(k.slice(0,3)) + cap(rand(PREFIXES));
+    case 5: return cap(k.slice(0, 3)) + cap(rand(PREFIXES));
+    case 6: return cap(rand(PREFIXES)) + cap(k.slice(0, 4));
+    case 7: return cap(k) + cap(rand(BLENDS).slice(0, 3));
     default: return cap(k) + rand(SUFFIXES);
   }
 }
 function pickTld() {
   const pool = [];
-  TLD_WEIGHTS.forEach(([t,w]) => { for(let i=0;i<w;i++) pool.push(t); });
+  TLD_WEIGHTS.forEach(([t, w]) => { for (let i = 0; i < w; i++) pool.push(t); });
   return rand(pool);
 }
 function getStatus() {
   const r = Math.random();
-  return r < 0.35 ? 'available' : r < 0.82 ? 'taken' : 'premium';
+  return r < 0.33 ? 'available' : r < 0.80 ? 'taken' : 'premium';
 }
 function generateDomains(keyword) {
   const kw = slug(keyword) || 'build';
   const seen = new Set(); const out = [];
   let tries = 0;
-  while (out.length < 60 && tries < 400) {
+  while (out.length < 72 && tries < 500) {
     tries++;
-    const name = makeName(kw); const tld = pickTld(); const full = name.toLowerCase()+tld;
-    if (seen.has(full) || name.length < 3 || name.length > 13) continue;
+    const name = makeName(kw); const tld = pickTld(); const full = name.toLowerCase() + tld;
+    if (seen.has(full) || name.length < 3 || name.length > 14) continue;
     seen.add(full);
-    out.push({ id:full, name, tld, full, status:getStatus() });
+    out.push({ id: full, name, tld, full, status: getStatus() });
   }
   return out;
 }
 
 /* =====================================================
-   Render
+   Filtering & sorting
 ===================================================== */
+function getDisplayList() {
+  let list = activeTld === 'all' ? allDomains : allDomains.filter(d => d.tld === activeTld);
+  if (showAvailOnly) list = list.filter(d => d.status === 'available');
+  if (sortBest) list = [...list].sort((a, b) => {
+    const rank = { available: 0, premium: 1, taken: 2 };
+    if (rank[a.status] !== rank[b.status]) return rank[a.status] - rank[b.status];
+    return a.name.length - b.name.length;
+  });
+  return list;
+}
+
+/* =====================================================
+   Render domain card
+===================================================== */
+function getRegistrarUrl(d) {
+  return `https://www.namecheap.com/domains/registration/results/?domain=${encodeURIComponent(d.full)}`;
+}
+
 function renderCard(domain, container) {
   const isSaved = savedIds.has(domain.id);
   const card = document.createElement('div');
-  card.className = 'domain-card fade-in'; card.dataset.id = domain.id;
+  card.className = 'domain-card fade-in';
+  card.dataset.id = domain.id;
+
+  const registerBtn = domain.status === 'available'
+    ? `<a class="btn-register" href="${getRegistrarUrl(domain)}" target="_blank" rel="noopener" title="Register on Namecheap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+        Register
+       </a>`
+    : '';
+
   card.innerHTML = `
     <div class="card-top">
       <span class="domain-name">${domain.name}<span class="domain-tld">${domain.tld}</span></span>
       <span class="status-badge status-${domain.status}">${cap(domain.status)}</span>
     </div>
+    <div class="domain-meta">${domain.name.length + domain.tld.length} chars</div>
     <div class="card-actions">
-      <button class="btn-save${isSaved?' saved':''}" data-id="${domain.id}">${isSaved?'Saved':'Save'}</button>
-      <button class="btn-starter" data-id="${domain.id}">Generate Starter</button>
+      <button class="btn-save${isSaved ? ' saved' : ''}" data-id="${domain.id}">${isSaved ? 'Saved' : 'Save'}</button>
+      <button class="btn-copy-domain" data-domain="${domain.full}">Copy</button>
+      ${registerBtn}
+      <button class="btn-starter">Starter</button>
     </div>`;
+
   card.querySelector('.btn-save').addEventListener('click', () => toggleSave(domain));
+  card.querySelector('.btn-copy-domain').addEventListener('click', e => {
+    const btn = e.currentTarget;
+    navigator.clipboard.writeText(domain.full).catch(() => {});
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1800);
+  });
   card.querySelector('.btn-starter').addEventListener('click', () => openStarter(domain));
   container.appendChild(card);
 }
+
 function renderGrid(list) {
-  const grid = document.getElementById('domainGrid'); grid.innerHTML = '';
-  if (!list.length) { grid.innerHTML = '<div class="empty-state">No domains match this filter.</div>'; return; }
-  list.forEach(d => renderCard(d, grid));
-  const avail = list.filter(d => d.status==='available').length;
-  document.getElementById('resultsMeta').textContent =
-    `${list.length} names${avail ? `, ${avail} available` : ''}`;
-}
-function renderSaved() {
-  const sec = document.getElementById('savedSection');
-  const lbl = document.getElementById('savedLabel');
-  const grid = document.getElementById('savedGrid');
-  const saved = allDomains.filter(d => savedIds.has(d.id));
-  if (!saved.length) { sec.classList.remove('visible'); return; }
-  sec.classList.add('visible');
-  lbl.textContent = `Saved (${saved.length})`;
+  const grid = document.getElementById('domainGrid');
   grid.innerHTML = '';
-  saved.forEach(d => renderCard(d, grid));
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-state">${showAvailOnly ? 'No available domains here. Try a different TLD or turn off the filter.' : 'No domains match this filter.'}</div>`;
+    return;
+  }
+  list.forEach(d => renderCard(d, grid));
+  const avail = list.filter(d => d.status === 'available').length;
+  document.getElementById('resultsMeta').textContent = `${list.length} names · ${avail} available`;
 }
+
+function renderSaved() {
+  const sec  = document.getElementById('savedSection');
+  const lbl  = document.getElementById('savedLabel');
+  const grid = document.getElementById('savedGrid');
+  if (!savedDomains.length) { sec.classList.remove('visible'); return; }
+  sec.classList.add('visible');
+  lbl.textContent = `Saved (${savedDomains.length})`;
+  grid.innerHTML = '';
+  savedDomains.forEach(d => renderCard(d, grid));
+}
+
+/* =====================================================
+   Save / unsave
+===================================================== */
 function toggleSave(domain) {
-  savedIds.has(domain.id) ? savedIds.delete(domain.id) : savedIds.add(domain.id);
+  if (savedIds.has(domain.id)) {
+    savedIds.delete(domain.id);
+    savedDomains = savedDomains.filter(d => d.id !== domain.id);
+    showToast('Removed from saved');
+  } else {
+    savedIds.add(domain.id);
+    savedDomains.push(domain);
+    showToast('Saved');
+  }
+  persistSaved();
   document.querySelectorAll(`.btn-save[data-id="${domain.id}"]`).forEach(btn => {
     const on = savedIds.has(domain.id);
     btn.textContent = on ? 'Saved' : 'Save';
     btn.classList.toggle('saved', on);
   });
-  showToast(savedIds.has(domain.id) ? 'Saved' : 'Removed from saved');
   renderSaved();
 }
 
@@ -1030,11 +1233,11 @@ function generate() {
   setTimeout(() => {
     allDomains = generateDomains(kw);
     activeTld  = 'all';
-    document.querySelectorAll('.tld-btn').forEach(b => b.classList.toggle('active', b.dataset.tld==='all'));
-    renderGrid(allDomains);
+    document.querySelectorAll('.tld-btn').forEach(b => b.classList.toggle('active', b.dataset.tld === 'all'));
+    renderGrid(getDisplayList());
     btn.disabled = false;
-    sec.scrollIntoView({ behavior:'smooth', block:'start' });
-  }, 650);
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 600);
 }
 
 /* =====================================================
@@ -1043,30 +1246,61 @@ function generate() {
 const taglines = {
   landing:   n => `The home for ${n}.`,
   saas:      n => `${n} makes your workflow faster.`,
+  nextjs:    n => `${n} — built with Next.js.`,
   directory: n => `Find everything on ${n}.`,
   'ai-tool': n => `${n} puts AI to work.`,
-  chrome:    n => `${n} lives in your browser.`
+  chrome:    n => `${n} lives in your browser.`,
 };
 function getTag(name, tpl) { return (taglines[tpl.id] || (n => `${n}.`))(name); }
 
 function buildFiles(domain, tpl) {
-  const tag   = getTag(domain.name, tpl);
-  const L     = domain.name.charAt(0).toUpperCase();
-  const readme = `# ${domain.name}\n\n${tag}\n\nGenerated by Nomio.\n`;
-  const idx = `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8"/>\n  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>\n  <title>${domain.name}</title>\n  <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#fff}h1{font-size:clamp(32px,8vw,60px);font-weight:700;letter-spacing:-.04em}p{color:#666;font-size:18px;margin-top:12px}</style>\n</head>\n<body><div style="text-align:center;padding:24px"><h1>${domain.name}</h1><p>${tag}</p></div></body>\n</html>`;
+  const tag  = getTag(domain.name, tpl);
+  const L    = domain.name.charAt(0).toUpperCase();
+  const name = domain.name;
+  const full = domain.full;
+
+  const readme = `# ${name}\n\n${tag}\n\nLive: [${full}](https://${full})\n\nGenerated by [Nomio](https://nomio.uk).\n\n## Getting started\n\n\`\`\`bash\nnpm install\nnpm run dev\n\`\`\`\n`;
+
+  let mainFile, mainFileName, mainFileMime;
+  if (tpl.id === 'nextjs') {
+    mainFileName = 'pages/index.js';
+    mainFileMime = 'text/javascript';
+    mainFile = `// pages/index.js — Next.js starter for ${name}\nexport default function Home() {\n  return (\n    <main style={{fontFamily:'system-ui',display:'flex',alignItems:'center',justifyContent:'center',minHeight:'100vh'}}>\n      <div style={{textAlign:'center'}}>\n        <h1 style={{fontSize:'clamp(2rem,8vw,4rem)',fontWeight:800,letterSpacing:'-.04em'}}>${name}</h1>\n        <p style={{color:'#666',marginTop:'12px',fontSize:'1.1rem'}}>${tag}</p>\n      </div>\n    </main>\n  );\n}\n`;
+  } else if (tpl.id === 'chrome') {
+    mainFileName = 'popup.html';
+    mainFileMime = 'text/html';
+    mainFile = `<!DOCTYPE html>\n<html lang="en">\n<head><meta charset="UTF-8"/><title>${name}</title>\n<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;width:320px;padding:24px}h1{font-size:20px;font-weight:800;letter-spacing:-.03em}p{color:#666;font-size:13px;margin-top:8px}</style></head>\n<body><h1>${name}</h1><p>${tag}</p></body>\n</html>`;
+  } else {
+    mainFileName = 'index.html';
+    mainFileMime = 'text/html';
+    mainFile = `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8"/>\n  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>\n  <title>${name}</title>\n  <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#fff}h1{font-size:clamp(32px,8vw,64px);font-weight:800;letter-spacing:-.04em}p{color:#666;font-size:18px;margin-top:12px}</style>\n</head>\n<body><div style="text-align:center;padding:24px"><h1>${name}</h1><p>${tag}</p></div></body>\n</html>`;
+  }
+
   const fav  = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#000"/><text x="16" y="23" font-family="system-ui" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">${L}</text></svg>`;
   const logo = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="8" fill="#000"/><text x="32" y="45" font-family="system-ui" font-size="38" font-weight="700" fill="#fff" text-anchor="middle">${L}</text></svg>`;
-  const brand = JSON.stringify({ name:domain.name, domain:domain.full, tagline:tag, template:tpl.id, generated:new Date().toISOString().slice(0,10) }, null, 2);
-  return [
-    { name:'README.md',   content:readme, mime:'text/markdown' },
-    { name:'index.html',  content:idx,    mime:'text/html' },
-    { name:'favicon.svg', content:fav,    mime:'image/svg+xml' },
-    { name:'logo.svg',    content:logo,   mime:'image/svg+xml' },
-    { name:'brand.json',  content:brand,  mime:'application/json' }
+  const brand = JSON.stringify({ name, domain: full, tagline: tag, template: tpl.id, generated: new Date().toISOString().slice(0, 10) }, null, 2);
+
+  const files = [
+    { name: 'README.md',    content: readme,    mime: 'text/markdown' },
+    { name: mainFileName,   content: mainFile,  mime: mainFileMime },
+    { name: 'favicon.svg',  content: fav,       mime: 'image/svg+xml' },
+    { name: 'logo.svg',     content: logo,      mime: 'image/svg+xml' },
+    { name: 'brand.json',   content: brand,     mime: 'application/json' },
   ];
+
+  if (tpl.id === 'chrome') {
+    const manifest = JSON.stringify({ manifest_version: 3, name, version: '1.0', description: tag, action: { default_popup: 'popup.html' } }, null, 2);
+    files.push({ name: 'manifest.json', content: manifest, mime: 'application/json' });
+  }
+
+  return files;
 }
+
 function gitCmds(domain) {
-  return `git init\ngit add .\ngit commit -m "Initial commit"\ngit branch -M main\ngit remote add origin https://github.com/YOUR_USERNAME/${domain.name.toLowerCase()}\ngit push -u origin main`;
+  return `git init\ngit add .\ngit commit -m "Initial commit: ${domain.name}"\ngit branch -M main\ngit remote add origin https://github.com/YOUR_USERNAME/${domain.name.toLowerCase()}\ngit push -u origin main`;
+}
+function ghNewUrl(domain) {
+  return `https://github.com/new?name=${encodeURIComponent(domain.name.toLowerCase())}&description=${encodeURIComponent(getTag(domain.name, selectedTpl))}&visibility=public`;
 }
 
 /* =====================================================
@@ -1080,45 +1314,54 @@ function openStarter(domain) {
 }
 function renderStarter() {
   const domain = currentDomain; const tpl = selectedTpl;
-  const files = buildFiles(domain, tpl);
-  const cmds  = gitCmds(domain);
-  const tag   = getTag(domain.name, tpl);
-  const body  = document.getElementById('starterBody');
+  const files  = buildFiles(domain, tpl);
+  const cmds   = gitCmds(domain);
+  const tag    = getTag(domain.name, tpl);
+  const body   = document.getElementById('starterBody');
+
   body.innerHTML = `
     <div class="starter-row"><p class="field-label">Domain</p><p class="field-value">${domain.full}</p></div>
     <div class="starter-row"><p class="field-label">Brand Name</p><p class="field-value">${domain.name}</p></div>
     <div class="starter-row"><p class="field-label">Tagline</p><p class="field-value">${tag}</p></div>
     <p class="field-label" style="margin-bottom:8px">Template</p>
     <div class="template-grid" id="tplGrid">
-      ${TEMPLATES.map(t=>`<div class="tpl-opt${t.id===tpl.id?' selected':''}" data-tid="${t.id}" role="button" tabindex="0"><p class="tpl-name">${t.name}</p><p class="tpl-desc">${t.desc}</p></div>`).join('')}
+      ${TEMPLATES.map(t => `<div class="tpl-opt${t.id === tpl.id ? ' selected' : ''}" data-tid="${t.id}" role="button" tabindex="0">
+        <p class="tpl-name">${t.name}</p><p class="tpl-desc">${t.desc}</p>
+      </div>`).join('')}
     </div>
     <p class="field-label" style="margin-bottom:8px">Generated Files</p>
     <div class="file-list">
-      ${files.map(f=>`<div class="file-item"><span class="file-name">${f.name}</span><span class="file-size">${f.content.length}B</span></div>`).join('')}
+      ${files.map(f => `<div class="file-item"><span class="file-name">${f.name}</span><span class="file-size">${(f.content.length / 1024).toFixed(1)} KB</span></div>`).join('')}
     </div>
     <hr class="divider"/>
     <div class="export-row">
-      <button class="btn-secondary" id="dlReadme">Download README</button>
-      <button class="btn-secondary" id="dlJson">Download brand.json</button>
+      <button class="btn-secondary" id="dlReadme">README</button>
+      <button class="btn-secondary" id="dlJson">brand.json</button>
       <button class="btn-secondary" id="dlZip">Download ZIP</button>
     </div>
     <hr class="divider"/>
     <p class="gh-title">GitHub Export</p>
     <div class="gh-field"><p class="field-label">Repository Name</p><p class="gh-value">${domain.name.toLowerCase()}</p></div>
     <div class="gh-field"><p class="field-label">Suggested Description</p><p class="gh-value">${tag}</p></div>
-    <p class="field-label" style="margin-bottom:6px">Push Instructions</p>
+    <p class="field-label" style="margin-bottom:6px">Push Commands</p>
     <div class="code-block">${cmds}</div>
-    <button class="btn-copy" id="copyGit">Copy Commands</button>`;
+    <div class="gh-actions">
+      <button class="btn-copy" id="copyGit">Copy Commands</button>
+      <a class="btn-gh-create" href="${ghNewUrl(domain)}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        Create on GitHub
+      </a>
+    </div>`;
 
   body.querySelectorAll('.tpl-opt').forEach(opt => {
-    const sel = () => { selectedTpl = TEMPLATES.find(t => t.id===opt.dataset.tid); renderStarter(); };
+    const sel = () => { selectedTpl = TEMPLATES.find(t => t.id === opt.dataset.tid); renderStarter(); };
     opt.addEventListener('click', sel);
-    opt.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){e.preventDefault();sel();} });
+    opt.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sel(); } });
   });
   body.querySelector('#dlReadme').addEventListener('click', () => dlFile('README.md', files[0].content, files[0].mime));
-  body.querySelector('#dlJson').addEventListener('click',   () => dlFile('brand.json', files[4].content, files[4].mime));
+  body.querySelector('#dlJson').addEventListener('click',   () => { const f = files.find(x => x.name === 'brand.json'); dlFile(f.name, f.content, f.mime); });
   body.querySelector('#dlZip').addEventListener('click',    () => dlZip(domain, files));
-  body.querySelector('#copyGit').addEventListener('click',  () => copyText(cmds, body.querySelector('#copyGit')));
+  body.querySelector('#copyGit').addEventListener('click',  e => copyText(cmds, e.currentTarget));
 }
 
 /* =====================================================
@@ -1126,19 +1369,19 @@ function renderStarter() {
 ===================================================== */
 function dlFile(name, content, mime) {
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([content],{type:mime}));
+  a.href = URL.createObjectURL(new Blob([content], { type: mime }));
   a.download = name; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   showToast(`Downloading ${name}`);
 }
 async function dlZip(domain, files) {
   const btn = document.getElementById('dlZip');
-  btn.textContent = 'Creating ZIP...'; btn.disabled = true;
+  btn.textContent = 'Creating…'; btn.disabled = true;
   try {
     if (typeof JSZip === 'undefined') throw new Error('no jszip');
     const zip = new JSZip();
     files.forEach(f => zip.file(f.name, f.content));
-    const blob = await zip.generateAsync({ type:'blob', compression:'DEFLATE' });
+    const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `${domain.name.toLowerCase()}-starter.zip`;
@@ -1146,7 +1389,7 @@ async function dlZip(domain, files) {
     showToast('ZIP downloaded');
   } catch {
     dlFile(`${domain.name.toLowerCase()}-starter.txt`,
-      files.map(f=>`=== ${f.name} ===\n${f.content}`).join('\n\n'), 'text/plain');
+      files.map(f => `=== ${f.name} ===\n${f.content}`).join('\n\n'), 'text/plain');
   } finally {
     btn.textContent = 'Download ZIP'; btn.disabled = false;
   }
@@ -1154,21 +1397,34 @@ async function dlZip(domain, files) {
 async function copyText(text, btn) {
   const orig = btn.textContent;
   try { await navigator.clipboard.writeText(text); }
-  catch { const ta=Object.assign(document.createElement('textarea'),{value:text,style:'position:fixed;opacity:0'}); document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
-  btn.textContent='Copied!'; btn.classList.add('copied');
-  setTimeout(() => { btn.textContent=orig; btn.classList.remove('copied'); }, 1800);
+  catch {
+    const ta = Object.assign(document.createElement('textarea'), { value: text, style: 'position:fixed;opacity:0' });
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  btn.textContent = 'Copied!'; btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1800);
 }
 
 /* =====================================================
    Events
 ===================================================== */
 document.getElementById('generateBtn').addEventListener('click', generate);
-document.getElementById('keywordInput').addEventListener('keydown', e => { if(e.key==='Enter') generate(); });
+document.getElementById('keywordInput').addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
+
+// / to focus search
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    e.preventDefault();
+    document.getElementById('keywordInput').focus();
+  }
+  if (e.key === 'Escape') { closeStarter(); closeAbout(); }
+});
 
 document.getElementById('chips').addEventListener('click', e => {
-  const chip = e.target.closest('.chip'); if(!chip) return;
-  if (activeCategory===chip.dataset.cat) { activeCategory=null; chip.classList.remove('active'); }
-  else {
+  const chip = e.target.closest('.chip'); if (!chip) return;
+  if (activeCategory === chip.dataset.cat) {
+    activeCategory = null; chip.classList.remove('active');
+  } else {
     document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
     chip.classList.add('active'); activeCategory = chip.dataset.cat;
     const inp = document.getElementById('keywordInput');
@@ -1177,22 +1433,41 @@ document.getElementById('chips').addEventListener('click', e => {
 });
 
 document.getElementById('tldFilters').addEventListener('click', e => {
-  const btn = e.target.closest('.tld-btn'); if(!btn) return;
+  const btn = e.target.closest('.tld-btn'); if (!btn) return;
   activeTld = btn.dataset.tld;
-  document.querySelectorAll('.tld-btn').forEach(b => b.classList.toggle('active', b===btn));
-  renderGrid(activeTld==='all' ? allDomains : allDomains.filter(d => d.tld===activeTld));
+  document.querySelectorAll('.tld-btn').forEach(b => b.classList.toggle('active', b === btn));
+  if (allDomains.length) renderGrid(getDisplayList());
+});
+
+document.getElementById('availToggle').addEventListener('click', () => {
+  showAvailOnly = !showAvailOnly;
+  document.getElementById('availToggle').classList.toggle('active-avail', showAvailOnly);
+  if (allDomains.length) renderGrid(getDisplayList());
+});
+
+document.getElementById('sortBtn').addEventListener('click', () => {
+  sortBest = !sortBest;
+  document.getElementById('sortBtn').classList.toggle('active-sort', sortBest);
+  if (allDomains.length) renderGrid(getDisplayList());
+});
+
+document.getElementById('clearSaved').addEventListener('click', () => {
+  if (!savedDomains.length) return;
+  savedDomains = []; savedIds.clear(); persistSaved();
+  renderSaved(); showToast('Saved list cleared');
 });
 
 document.getElementById('closeStarter').addEventListener('click', closeStarter);
-document.getElementById('starterModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeStarter(); });
-function closeStarter() { document.getElementById('starterModal').classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('starterModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeStarter(); });
+function closeStarter() { document.getElementById('starterModal').classList.remove('open'); document.body.style.overflow = ''; }
 
-document.getElementById('openAbout').addEventListener('click', () => { document.getElementById('aboutModal').classList.add('open'); document.body.style.overflow='hidden'; });
+document.getElementById('openAbout').addEventListener('click', () => { document.getElementById('aboutModal').classList.add('open'); document.body.style.overflow = 'hidden'; });
 document.getElementById('closeAbout').addEventListener('click', closeAbout);
-document.getElementById('aboutModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeAbout(); });
-function closeAbout() { document.getElementById('aboutModal').classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('aboutModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeAbout(); });
+function closeAbout() { document.getElementById('aboutModal').classList.remove('open'); document.body.style.overflow = ''; }
 
-document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeStarter(); closeAbout(); } });
+// Restore saved on load
+renderSaved();
 </script>
 </body>
 </html>
