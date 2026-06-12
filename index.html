@@ -188,24 +188,34 @@
     /* ============================================================
        Search
     ============================================================ */
-    .search-block { display: flex; flex-direction: column; gap: 14px; }
-    .input-row { display: flex; gap: 10px; }
-    .keyword-input {
-      flex: 1; height: 48px;
-      border: 1.5px solid var(--g200); border-radius: var(--radius);
-      font-family: var(--font); font-size: 15px; padding: 0 16px;
-      outline: none; background: var(--white); color: var(--black);
-      transition: border-color .15s, background .2s;
+    .search-block { display: flex; flex-direction: column; gap: 16px; }
+    .input-row {
+      display: flex; gap: 0;
+      border: 1.5px solid var(--g200); border-radius: 14px;
+      overflow: hidden; background: var(--white);
+      box-shadow: 0 2px 20px rgba(0,0,0,.05);
+      transition: border-color .2s, box-shadow .2s;
     }
-    .keyword-input:focus { border-color: var(--black); }
+    .input-row:focus-within {
+      border-color: var(--black);
+      box-shadow: 0 0 0 3px rgba(0,0,0,.07), 0 2px 20px rgba(0,0,0,.07);
+    }
+    [data-theme="dark"] .input-row:focus-within { box-shadow: 0 0 0 3px rgba(255,255,255,.1); }
+    .keyword-input {
+      flex: 1; height: 62px;
+      border: none;
+      font-family: var(--font); font-size: 16px; padding: 0 22px;
+      outline: none; background: transparent; color: var(--black);
+    }
     .keyword-input::placeholder { color: var(--g400); }
 
     .btn-primary {
-      height: 48px; padding: 0 24px;
+      height: 62px; padding: 0 30px;
       background: var(--black); color: var(--white);
-      border: none; border-radius: var(--radius);
+      border: none; border-radius: 0;
       font-size: 14px; font-weight: 600; white-space: nowrap;
       letter-spacing: -.01em; transition: opacity .15s;
+      border-left: 1.5px solid rgba(255,255,255,.08);
     }
     .btn-primary:hover  { opacity: .82; }
     .btn-primary:active { opacity: .65; }
@@ -932,6 +942,121 @@
     [data-theme="dark"] .domain-card[data-avail="true"] { border-left-color: #16a34a; }
 
     /* ============================================================
+       Brand button on domain cards
+    ============================================================ */
+    .btn-brand-card {
+      display: inline-flex; align-items: center; gap: 4px;
+      height: 30px; padding: 0 10px;
+      border: 1.5px solid var(--g200); border-radius: 6px;
+      font-size: 12px; font-weight: 600; color: var(--g600);
+      background: var(--white); cursor: pointer; font-family: var(--font);
+      transition: all .15s;
+    }
+    .btn-brand-card:hover { border-color: var(--black); color: var(--black); }
+    .btn-brand-card svg { width: 11px; height: 11px; }
+
+    /* ============================================================
+       Brand Preview Modal
+    ============================================================ */
+    #brandModal .modal {
+      max-width: 860px; width: 96vw; max-height: 93vh;
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .brand-body { overflow-y: auto; padding: 20px 28px 28px; flex: 1; }
+    .brand-section-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--g400); margin-bottom: 12px;
+    }
+
+    /* 2-col layout */
+    .brand-layout { display: grid; grid-template-columns: 1fr 1.15fr; gap: 24px; }
+    @media (max-width: 660px) { .brand-layout { grid-template-columns: 1fr; } }
+
+    /* Logo variant grid */
+    .brand-logo-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; margin-bottom: 22px; }
+    .brand-logo-opt {
+      border: 2px solid var(--g200); border-radius: 10px;
+      padding: 14px 10px 10px; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 7px;
+      transition: border-color .15s, box-shadow .15s; background: var(--white);
+    }
+    .brand-logo-opt.bp-selected { border-color: var(--black); box-shadow: 0 0 0 1px var(--black); }
+    .brand-logo-opt:hover:not(.bp-selected) { border-color: var(--g400); }
+    .brand-logo-svg-wrap { width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .brand-logo-svg-wrap svg { width: 100%; height: auto; max-height: 42px; }
+    .brand-logo-style-name { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--g400); }
+
+    /* Palette picker */
+    .brand-palette-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 22px; }
+    .brand-palette-opt {
+      border: 2px solid transparent; border-radius: 9px;
+      padding: 7px 10px; cursor: pointer;
+      display: flex; align-items: center; gap: 7px;
+      background: var(--g50); transition: border-color .15s;
+    }
+    .brand-palette-opt.bp-selected { border-color: var(--black); }
+    .brand-palette-swatches { display: flex; }
+    .brand-palette-swatch {
+      width: 14px; height: 14px; border-radius: 50%;
+      margin-left: -4px; border: 2px solid var(--white);
+    }
+    .brand-palette-swatch:first-child { margin-left: 0; }
+    .brand-palette-name { font-size: 11px; font-weight: 600; color: var(--g600); }
+
+    /* Browser scene mockup */
+    .brand-scene-wrap { border: 1.5px solid var(--g200); border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+    .brand-scene-topbar {
+      background: var(--g50); padding: 7px 12px;
+      display: flex; align-items: center; gap: 9px;
+      border-bottom: 1px solid var(--g200);
+    }
+    .bs-traffic { display: flex; gap: 5px; }
+    .bs-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .bs-addr {
+      flex: 1; height: 20px; background: var(--white);
+      border: 1px solid var(--g200); border-radius: 4px;
+      display: flex; align-items: center; padding: 0 8px;
+      font-size: 10px; font-family: var(--font-mono); color: var(--g400); gap: 4px;
+    }
+    .brand-scene-canvas {
+      padding: 40px 24px; min-height: 220px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; transition: background .3s;
+    }
+    .brand-scene-logo-inner svg { height: 44px; width: auto; display: block; }
+    .brand-scene-tagline { font-size: 13px; margin-top: 10px; transition: color .3s; font-weight: 400; }
+    .brand-scene-cta {
+      margin-top: 18px; padding: 10px 24px;
+      border-radius: 8px; font-size: 13px; font-weight: 600;
+      border: none; cursor: default; transition: all .3s;
+    }
+
+    /* Domain stats row */
+    .brand-meta-row {
+      display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .brand-meta-item {
+      background: var(--g50); border: 1px solid var(--g200);
+      border-radius: 8px; padding: 10px 14px; flex: 1; min-width: 100px;
+    }
+    .brand-meta-key { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--g400); margin-bottom: 3px; }
+    .brand-meta-val { font-size: 16px; font-weight: 700; color: var(--black); letter-spacing: -.02em; }
+
+    /* Action row */
+    .brand-action-row { display: flex; gap: 9px; flex-wrap: wrap; }
+    .btn-ba {
+      height: 38px; padding: 0 16px;
+      border: 1.5px solid var(--g200); border-radius: 8px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: var(--font); background: var(--white); color: var(--black);
+      display: inline-flex; align-items: center; gap: 6px; transition: all .15s;
+    }
+    .btn-ba:hover { border-color: var(--black); }
+    .btn-ba.btn-ba-primary { background: var(--black); color: var(--white); border-color: var(--black); }
+    .btn-ba.btn-ba-primary:hover { opacity: .82; }
+    .btn-ba svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+    /* ============================================================
        Search history
     ============================================================ */
     .search-history {
@@ -1434,6 +1559,20 @@
   </div>
 </footer>
 
+<!-- ===================== BRAND PREVIEW MODAL ===================== -->
+<div class="modal-overlay" id="brandModal" role="dialog" aria-modal="true" aria-labelledby="brandModalTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <div style="display:flex;align-items:baseline;gap:10px;">
+        <span class="modal-title" id="brandModalTitle">Brand Preview</span>
+        <span id="brandModalDomain" style="font-size:13px;color:var(--g400);font-weight:500"></span>
+      </div>
+      <button class="modal-close" id="closeBrand" aria-label="Close">&#x2715;</button>
+    </div>
+    <div class="brand-body" id="brandBody"></div>
+  </div>
+</div>
+
 <!-- ===================== STARTER MODAL ===================== -->
 <div class="modal-overlay" id="starterModal" role="dialog" aria-modal="true" aria-labelledby="starterTitle">
   <div class="modal">
@@ -1774,9 +1913,14 @@ function renderCard(domain, container) {
         Share
       </a>
       <button class="btn-starter">Starter</button>
+      <button class="btn-brand-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+        Brand
+      </button>
     </div>`;
 
   card.querySelector('.btn-save').addEventListener('click', () => toggleSave(domain));
+  card.querySelector('.btn-brand-card').addEventListener('click', () => openBrandPreview(domain));
   card.querySelector('.btn-copy-domain').addEventListener('click', e => {
     const btn = e.currentTarget;
     navigator.clipboard.writeText(domain.full).catch(() => {});
@@ -2134,6 +2278,175 @@ document.getElementById('openAbout').addEventListener('click', () => { document.
 document.getElementById('closeAbout').addEventListener('click', closeAbout);
 document.getElementById('aboutModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeAbout(); });
 function closeAbout() { document.getElementById('aboutModal').classList.remove('open'); document.body.style.overflow = ''; }
+
+/* =====================================================
+   Brand Preview
+===================================================== */
+const BRAND_PALETTES = [
+  { id:'obsidian', name:'Obsidian', bg:'#0a0a0a', surface:'#1e1e1e', primary:'#ffffff', accent:'#ffffff', muted:'rgba(255,255,255,.4)', ctaBg:'#ffffff', ctaText:'#0a0a0a', dark:true,  swatches:['#0a0a0a','#1e1e1e','#ffffff'] },
+  { id:'ocean',    name:'Ocean',    bg:'#0c1445', surface:'#172060', primary:'#60a5fa', accent:'#38bdf8', muted:'rgba(255,255,255,.4)', ctaBg:'#38bdf8', ctaText:'#0c1445', dark:true,  swatches:['#0c1445','#172060','#38bdf8'] },
+  { id:'sage',     name:'Sage',     bg:'#f0fdf4', surface:'#ffffff', primary:'#166534', accent:'#16a34a', muted:'#6b7280',              ctaBg:'#16a34a', ctaText:'#ffffff', dark:false, swatches:['#f0fdf4','#16a34a','#166534'] },
+  { id:'dusk',     name:'Dusk',     bg:'#0f0a2e', surface:'#1c1450', primary:'#c084fc', accent:'#a855f7', muted:'rgba(255,255,255,.4)', ctaBg:'#a855f7', ctaText:'#ffffff', dark:true,  swatches:['#0f0a2e','#1c1450','#c084fc'] },
+  { id:'flame',    name:'Flame',    bg:'#fff7ed', surface:'#ffffff', primary:'#9a3412', accent:'#ea580c', muted:'#6b7280',              ctaBg:'#ea580c', ctaText:'#ffffff', dark:false, swatches:['#fff7ed','#ea580c','#9a3412'] },
+  { id:'sand',     name:'Sand',     bg:'#faf7f0', surface:'#ffffff', primary:'#44403c', accent:'#ca8a04', muted:'#78716c',              ctaBg:'#44403c', ctaText:'#ffffff', dark:false, swatches:['#faf7f0','#ca8a04','#44403c'] },
+];
+
+function makeBrandLogo(name, initial, style, pal) {
+  const P = pal.primary, A = pal.accent, B = pal.bg;
+  const textFill = pal.dark ? '#ffffff' : '#0a0a0a';
+  const n = name.length > 10 ? name.slice(0, 10) : name;
+
+  if (style === 0) {
+    return `<svg viewBox="0 0 220 66" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="64" height="64" rx="14" fill="${P}"/>
+      <text x="33" y="45" text-anchor="middle" font-family="system-ui,sans-serif" font-size="32" font-weight="900" fill="${B}">${initial}</text>
+      <text x="78" y="37" font-family="system-ui,sans-serif" font-size="21" font-weight="800" letter-spacing="-0.04em" fill="${textFill}">${n}</text>
+    </svg>`;
+  }
+  if (style === 1) {
+    return `<svg viewBox="0 0 220 66" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="33" cy="33" r="30" fill="none" stroke="${P}" stroke-width="3.5"/>
+      <circle cx="33" cy="33" r="19" fill="${P}"/>
+      <text x="33" y="40" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" font-weight="900" fill="${B}">${initial}</text>
+      <text x="77" y="39" font-family="system-ui,sans-serif" font-size="21" font-weight="800" letter-spacing="-0.04em" fill="${textFill}">${n}</text>
+    </svg>`;
+  }
+  const wLength = Math.min(n.length * 15, 195);
+  return `<svg viewBox="0 0 220 66" xmlns="http://www.w3.org/2000/svg">
+    <text x="10" y="50" font-family="system-ui,sans-serif" font-size="42" font-weight="900" letter-spacing="-0.05em" fill="${P}">${n}</text>
+    <rect x="10" y="58" width="${wLength}" height="4" rx="2" fill="${A}"/>
+  </svg>`;
+}
+
+let brandDomain = null, brandStyle = 0, brandPalIdx = 0;
+
+function openBrandPreview(domain) {
+  brandDomain = domain; brandStyle = 0; brandPalIdx = 0;
+  document.getElementById('brandModalDomain').textContent = domain.full;
+  renderBrandPreview();
+  document.getElementById('brandModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderBrandPreview() {
+  const d = brandDomain;
+  const initial = d.name.charAt(0).toUpperCase();
+  const pal = BRAND_PALETTES[brandPalIdx];
+  const sl = scoreLabel(d.score || scoreD(d));
+  const tagline = `The home for ${d.name}.`;
+
+  const logoGridHTML = [0,1,2].map(s => {
+    const lbl = ['Square Mark','Ring Mark','Wordmark'][s];
+    return `<div class="brand-logo-opt${s === brandStyle ? ' bp-selected' : ''}" data-bstyle="${s}">
+      <div class="brand-logo-svg-wrap">${makeBrandLogo(d.name, initial, s, pal)}</div>
+      <span class="brand-logo-style-name">${lbl}</span>
+    </div>`;
+  }).join('');
+
+  const paletteHTML = BRAND_PALETTES.map((p, i) => `
+    <div class="brand-palette-opt${i === brandPalIdx ? ' bp-selected' : ''}" data-bpal="${i}">
+      <div class="brand-palette-swatches">
+        ${p.swatches.map(c => `<div class="brand-palette-swatch" style="background:${c}"></div>`).join('')}
+      </div>
+      <span class="brand-palette-name">${p.name}</span>
+    </div>`).join('');
+
+  const sceneLogo = makeBrandLogo(d.name, initial, brandStyle, pal);
+  const sceneTextColor = pal.dark ? 'rgba(255,255,255,.55)' : pal.muted;
+
+  document.getElementById('brandBody').innerHTML = `
+    <div class="brand-layout">
+      <div>
+        <p class="brand-section-label">Logo Style</p>
+        <div class="brand-logo-grid" id="bLogoGrid">${logoGridHTML}</div>
+        <p class="brand-section-label">Color Palette</p>
+        <div class="brand-palette-row" id="bPaletteRow">${paletteHTML}</div>
+        <div class="brand-meta-row">
+          <div class="brand-meta-item">
+            <div class="brand-meta-key">Domain</div>
+            <div class="brand-meta-val" style="font-size:14px">${d.full}</div>
+          </div>
+          <div class="brand-meta-item">
+            <div class="brand-meta-key">Score</div>
+            <div class="brand-meta-val"><span class="score-badge ${sl.cls}" style="font-size:13px;padding:3px 8px">${sl.label}</span></div>
+          </div>
+          <div class="brand-meta-item">
+            <div class="brand-meta-key">Status</div>
+            <div class="brand-meta-val" style="font-size:13px;text-transform:capitalize">${d.status}</div>
+          </div>
+        </div>
+        <div class="brand-action-row">
+          <button class="btn-ba" id="bDlSvg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download SVG
+          </button>
+          <button class="btn-ba" id="bCopyColors">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy Colors
+          </button>
+          <button class="btn-ba btn-ba-primary" id="bOpenStarter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Starter Kit
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <p class="brand-section-label">Live Preview</p>
+        <div class="brand-scene-wrap">
+          <div class="brand-scene-topbar">
+            <div class="bs-traffic">
+              <div class="bs-dot" style="background:#ff5f57"></div>
+              <div class="bs-dot" style="background:#febc2e"></div>
+              <div class="bs-dot" style="background:#28c840"></div>
+            </div>
+            <div class="bs-addr">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              ${d.full}
+            </div>
+          </div>
+          <div class="brand-scene-canvas" style="background:${pal.bg}">
+            <div class="brand-scene-logo-inner">${sceneLogo}</div>
+            <div class="brand-scene-tagline" style="color:${sceneTextColor}">${tagline}</div>
+            <button class="brand-scene-cta" style="background:${pal.ctaBg};color:${pal.ctaText}">Get started</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('bLogoGrid').addEventListener('click', e => {
+    const opt = e.target.closest('[data-bstyle]'); if (!opt) return;
+    brandStyle = +opt.dataset.bstyle; renderBrandPreview();
+  });
+  document.getElementById('bPaletteRow').addEventListener('click', e => {
+    const opt = e.target.closest('[data-bpal]'); if (!opt) return;
+    brandPalIdx = +opt.dataset.bpal; renderBrandPreview();
+  });
+  document.getElementById('bDlSvg').addEventListener('click', () => {
+    const svg = makeBrandLogo(d.name, initial, brandStyle, pal);
+    const full = `<?xml version="1.0" encoding="utf-8"?>${svg}`;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([full], { type: 'image/svg+xml' }));
+    a.download = `${d.name.toLowerCase()}-logo.svg`; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    showToast(`Downloaded ${d.name.toLowerCase()}-logo.svg`);
+  });
+  document.getElementById('bCopyColors').addEventListener('click', async e => {
+    const css = `--color-bg: ${pal.bg};\n--color-primary: ${pal.primary};\n--color-accent: ${pal.accent};`;
+    try { await navigator.clipboard.writeText(css); } catch { }
+    showToast('Colors copied as CSS variables');
+  });
+  document.getElementById('bOpenStarter').addEventListener('click', () => {
+    closeBrand(); openStarter(d);
+  });
+}
+
+function closeBrand() {
+  document.getElementById('brandModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('closeBrand').addEventListener('click', closeBrand);
+document.getElementById('brandModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeBrand(); });
 
 // Restore saved + history on load
 renderSaved();
