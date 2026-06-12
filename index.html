@@ -582,25 +582,55 @@
     /* ============================================================
        Footer
     ============================================================ */
-    footer { border-top: 1px solid var(--g200); padding: 40px 0; }
-    .footer-inner {
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 20px;
+    footer { border-top: 1px solid var(--g200); padding: 56px 0 32px; }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
     }
-    .footer-left  { display: flex; align-items: center; gap: 16px; }
     .footer-brand {
       font-family: var(--font-display);
-      font-size: 17px; font-weight: 800; letter-spacing: -.04em; color: var(--black);
+      font-size: 17px; font-weight: 800; letter-spacing: -.04em;
+      color: var(--black); margin-bottom: 6px;
     }
-    .footer-tag   { font-size: 13px; color: var(--g400); }
-    .footer-right { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .footer-tag   { font-size: 13px; color: var(--g400); line-height: 1.6; margin-bottom: 16px; }
+    .footer-copy  { font-size: 12px; color: var(--g400); }
+    .footer-col-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .09em; color: var(--g400); margin-bottom: 14px;
+    }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-link {
+      font-size: 13px; font-weight: 500; color: var(--g600);
+      text-decoration: none; background: none; border: none;
+      font-family: var(--font); cursor: pointer; text-align: left;
+      padding: 0; transition: color .15s;
+    }
+    .footer-link:hover { color: var(--black); }
     .footer-x {
       display: flex; align-items: center; gap: 6px;
-      text-decoration: none; color: var(--g400);
+      text-decoration: none; color: var(--g600);
       font-size: 13px; font-weight: 500; transition: color .15s;
     }
     .footer-x:hover { color: var(--black); }
-    .footer-x svg { width: 14px; height: 14px; }
+    .footer-x svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .footer-info-row { display: flex; flex-direction: column; gap: 8px; }
+    .footer-info-item { font-size: 13px; color: var(--g600); line-height: 1.55; }
+    .footer-info-item strong { color: var(--black); font-weight: 600; display: block; font-size: 12px; }
+    .footer-bottom {
+      border-top: 1px solid var(--g200); padding-top: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom-copy { font-size: 12px; color: var(--g400); }
+    .footer-badge-wrap { display: flex; align-items: center; }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
 
     .badge-light { display: block; }
     .badge-dark  { display: none; }
@@ -892,10 +922,6 @@
       </a>
 
       <div class="nav-right">
-        <a class="nav-link" href="https://x.com/lucasreedxx" target="_blank" rel="noopener" aria-label="@lucasreedxx on X">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          <span>@lucasreedxx</span>
-        </a>
         <button class="nav-link" id="navTeam" aria-label="Team page">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="18" cy="9" r="2.5"/><path d="M15.5 20c0-2.5 1.8-4.5 4-4.8"/></svg>
           <span>Team</span>
@@ -920,7 +946,7 @@
   <section class="hero">
     <div class="container">
       <h1>Find a name.<br>Start a project.</h1>
-      <p>Discover brandable domains and generate project starters in minutes. No fluff — just the tools to get moving.</p>
+      <p>Discover brandable domains and generate project starters in minutes. No fluff, just the tools to get moving.</p>
 
       <div class="search-block">
         <div class="input-row">
@@ -1218,7 +1244,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
             </div>
             <div class="value-title">Ship fast</div>
-            <div class="value-desc">Ideas are cheap. The name, the domain, the first commit — those are the real start. We remove every blocker between idea and launch.</div>
+            <div class="value-desc">Ideas are cheap. The name, the domain, the first commit: those are the real start. We remove every blocker between idea and launch.</div>
           </div>
           <div class="value-item">
             <div class="value-icon">
@@ -1248,7 +1274,7 @@
       <div class="team-join reveal">
         <div>
           <h2>Want to build with us?</h2>
-          <p>We're always looking for sharp people who care about the craft — designers, engineers, and operators who want to work on something genuinely useful.</p>
+          <p>We are always looking for sharp people who care about the craft: designers, engineers, and operators who want to work on something genuinely useful.</p>
         </div>
         <div class="team-join-actions">
           <a class="team-x-link" href="https://x.com/lucasreedxx" target="_blank" rel="noopener">
@@ -1265,21 +1291,64 @@
 <!-- ===================== FOOTER ===================== -->
 <footer>
   <div class="container">
-    <div class="footer-inner">
-      <div class="footer-left">
-        <span class="footer-brand">Nomio</span>
-        <span class="footer-tag">Built for builders.</span>
+    <div class="footer-grid">
+
+      <!-- Col 1: Brand -->
+      <div>
+        <div class="footer-brand">Nomio</div>
+        <div class="footer-tag">Find a name.<br>Start a project.</div>
+        <div class="footer-copy">nomio.uk</div>
       </div>
-      <div class="footer-right">
-        <div class="orynth-badge">
-          <a href="https://orynth.dev/projects/nomio" target="_blank" rel="noopener">
-            <img class="badge-light" src="https://orynth.dev/api/badge/nomio?theme=light&style=default" alt="Featured on Orynth" width="130" height="40" />
-            <img class="badge-dark"  src="https://orynth.dev/api/badge/nomio?theme=dark&style=default"  alt="Featured on Orynth" width="130" height="40" />
+
+      <!-- Col 2: Product links -->
+      <div>
+        <div class="footer-col-label">Product</div>
+        <div class="footer-links">
+          <button class="footer-link" id="footerHome">Home</button>
+          <button class="footer-link" id="footerToken">Token</button>
+          <button class="footer-link" id="footerTeam">Team</button>
+          <button class="footer-link" id="footerAbout">About</button>
+        </div>
+      </div>
+
+      <!-- Col 3: Follow -->
+      <div>
+        <div class="footer-col-label">Follow</div>
+        <div class="footer-links">
+          <a class="footer-x" href="https://x.com/lucasreedxx" target="_blank" rel="noopener" aria-label="Lucas Reed on X">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            @lucasreedxx
+          </a>
+          <a class="footer-x" href="https://x.com/AlexanderRothr" target="_blank" rel="noopener" aria-label="Alexander Rothr on X">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            @AlexanderRothr
           </a>
         </div>
-        <a class="footer-x" href="https://x.com/lucasreedxx" target="_blank" rel="noopener" aria-label="@lucasreedxx on X">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          @lucasreedxx
+      </div>
+
+      <!-- Col 4: Pricing & Hours -->
+      <div>
+        <div class="footer-col-label">Info</div>
+        <div class="footer-info-row">
+          <div class="footer-info-item">
+            <strong>Pricing</strong>
+            Free to use. Premium access costs $10 in $NOMIO per pack.
+          </div>
+          <div class="footer-info-item">
+            <strong>Working hours</strong>
+            Mon to Fri, UTC. Replies within 24 hours.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span class="footer-bottom-copy">&copy; 2025 Nomio. All rights reserved.</span>
+      <div class="footer-badge-wrap">
+        <a href="https://orynth.dev/projects/nomio" target="_blank" rel="noopener">
+          <img class="badge-light" src="https://orynth.dev/api/badge/nomio?theme=light&style=default" alt="Featured on Orynth" width="120" height="36" />
+          <img class="badge-dark"  src="https://orynth.dev/api/badge/nomio?theme=dark&style=default"  alt="Featured on Orynth" width="120" height="36" />
         </a>
       </div>
     </div>
@@ -1368,6 +1437,13 @@ function showPage(id) {
 document.getElementById('navToken').addEventListener('click', () => showPage('pageToken'));
 document.getElementById('navTeam').addEventListener('click',  () => showPage('pageTeam'));
 document.getElementById('logoLink').addEventListener('click', e => { e.preventDefault(); showPage('pageHome'); });
+document.getElementById('footerHome').addEventListener('click',  () => showPage('pageHome'));
+document.getElementById('footerToken').addEventListener('click', () => showPage('pageToken'));
+document.getElementById('footerTeam').addEventListener('click',  () => showPage('pageTeam'));
+document.getElementById('footerAbout').addEventListener('click', () => {
+  document.getElementById('aboutModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+});
 
 /* =====================================================
    Scroll reveal (IntersectionObserver)
