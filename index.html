@@ -16,7 +16,7 @@
   <meta property="og:image" content="https://nomio.uk/og.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='black'/%3E%3Cpath d='M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z' fill='white'/%3E%3C/svg%3E" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
 
@@ -24,17 +24,17 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --black:  #0a0a0a;
-      --white:  #ffffff;
-      --g50:    #fafafa;
-      --g100:   #f4f4f4;
-      --g200:   #e5e5e5;
-      --g400:   #a3a3a3;
-      --g600:   #525252;
-      --g800:   #262626;
-      --radius: 8px;
+      --black:  #1A0A00;
+      --white:  #FFFCF5;
+      --g50:    #F7E8C5;
+      --g100:   #F0DDB0;
+      --g200:   #E2C98A;
+      --g400:   #9A7050;
+      --g600:   #6B4A30;
+      --g800:   #2D1600;
+      --radius: 10px;
       --font:         'Plus Jakarta Sans', system-ui, sans-serif;
-      --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-display: 'Syne', system-ui, sans-serif;
       --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
       --ease:         cubic-bezier(.4,0,.2,1);
       --ease-spring:  cubic-bezier(.22,1,.36,1);
@@ -44,15 +44,15 @@
     }
 
     [data-theme="dark"] {
-      --black:  #f0f0f0;
-      --white:  #0d0d0d;
-      --g50:    #141414;
-      --g100:   #1c1c1c;
-      --g200:   #2a2a2a;
-      --g400:   #5a5a5a;
-      --g600:   #a0a0a0;
-      --g800:   #d0d0d0;
-      --glow: 0 0 60px rgba(255,255,255,.04), 0 2px 20px rgba(0,0,0,.4);
+      --black:  #F5E6C5;
+      --white:  #120800;
+      --g50:    #1C0D00;
+      --g100:   #2A1500;
+      --g200:   #3A2200;
+      --g400:   #8A6A40;
+      --g600:   #C4A060;
+      --g800:   #EECF90;
+      --glow: 0 0 60px rgba(217,21,21,.08), 0 2px 20px rgba(0,0,0,.5);
     }
 
     html { font-size: 16px; scroll-behavior: smooth; }
@@ -261,7 +261,7 @@
 
     .btn-primary {
       height: 66px; padding: 0 32px;
-      background: var(--black); color: var(--white);
+      background: #D91515; color: #fff;
       border: none; border-radius: 0;
       font-size: 14px; font-weight: 700; white-space: nowrap;
       letter-spacing: -.01em; transition: opacity .15s, background .2s;
@@ -311,7 +311,7 @@
     }
     .chip:hover { border-color: var(--black); color: var(--black); transform: translateY(-1px); }
     .chip.active {
-      background: var(--black); color: var(--white); border-color: var(--black);
+      background: #D91515; color: #fff; border-color: #D91515;
       box-shadow: 0 4px 12px rgba(0,0,0,.15);
     }
 
@@ -332,7 +332,7 @@
     .stat-num {
       font-family: var(--font-display);
       font-size: clamp(30px, 4.5vw, 48px); font-weight: 800;
-      letter-spacing: -.05em; color: var(--black);
+      letter-spacing: -.05em; color: #D91515;
       line-height: 1;
     }
     .stat-label { font-size: 12px; font-weight: 600; color: var(--g400); text-align: center; letter-spacing: .02em; text-transform: uppercase; }
@@ -402,7 +402,7 @@
       background: var(--white); transition: all .15s; letter-spacing: .02em;
     }
     .tld-btn:hover { border-color: var(--black); color: var(--black); }
-    .tld-btn.active { background: var(--black); color: var(--white); border-color: var(--black); }
+    .tld-btn.active { background: #D91515; color: #fff; border-color: #D91515; }
 
     .results-controls { display: flex; gap: 6px; }
     .ctrl-btn {
@@ -414,7 +414,7 @@
     }
     .ctrl-btn:hover { border-color: var(--black); color: var(--black); }
     .ctrl-btn.active-avail { background: #edfbee; color: #166534; border-color: #86efac; }
-    .ctrl-btn.active-sort  { background: var(--black); color: var(--white); border-color: var(--black); }
+    .ctrl-btn.active-sort  { background: #D91515; color: #fff; border-color: #D91515; }
     .ctrl-btn svg { width: 11px; height: 11px; flex-shrink: 0; }
 
     .domain-grid {
@@ -912,7 +912,7 @@
     ============================================================ */
     .toast {
       position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: var(--black); color: var(--white);
+      background: #D91515; color: #fff;
       font-size: 13px; font-weight: 600;
       padding: 10px 20px; border-radius: 100px;
       opacity: 0; pointer-events: none;
@@ -1087,7 +1087,7 @@
     }
     .btn-ba:hover { border-color: var(--black); color: var(--black); }
     .btn-ba svg { width: 12px; height: 12px; }
-    .btn-ba-primary { background: var(--black); color: var(--white); border-color: var(--black); }
+    .btn-ba-primary { background: #D91515; color: #fff; border-color: #D91515; }
     .btn-ba-primary:hover { opacity: .82; color: var(--white); }
 
     .brand-scene-wrap {
@@ -1138,7 +1138,7 @@
     <div class="header-inner">
       <a class="logo" href="#" id="logoLink" aria-label="Nomio home">
         <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" fill="var(--black)"/>
+          <rect width="32" height="32" fill="#D91515"/>
           <path d="M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z" fill="var(--white)"/>
         </svg>
         <span style="font-size:17px;font-weight:800;letter-spacing:-.04em">Nomio</span>
@@ -1575,13 +1575,7 @@
 
     <div class="footer-bottom">
       <span class="footer-bottom-copy">&copy; 2025 Nomio. All rights reserved.</span>
-      <div class="footer-badge-wrap">
-        <a href="https://orynth.dev/projects/nomio" target="_blank" rel="noopener">
-          <img class="badge-light" src="https://orynth.dev/api/badge/nomio?theme=light&style=default" alt="Featured on Orynth" width="120" height="36" />
-          <img class="badge-dark"  src="https://orynth.dev/api/badge/nomio?theme=dark&style=default"  alt="Featured on Orynth" width="120" height="36" />
-        </a>
       </div>
-    </div>
   </div>
 </footer>
 
