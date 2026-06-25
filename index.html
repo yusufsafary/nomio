@@ -16,7 +16,7 @@
   <meta property="og:image" content="https://nomio.uk/og.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,600;1,9..144,700;1,9..144,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='black'/%3E%3Cpath d='M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z' fill='white'/%3E%3C/svg%3E" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
 
@@ -33,8 +33,8 @@
       --g600:   #6B4A30;
       --g800:   #2D1600;
       --radius: 10px;
-      --font:         'Plus Jakarta Sans', system-ui, sans-serif;
-      --font-display: 'Syne', system-ui, sans-serif;
+      --font:         'DM Sans', system-ui, sans-serif;
+      --font-display: 'Fraunces', Georgia, serif;
       --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
       --ease:         cubic-bezier(.4,0,.2,1);
       --ease-spring:  cubic-bezier(.22,1,.36,1);
@@ -212,9 +212,11 @@
     .hero h1 {
       font-family: var(--font-display);
       font-size: clamp(44px, 7vw, 80px);
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.04;
+      font-weight: 700;
+      font-style: italic;
+      font-optical-sizing: auto;
+      letter-spacing: -0.01em;
+      line-height: 1.08;
       margin-bottom: 24px;
       color: var(--black);
     }
@@ -331,8 +333,8 @@
     .stat-item { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; min-width: 120px; }
     .stat-num {
       font-family: var(--font-display);
-      font-size: clamp(30px, 4.5vw, 48px); font-weight: 800;
-      letter-spacing: -.05em; color: #D91515;
+      font-size: clamp(30px, 4.5vw, 48px); font-weight: 700; font-optical-sizing: auto;
+      letter-spacing: -.025em; color: #D91515;
       line-height: 1;
     }
     .stat-label { font-size: 12px; font-weight: 600; color: var(--g400); text-align: center; letter-spacing: .02em; text-transform: uppercase; }
@@ -387,7 +389,7 @@
     }
     .results-title {
       font-family: var(--font-display);
-      font-size: 22px; font-weight: 800; letter-spacing: -.04em;
+      font-size: 22px; font-weight: 700; font-optical-sizing: auto; letter-spacing: -.02em;
       color: var(--black);
     }
     .results-meta  { font-size: 13px; color: var(--g400); margin-top: 3px; }
@@ -440,7 +442,7 @@
     [data-theme="dark"] .domain-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,.5); border-color: var(--g400); }
 
     .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-    .domain-name { font-size: 17px; font-weight: 800; letter-spacing: -.03em; word-break: break-all; color: var(--black); }
+    .domain-name { font-size: 17px; font-weight: 700; letter-spacing: -.02em; word-break: break-all; color: var(--black); }
     .domain-tld  { color: var(--g400); font-weight: 400; }
 
     .status-badge {
@@ -584,7 +586,7 @@
     }
     .modal-title {
       font-family: var(--font-display);
-      font-size: 18px; font-weight: 800; letter-spacing: -.03em;
+      font-size: 18px; font-weight: 700; font-optical-sizing: auto; letter-spacing: -.01em;
       color: var(--black);
     }
     .modal-close {
@@ -709,7 +711,7 @@
     .token-hero h1 {
       font-family: var(--font-display);
       font-size: clamp(38px, 5.5vw, 64px);
-      font-weight: 800; letter-spacing: -.04em; line-height: 1.04;
+      font-weight: 700; font-optical-sizing: auto; letter-spacing: -.01em; line-height: 1.08;
       color: var(--black); margin-bottom: 20px;
     }
     .token-hero p { font-size: 17px; line-height: 1.75; color: var(--g600); max-width: 540px; }
@@ -718,7 +720,7 @@
     .token-mechanics { margin-bottom: 72px; }
     .token-mechanics h2 {
       font-family: var(--font-display);
-      font-size: 24px; font-weight: 800; letter-spacing: -.04em;
+      font-size: 24px; font-weight: 700; font-optical-sizing: auto; letter-spacing: -.015em;
       margin-bottom: 36px; color: var(--black);
     }
     .mechanic-row {
@@ -734,8 +736,8 @@
     .mechanic-item:hover { background: var(--g50); }
     .mechanic-num {
       font-family: var(--font-display);
-      font-size: 36px; font-weight: 800;
-      color: var(--black); margin-bottom: 6px; letter-spacing: -.05em;
+      font-size: 36px; font-weight: 700; font-optical-sizing: auto;
+      color: var(--black); margin-bottom: 6px; letter-spacing: -.025em;
       line-height: 1;
     }
     .mechanic-label { font-size: 13px; font-weight: 700; color: var(--black); margin-bottom: 6px; }
@@ -765,7 +767,7 @@
     .token-card-icon svg { width: 22px; height: 22px; color: var(--black); }
     .token-card h3 {
       font-family: var(--font-display);
-      font-size: 16px; font-weight: 800; letter-spacing: -.03em;
+      font-size: 16px; font-weight: 700; font-optical-sizing: auto; letter-spacing: -.01em;
       margin-bottom: 10px; color: var(--black);
     }
     .token-card p { font-size: 14px; line-height: 1.7; color: var(--g600); }
@@ -792,7 +794,7 @@
     }
     .token-launch-left h2 {
       font-family: var(--font-display);
-      font-size: 24px; font-weight: 800; letter-spacing: -.04em;
+      font-size: 24px; font-weight: 700; font-optical-sizing: auto; letter-spacing: -.015em;
       margin-bottom: 10px; color: var(--black);
     }
     .token-launch-left p { font-size: 15px; line-height: 1.65; max-width: 440px; }
@@ -801,7 +803,7 @@
     .token-faq { margin-bottom: 48px; }
     .token-faq h2 {
       font-family: var(--font-display);
-      font-size: 24px; font-weight: 800; letter-spacing: -.04em;
+      font-size: 24px; font-weight: 700; font-optical-sizing: auto; letter-spacing: -.015em;
       margin-bottom: 28px; color: var(--black);
     }
     .faq-item {
@@ -834,7 +836,7 @@
     }
     .footer-brand {
       font-family: var(--font-display);
-      font-size: 18px; font-weight: 800; letter-spacing: -.04em;
+      font-size: 18px; font-weight: 700; font-optical-sizing: auto; letter-spacing: -.01em;
       color: var(--black); margin-bottom: 8px;
     }
     .footer-tag   { font-size: 13px; color: var(--g400); line-height: 1.6; margin-bottom: 16px; }
@@ -931,7 +933,7 @@
     .team-hero h1 {
       font-family: var(--font-display);
       font-size: clamp(36px, 5.5vw, 60px);
-      font-weight: 800; letter-spacing: -.04em; line-height: 1.06;
+      font-weight: 700; font-optical-sizing: auto; letter-spacing: -.01em; line-height: 1.08;
       color: var(--black); margin-bottom: 18px;
     }
     .team-hero p { font-size: 16px; line-height: 1.75; color: var(--g600); max-width: 480px; }
@@ -969,7 +971,7 @@
       width: 72px; height: 72px; border-radius: 50%;
       background: var(--g100); border: 2px solid var(--g200);
       display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display); font-size: 26px; font-weight: 800;
+      font-family: var(--font-display); font-size: 26px; font-weight: 700;
       color: var(--black); margin-bottom: 22px;
       overflow: hidden; flex-shrink: 0; position: relative;
     }
@@ -984,7 +986,7 @@
     .badge-founder   { background: #0a0a0a; color: #fff; }
     .badge-cofounder { background: var(--g100); color: var(--g800); border: 1px solid var(--g200); }
 
-    .team-name  { font-size: 20px; font-weight: 800; letter-spacing: -.03em; color: var(--black); margin-bottom: 4px; }
+    .team-name  { font-size: 20px; font-weight: 600; font-optical-sizing: auto; letter-spacing: -.01em; color: var(--black); margin-bottom: 4px; }
     .team-title { font-size: 13px; color: var(--g400); font-weight: 500; margin-bottom: 16px; }
     .team-bio   { font-size: 14px; line-height: 1.7; color: var(--g600); margin-bottom: 20px; }
     .team-socials { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -1015,7 +1017,7 @@
       margin-bottom: 14px;
     }
     .value-icon svg { width: 18px; height: 18px; color: var(--black); }
-    .value-title { font-size: 14px; font-weight: 800; letter-spacing: -.02em; color: var(--black); margin-bottom: 6px; }
+    .value-title { font-size: 14px; font-weight: 600; letter-spacing: 0em; color: var(--black); margin-bottom: 6px; }
     .value-desc  { font-size: 13px; line-height: 1.65; color: var(--g600); }
 
     .team-join {
@@ -1026,7 +1028,7 @@
     }
     .team-join h2 {
       font-family: var(--font-display);
-      font-size: 24px; font-weight: 800; letter-spacing: -.04em;
+      font-size: 24px; font-weight: 700; font-optical-sizing: auto; letter-spacing: -.015em;
       margin-bottom: 10px; color: var(--black);
     }
     .team-join p { font-size: 15px; line-height: 1.65; color: var(--g600); max-width: 440px; }
@@ -1136,7 +1138,7 @@
           <rect width="32" height="32" fill="#D91515"/>
           <path d="M6 6 L6 26 L11 26 L11 14.5 L21 26 L26 26 L26 6 L21 6 L21 17.5 L11 6 Z" fill="var(--white)"/>
         </svg>
-        <span style="font-size:17px;font-weight:800;letter-spacing:-.04em">Nomio</span>
+        <span style="font-size:17px;font-weight:700;letter-spacing:-.02em">Nomio</span>
       </a>
 
       <nav class="nav-right">
