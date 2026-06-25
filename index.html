@@ -11,8 +11,8 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://nomio.uk" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@lucasreedxx" />
-  <meta name="twitter:creator" content="@lucasreedxx" />
+  <meta name="twitter:site" content="@NOMIO_AI" />
+  <meta name="twitter:creator" content="@NOMIO_AI" />
   <meta property="og:image" content="https://nomio.uk/og.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -876,6 +876,123 @@
       .footer-grid { grid-template-columns: 1fr; gap: 24px; }
     }
 
+
+    /* ============================================================
+       X / Follow banner
+    ============================================================ */
+    .x-banner {
+      background: #0a0a0a;
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; padding: 9px 16px;
+      font-size: 13px; font-weight: 500;
+      position: relative;
+      transition: max-height .3s ease, padding .3s ease, opacity .2s;
+      overflow: hidden;
+    }
+    .x-banner-link {
+      display: flex; align-items: center; gap: 8px;
+      color: #fff; text-decoration: none;
+      transition: opacity .15s;
+    }
+    .x-banner-link:hover { opacity: .78; }
+    .x-banner-link svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .x-banner strong { color: #fff; }
+    .x-banner-arrow { opacity: .5; }
+    .x-banner-close {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: rgba(255,255,255,.55);
+      font-size: 16px; cursor: pointer; padding: 4px 6px;
+      line-height: 1; border-radius: 4px;
+      transition: color .15s, background .15s;
+    }
+    .x-banner-close:hover { color: #fff; background: rgba(255,255,255,.12); }
+    .x-banner.dismissed { max-height: 0 !important; padding: 0 !important; opacity: 0; pointer-events: none; }
+
+    /* ============================================================
+       Login page
+    ============================================================ */
+    .login-page { max-width: 640px; margin: 0 auto; padding: 80px 0 120px; }
+    .login-eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--g400); margin-bottom: 20px;
+    }
+    .login-eyebrow-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #D91515;
+      animation: pulse 2s infinite;
+    }
+    .login-page h1 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700; font-style: italic; font-optical-sizing: auto;
+      letter-spacing: -.01em; line-height: 1.1;
+      color: var(--black); margin-bottom: 12px;
+    }
+    .login-page .login-sub {
+      font-size: 15px; color: var(--g600); line-height: 1.65;
+      margin-bottom: 48px; max-width: 420px;
+    }
+    .login-cards {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    @media (max-width: 540px) { .login-cards { grid-template-columns: 1fr; } }
+    .login-card {
+      border: 1.5px solid var(--g200); border-radius: 16px;
+      padding: 32px 28px; background: var(--white);
+      display: flex; flex-direction: column; gap: 14px;
+      transition: border-color .2s, box-shadow .25s, transform .25s var(--ease-spring);
+    }
+    .login-card:hover {
+      border-color: var(--g400);
+      box-shadow: 0 8px 32px rgba(0,0,0,.07);
+      transform: translateY(-3px);
+    }
+    .login-card-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .login-card-icon svg { width: 22px; height: 22px; }
+    .login-card-icon-agent { background: #f0f4ff; color: #3b5bdb; }
+    .login-card-icon-human { background: var(--g100); color: var(--g800); }
+    .login-card-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .09em; color: var(--g400);
+    }
+    .login-card-title {
+      font-family: var(--font-display);
+      font-size: 19px; font-weight: 700; font-optical-sizing: auto;
+      letter-spacing: -.01em; color: var(--black); line-height: 1.2;
+    }
+    .login-card-desc {
+      font-size: 13px; color: var(--g600); line-height: 1.65; flex: 1;
+    }
+    .login-card-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 11px 18px; border-radius: 10px;
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      cursor: not-allowed; border: none; margin-top: 4px;
+      transition: opacity .15s;
+    }
+    .login-card-btn-agent {
+      background: #3b5bdb; color: #fff; opacity: .45;
+    }
+    .login-card-btn-human {
+      background: var(--black); color: var(--white); opacity: .45;
+    }
+    .login-soon {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--g400);
+      background: var(--g100); border-radius: 5px; padding: 3px 8px;
+    }
+    .login-note {
+      margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--g200);
+      font-size: 12px; color: var(--g400); text-align: center; line-height: 1.7;
+    }
+    .login-note a { color: var(--g600); text-decoration: underline; text-underline-offset: 3px; }
+
     /* ============================================================
        Animations — upgraded
     ============================================================ */
@@ -1129,6 +1246,16 @@
 </head>
 <body>
 
+<!-- ===================== X BANNER ===================== -->
+<div class="x-banner" id="xBanner">
+  <a href="https://x.com/NOMIO_AI" target="_blank" rel="noopener" class="x-banner-link">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    Follow <strong>@NOMIO_AI</strong> on X &nbsp;&mdash;&nbsp; official updates &amp; launches
+    <span class="x-banner-arrow">→</span>
+  </a>
+  <button class="x-banner-close" id="xBannerClose" aria-label="Dismiss">&#x2715;</button>
+</div>
+
 <!-- ===================== HEADER ===================== -->
 <header>
   <div class="container">
@@ -1146,9 +1273,9 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.5 7.5H10a2.5 2.5 0 100 5h4a2.5 2.5 0 110 5H9.5"/><path d="M12 6v1.5M12 16.5V18"/></svg>
           <span>Token</span>
         </button>
-        <button class="nav-link" id="navTeam">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="18" cy="9" r="2.5"/><path d="M15.5 20c0-2.5 1.8-4.5 4-4.8"/></svg>
-          <span>Team</span>
+        <button class="nav-link" id="navLogin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><path d="M17 11l2 2 4-4" stroke-width="2.2"/></svg>
+          <span>Login</span>
         </button>
         <button class="nav-link" id="openAbout">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
@@ -1385,7 +1512,7 @@
       <div class="token-launch reveal">
         <div class="token-launch-left">
           <h2>$NOMIO launches on EasyA Kickstart</h2>
-          <p>EasyA Kickstart is where community-driven crypto projects get their start. That is where $NOMIO will be listed first. Follow <a href="https://x.com/lucasreedxx" target="_blank" rel="noopener" style="color:var(--black);font-weight:700;text-decoration:underline;text-underline-offset:3px;">@lucasreedxx</a> for the exact date.</p>
+          <p>EasyA Kickstart is where community-driven crypto projects get their start. That is where $NOMIO will be listed first. Follow <a href="https://x.com/NOMIO_AI" target="_blank" rel="noopener" style="color:var(--black);font-weight:700;text-decoration:underline;text-underline-offset:3px;">@NOMIO_AI</a> for the exact date.</p>
         </div>
         <a href="https://kickstart.easya.io/" target="_blank" rel="noopener" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;height:52px;padding:0 28px;border-radius:12px;flex-shrink:0;font-weight:700;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
@@ -1397,7 +1524,7 @@
         <h2>Questions</h2>
         <div class="faq-item">
           <p class="faq-q">When does $NOMIO launch? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></p>
-          <p class="faq-a">We are not giving a hard date yet. What we know is the listing will happen on EasyA Kickstart. Follow @lucasreedxx on X and you will know as soon as we do.</p>
+          <p class="faq-a">We are not giving a hard date yet. What we know is the listing will happen on EasyA Kickstart. Follow @NOMIO_AI on X and you will know as soon as we do.</p>
         </div>
         <div class="faq-item">
           <p class="faq-q">What is the total supply? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></p>
@@ -1422,107 +1549,54 @@
 </div><!-- /pageToken -->
 
 <!-- ===================== PAGE: TEAM ===================== -->
-<div class="page" id="pageTeam">
+
+
+
+<!-- ===================== PAGE: LOGIN ===================== -->
+<div class="page" id="pageLogin">
   <div class="container">
-    <div class="team-page">
+    <div class="login-page">
+      <div class="login-eyebrow">
+        <span class="login-eyebrow-dot"></span>
+        Account access
+      </div>
+      <h1>Sign in to Nomio.</h1>
+      <p class="login-sub">Choose how you'd like to continue. Full authentication is coming soon — enter your details below to join the waitlist.</p>
 
-      <div class="team-hero reveal">
-        <div class="team-eyebrow">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="18" cy="9" r="2.5"/><path d="M15.5 20c0-2.5 1.8-4.5 4-4.8"/></svg>
-          The Team
+      <div class="login-cards">
+
+        <div class="login-card">
+          <div class="login-card-icon login-card-icon-agent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="3"/><path d="M8 20h8M12 18v2"/><circle cx="9" cy="11" r="1.5" fill="currentColor" stroke="none"/><circle cx="15" cy="11" r="1.5" fill="currentColor" stroke="none"/><path d="M9 8V6M15 8V6"/></svg>
+          </div>
+          <div class="login-card-label">Automated</div>
+          <div class="login-card-title">AI Agent</div>
+          <p class="login-card-desc">Authenticate via an agent session. Built for automated pipelines, integrations, and programmatic access to Nomio's generation API.</p>
+          <button class="login-card-btn login-card-btn-agent" disabled>
+            Coming soon &nbsp;<span class="login-soon">Beta</span>
+          </button>
         </div>
-        <h1>Built by people<br>who actually ship.</h1>
-        <p>Nomio was born from a genuine frustration with slow, overcrowded domain tools. We are a small founding team that builds and uses what we make, every day.</p>
+
+        <div class="login-card">
+          <div class="login-card-icon login-card-icon-human">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </div>
+          <div class="login-card-label">Personal</div>
+          <div class="login-card-title">Human</div>
+          <p class="login-card-desc">Sign in with your account to access saved domains, starter kits, purchase history, and your personal Nomio dashboard.</p>
+          <button class="login-card-btn login-card-btn-human" disabled>
+            Coming soon &nbsp;<span class="login-soon">Q3</span>
+          </button>
+        </div>
+
       </div>
 
-      <div class="team-leadership">
-        <p class="team-section-label reveal">Leadership</p>
-        <div class="team-leadership-grid">
-          <div class="team-card team-card-founder reveal reveal-delay-1">
-            <div class="team-avatar">
-              <img src="https://unavatar.io/twitter/lucasreedxx" alt="Lucas Reed" onerror="this.remove()"/>L</div>
-            <span class="team-role-badge badge-founder">
-              <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-              Founder
-            </span>
-            <div class="team-name">Lucas Reed</div>
-            <div class="team-title">Founder &amp; CEO</div>
-            <div class="team-bio">Lucas started Nomio after spending too many late nights trying to find the right name for a side project. He leads product vision, growth, and the $NOMIO token strategy. When he's not building, he's writing about startup naming and brand strategy.</div>
-            <div class="team-socials">
-              <a class="team-x-link" href="https://x.com/lucasreedxx" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                @lucasreedxx
-              </a>
-            </div>
-          </div>
-
-          <div class="team-card reveal reveal-delay-2">
-            <div class="team-avatar">
-              <img src="https://unavatar.io/twitter/AlexanderRothr" alt="Alexander Rothr" onerror="this.remove()"/>A</div>
-            <span class="team-role-badge badge-cofounder">Co-Founder</span>
-            <div class="team-name">Alexander Rothr</div>
-            <div class="team-title">Co-Founder &amp; CTO</div>
-            <div class="team-bio">Alexander handles architecture, engineering, and the systems that make Nomio fast. He built the original name generator, the starter kit engine, and the Vercel deployment pipeline. He's obsessed with things that are both simple and powerful.</div>
-            <div class="team-socials">
-              <a class="team-x-link" href="https://x.com/AlexanderRothr" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                @AlexanderRothr
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="team-values reveal">
-        <p class="team-section-label" style="margin-bottom:20px">What we stand for</p>
-        <div class="team-values-grid">
-          <div class="value-item">
-            <div class="value-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            </div>
-            <div class="value-title">Ship fast</div>
-            <div class="value-desc">Ideas are cheap. The name, the domain, the first commit: those are the real start. We remove every blocker between idea and launch.</div>
-          </div>
-          <div class="value-item">
-            <div class="value-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-            </div>
-            <div class="value-title">No fluff</div>
-            <div class="value-desc">Every feature earns its place. We cut anything that slows you down or exists just to look impressive. Simple tools compound.</div>
-          </div>
-          <div class="value-item">
-            <div class="value-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-            </div>
-            <div class="value-title">Community first</div>
-            <div class="value-desc">The $NOMIO token isn't an afterthought. It ties platform growth to the people who actually use it. Builders benefit when Nomio grows.</div>
-          </div>
-          <div class="value-item">
-            <div class="value-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-            </div>
-            <div class="value-title">Transparency</div>
-            <div class="value-desc">Burn mechanics are on-chain and automatic. Reward rules are published. No black boxes, no discretionary decisions. What you see is what it does.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="team-join reveal">
-        <div>
-          <h2>Want to build with us?</h2>
-          <p>We are always looking for sharp people who care about the craft: designers, engineers, and operators who want to work on something genuinely useful.</p>
-        </div>
-        <div class="team-join-actions">
-          <a class="team-x-link" href="https://x.com/lucasreedxx" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            Reach out on X
-          </a>
-        </div>
-      </div>
-
+      <p class="login-note">
+        No account yet? <a href="https://x.com/NOMIO_AI" target="_blank" rel="noopener">Follow @NOMIO_AI</a> for early access announcements.
+      </p>
     </div>
   </div>
-</div><!-- /pageTeam -->
+</div><!-- /pageLogin -->
 
 <!-- ===================== FOOTER ===================== -->
 <footer>
@@ -1538,20 +1612,15 @@
         <div class="footer-links">
           <button class="footer-link" id="footerHome">Home</button>
           <button class="footer-link" id="footerToken">Token</button>
-          <button class="footer-link" id="footerTeam">Team</button>
           <button class="footer-link" id="footerAbout">About</button>
         </div>
       </div>
       <div>
         <div class="footer-col-label">Follow</div>
         <div class="footer-links">
-          <a class="footer-x" href="https://x.com/lucasreedxx" target="_blank" rel="noopener">
+          <a class="footer-x" href="https://x.com/NOMIO_AI" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            @lucasreedxx
-          </a>
-          <a class="footer-x" href="https://x.com/AlexanderRothr" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            @AlexanderRothr
+            @NOMIO_AI
           </a>
         </div>
       </div>
@@ -1690,16 +1759,27 @@ function showPage(id) {
   setTimeout(attachReveal, 50);
 }
 document.getElementById('navToken').addEventListener('click', () => showPage('pageToken'));
-document.getElementById('navTeam').addEventListener('click',  () => showPage('pageTeam'));
+document.getElementById('navLogin').addEventListener('click', () => showPage('pageLogin'));
 document.getElementById('logoLink').addEventListener('click', e => { e.preventDefault(); showPage('pageHome'); });
 document.getElementById('footerHome').addEventListener('click',  () => showPage('pageHome'));
 document.getElementById('footerToken').addEventListener('click', () => showPage('pageToken'));
-document.getElementById('footerTeam').addEventListener('click',  () => showPage('pageTeam'));
+
 document.getElementById('footerAbout').addEventListener('click', () => {
   document.getElementById('aboutModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 });
 
+
+/* X Banner dismiss */
+(function() {
+  var banner = document.getElementById('xBanner');
+  var close = document.getElementById('xBannerClose');
+  if (sessionStorage.getItem('xBannerDismissed')) banner.classList.add('dismissed');
+  close.addEventListener('click', function() {
+    banner.classList.add('dismissed');
+    sessionStorage.setItem('xBannerDismissed', '1');
+  });
+})();
 /* =====================================================
    FAQ accordion
 ===================================================== */
