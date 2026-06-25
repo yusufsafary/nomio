@@ -884,30 +884,39 @@
       background: #0a0a0a;
       color: #fff;
       display: flex; align-items: center; justify-content: center;
-      gap: 10px; padding: 9px 16px;
+      gap: 0; padding: 0;
       font-size: 13px; font-weight: 500;
       position: relative;
-      transition: max-height .3s ease, padding .3s ease, opacity .2s;
+      transition: max-height .3s ease, opacity .2s;
       overflow: hidden;
+      min-height: 38px;
     }
     .x-banner-link {
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 7px;
       color: #fff; text-decoration: none;
+      padding: 9px 44px 9px 16px;
+      width: 100%; justify-content: center;
       transition: opacity .15s;
+      line-height: 1.4;
     }
     .x-banner-link:hover { opacity: .78; }
-    .x-banner-link svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .x-banner-link svg { width: 13px; height: 13px; flex-shrink: 0; }
     .x-banner strong { color: #fff; }
-    .x-banner-arrow { opacity: .5; }
+    .x-banner-arrow { opacity: .45; flex-shrink: 0; }
     .x-banner-close {
-      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; color: rgba(255,255,255,.55);
-      font-size: 16px; cursor: pointer; padding: 4px 6px;
-      line-height: 1; border-radius: 4px;
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: rgba(255,255,255,.5);
+      font-size: 15px; cursor: pointer; padding: 6px 8px;
+      line-height: 1; border-radius: 4px; flex-shrink: 0;
       transition: color .15s, background .15s;
     }
     .x-banner-close:hover { color: #fff; background: rgba(255,255,255,.12); }
-    .x-banner.dismissed { max-height: 0 !important; padding: 0 !important; opacity: 0; pointer-events: none; }
+    .x-banner.dismissed { max-height: 0 !important; min-height: 0 !important; opacity: 0; pointer-events: none; }
+    @media (max-width: 480px) {
+      .x-banner { font-size: 12px; min-height: 36px; }
+      .x-banner-link { gap: 6px; padding: 8px 40px 8px 12px; }
+      .x-banner-arrow { display: none; }
+    }
 
     /* ============================================================
        Login page
