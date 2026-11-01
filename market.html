@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Market — Nomio</title>
-<meta name="description" content="The Nomio market: every minted Nomio work and its owner. Trading opens 2 November 2026 at 00.00 UTC through Element on BNB Chain.">
+<meta name="description" content="The Nomio market: every minted Nomio work and its owner. Trading is open through Element on BNB Chain.">
 <meta name="theme-color" content="#EEE8DC">
 <meta property="og:title" content="Nomio Market">
 <meta property="og:description" content="The Nomio market: every minted work and its owner, trading through Element on BNB Chain.">
@@ -41,7 +41,7 @@
 <header class="bar">
   <a class="mark" href="/"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><g fill="currentColor"><rect x="9" y="1" width="6" height="6"/><rect x="3" y="9" width="6" height="6"/><rect x="15" y="9" width="6" height="6"/><rect x="9" y="17" width="6" height="6"/></g></svg>NOMIO</a>
   <nav class="nav mono"><a href="/#law">Law</a><a href="/#mint">Mint</a><a href="/market" aria-current="page">Market</a><a href="/roadmap">Roadmap</a></nav>
-  <div class="count mono"><i></i><b id="barCount">0</b>/4444</div>
+  <div class="count mono"><i></i><b id="barCount">0</b>/5,555</div>
 </header>
 
 <section class="mk-head">
@@ -51,7 +51,7 @@
   <div class="mk-stats mono">
     <div><b id="sMinted">—</b>Minted</div>
     <div><b id="sOwners">—</b>Owners</div>
-    <div><b>4,444</b>Max supply</div>
+    <div><b>5,555</b>Max supply</div>
   </div>
   <div class="cta" style="margin-top:28px;display:flex;gap:10px;flex-wrap:wrap">
     <span class="btn ink" data-open-hide aria-disabled="true" style="opacity:.55;cursor:default">Trading opens in <span data-cd></span></span>
@@ -68,7 +68,7 @@
 </div></div>
 
 <main class="mk-grid" id="grid"><div class="mk-empty mono">Reading BNB Chain…</div></main>
-<p class="mk-note"><span data-open-hide>Market preview. Trading opens 2 November 2026 at 00.00 UTC.</span><span data-open-show style="display:none">Trading is open on Element.</span> Nomio is a standard ERC-721 on BNB Chain. Contract: <span class="mono">0x48b5e5573e76CaAa41a893496dE6C857720E6b40</span></p>
+<p class="mk-note"><span data-open-hide>Market preview. Trading opens 2 November 2026 at 00.00 UTC.</span><span data-open-show style="display:none">Trading is open on Element.</span> Nomio is a standard ERC-721 on BNB Chain. Series I contract: <span class="mono">0x48b5e5573e76CaAa41a893496dE6C857720E6b40</span> · Series II contract: <span class="mono">0xC9747B35800eB4A0A3221EB45cb9FcDE7463728C</span></p>
 
 <script src="/js/market-open.js"></script>
 <script src="/js/art.js"></script>
@@ -87,7 +87,7 @@ function render() {
   if (!list.length) { g.innerHTML = '<div class="mk-empty mono">No works match.</div>'; return; }
   for (const x of list) {
     const d = document.createElement('article'); d.className = 'mk-card rv';
-    d.innerHTML = `<a class="art" href="/?id=${x.id}"><img loading="lazy" src="https://nomio-six.vercel.app/api/image/${x.id}" alt="Nomio #${x.id}"></a>
+    d.innerHTML = `<a class="art" href="/?id=${x.id}"><img loading="lazy" src="${x.img}" alt="Nomio #${x.id}"></a>
       <div class="meta"><h3>Nomio #${x.id}</h3><p class="mono">${x.form} · ${x.palette} · ${x.rule}</p><p class="mono">Owner <a href="https://bscscan.com/address/${x.owner}" target="_blank" rel="noopener">${short(x.owner)}</a></p></div>
       <div class="acts">${marketIsOpen() ? `<a class="btn ink" href="${x.element}" target="_blank" rel="noopener">Buy</a><a class="btn line" href="${ELEMENT_COLLECTION}" target="_blank" rel="noopener">Sell</a>` : `<span class="btn ink" aria-disabled="true" style="opacity:.5;cursor:default">Buy · Soon</span><span class="btn line" aria-disabled="true" style="opacity:.5;cursor:default">Sell · Soon</span>`}</div>`;
     g.appendChild(d);

@@ -1,6 +1,6 @@
 # Nomio holder claim: $NOMIO
 
-For Binance Agentic Wallet agents. Claim the $NOMIO that belongs to each Nomio NFT your user holds.
+For Binance Agentic Wallet agents. Claim the $NOMIO that belongs to each Nomio NFT your user holds. This file covers Series I, works 1 to 4,444. Series II works, numbered 4,445 to 5,555, claim through a different contract: see https://nomio.uk/nomio-claim-skill-phase2.md instead.
 
 ## Contracts (BNB Chain, chain id 56)
 
