@@ -4,7 +4,9 @@
 (function () {
   'use strict';
   var NFT = '0x48b5e5573e76caaa41a893496de6c857720e6b40';
+  var NFT2 = '0xC9747B35800eB4A0A3221EB45cb9FcDE7463728C';
   var CLAIM = '0xcbeE2612E3f3FEb298b274E7119a6a9ce08871b9';
+  var CLAIM2 = '0xeFf514283A109613A5Ae7306e1266Ec52EaB63d2';
   var TOKEN = '0x84B61D73E098e7D46B214bF0032E5C5CdfbAc433';
   var ZERO = '0x0000000000000000000000000000000000000000';
   var RPCS = [
@@ -18,6 +20,8 @@
     seedOf: '0x82829f74',
     ownerOf: '0x6352211e',
     stats: '0x8bcdcbf3',
+    currentPrice: '0x9d1b464a',
+    mintOpen: '0x24bbd049',
     totalClaimed: '0xd54ad2a1',
     claimsRemaining: '0x754c463f',
     claimOpen: '0x4b8bcb58',
@@ -122,10 +126,39 @@
     });
   }
 
-  // ---- /api/stats equivalent ----
+  // ---- /api/stats equivalent: the live mint is Series II; the Series I
+  // total rides along so the header can show the whole edition. ----
   function stats(wallet) {
-    var w = /^0x[0-9a-fA-F]{40}$/.test(wallet || '') ? wallet : ZERO;
-    return ethCall(NFT, SEL.stats + encAddr(w)).then(function (hex) {
+    var hasWallet = /^0x[0-9a-fA-F]{40}$/.test(wallet || '') && wallet.toLowerCase() !== ZERO.toLowerCase();
+    if (!hasWallet) {
+      // The Series II stats() reverts for the zero address (its Agent ID
+      // check reads balanceOf(0)), so the public ledger reads the mint
+      // numbers directly instead.
+      return aggregate3([
+        { to: NFT2, data: SEL.totalSupply },
+        { to: NFT2, data: SEL.currentPrice },
+        { to: NFT2, data: SEL.mintOpen },
+        { to: NFT, data: SEL.totalSupply }
+      ]).then(function (r) {
+        if (!r[0].ok) throw new Error('stats read failed');
+        return {
+          minted: Number(wordAt(r[0].result, 0)),
+          max: 1111,
+          priceWei: wordAt(r[1].result, 0).toString(),
+          open: wordAt(r[2].result, 0) !== 0n,
+          hasAgentId: false,
+          hasMinted: false,
+          series1Minted: r[3].ok ? Number(wordAt(r[3].result, 0)) : 4444,
+          contract: NFT2
+        };
+      });
+    }
+    return aggregate3([
+      { to: NFT2, data: SEL.stats + encAddr(wallet) },
+      { to: NFT, data: SEL.totalSupply }
+    ]).then(function (r) {
+      if (!r[0].ok) throw new Error('stats read failed');
+      var hex = r[0].result;
       return {
         minted: Number(wordAt(hex, 0)),
         max: Number(wordAt(hex, 1)),
@@ -133,7 +166,8 @@
         open: wordAt(hex, 3) !== 0n,
         hasAgentId: wordAt(hex, 4) !== 0n,
         hasMinted: wordAt(hex, 5) !== 0n,
-        contract: NFT
+        series1Minted: r[1].ok ? Number(wordAt(r[1].result, 0)) : 4444,
+        contract: NFT2
       };
     });
   }
@@ -159,85 +193,103 @@
     });
   }
 
-  // ---- /api/claim equivalent ----
+  // ---- /api/claim equivalent: both series combined in the ledger;
+  // a per-work read routes by number (1-4,444 Series I, 4,445+ Series II).
   function claim(id) {
     var calls = [
       { to: CLAIM, data: SEL.totalClaimed },
       { to: CLAIM, data: SEL.claimsRemaining },
-      { to: CLAIM, data: SEL.claimOpen }
+      { to: CLAIM, data: SEL.claimOpen },
+      { to: CLAIM2, data: SEL.totalClaimed },
+      { to: CLAIM2, data: SEL.claimsRemaining },
+      { to: CLAIM2, data: SEL.claimOpen }
     ];
     if (id !== undefined) {
-      calls.push({ to: CLAIM, data: SEL.claimedById + encUint(id) });
-      calls.push({ to: NFT, data: SEL.ownerOf + encUint(id) });
+      var p2 = id > 4444;
+      calls.push({ to: p2 ? CLAIM2 : CLAIM, data: SEL.claimedById + encUint(id) });
+      calls.push({ to: p2 ? NFT2 : NFT, data: SEL.ownerOf + encUint(id) });
     }
     return aggregate3(calls).then(function (r) {
-      if (!r[0].ok || !r[1].ok || !r[2].ok) throw new Error('claim read failed');
+      if (!r[0].ok || !r[3].ok) throw new Error('claim read failed');
       var out = {
-        claimed: Number(wordAt(r[0].result, 0)),
-        max: 4444,
-        remaining: Number(wordAt(r[1].result, 0)),
-        open: wordAt(r[2].result, 0) !== 0n,
+        claimed: Number(wordAt(r[0].result, 0)) + Number(wordAt(r[3].result, 0)),
+        max: 5555,
+        remaining: Number(wordAt(r[1].result, 0)) + Number(wordAt(r[4].result, 0)),
+        open: wordAt(r[2].result, 0) !== 0n && wordAt(r[5].result, 0) !== 0n,
         claimContract: CLAIM,
         tokenContract: TOKEN
       };
       if (id !== undefined) {
         out.id = id;
-        out.claimedForId = r[3].ok ? wordAt(r[3].result, 0) !== 0n : false;
-        out.owner = r[4].ok ? addrAt(r[4].result, 0) : null;
+        out.claimedForId = r[6].ok ? wordAt(r[6].result, 0) !== 0n : false;
+        out.owner = r[7].ok ? addrAt(r[7].result, 0) : null;
       }
       return out;
     });
   }
 
   // ---- /api/market equivalent ----
-  // Traits never change (seed is fixed at mint), so they ship as a static
-  // snapshot in /market-data.json; owners and new mints are read live.
+  // Traits never change (seed is fixed at mint), so Series I traits ship
+  // as a static snapshot in /market-data.json; owners and new mints are
+  // read live. Series II works (4,445 and up) are read live from the
+  // second contract in the same pass, traits rendered from their seeds.
   function market() {
     var snapP = fetch('/market-data.json', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .catch(function () { return null; });
-    return Promise.all([snapP, ethCall(NFT, SEL.totalSupply)]).then(function (pair) {
+    var countsP = aggregate3([
+      { to: NFT, data: SEL.totalSupply },
+      { to: NFT2, data: SEL.totalSupply }
+    ]);
+    return Promise.all([snapP, countsP]).then(function (pair) {
       var snap = pair[0] || { minted: 0, items: [] };
-      var n = Number(wordAt(pair[1], 0));
+      var n = Number(wordAt(pair[1][0].result, 0));
+      var n2 = Number(wordAt(pair[1][1].result, 0));
       var byId = {};
       (snap.items || []).forEach(function (it) { byId[it.id] = it; });
       var calls = [];
       var i;
       for (i = 1; i <= n; i++) calls.push({ to: NFT, data: SEL.ownerOf + encUint(i) });
+      for (i = 1; i <= n2; i++) calls.push({ to: NFT2, data: SEL.ownerOf + encUint(4444 + i) });
       return aggregate3Chunked(calls, 300).then(function (owners) {
         var fresh = [];
-        for (i = (snap.minted || 0) + 1; i <= n; i++) if (!byId[i]) fresh.push(i);
-        var seedCalls = fresh.map(function (id) { return { to: NFT, data: SEL.seedOf + encUint(id) }; });
+        for (i = (snap.minted || 0) + 1; i <= n; i++) if (!byId[i]) fresh.push({ id: i, to: NFT });
+        for (i = 1; i <= n2; i++) fresh.push({ id: 4444 + i, to: NFT2 });
+        var seedCalls = fresh.map(function (f) { return { to: f.to, data: SEL.seedOf + encUint(f.id) }; });
         return (seedCalls.length ? aggregate3(seedCalls) : Promise.resolve([])).then(function (seeds) {
-          fresh.forEach(function (id, k) {
+          fresh.forEach(function (f, k) {
             var r = seeds[k];
             if (!r || !r.ok) return;
             var v = wordAt(r.result, 0);
             if (v === 0n || !window.Nomio) return;
             var seed = '0x' + v.toString(16).padStart(64, '0');
             try {
-              var t = window.Nomio.render(seed, id).traits;
-              byId[id] = { id: id, owner: null, form: t.Form, palette: t.Palette, rule: t.Rule };
+              var t = window.Nomio.render(seed, f.id).traits;
+              byId[f.id] = { id: f.id, owner: null, form: t.Form, palette: t.Palette, rule: t.Rule };
             } catch (e) {}
           });
           var items = [];
           var ownerSet = {};
-          for (i = 1; i <= n; i++) {
-            var base = byId[i];
-            if (!base) continue;
-            var owner = owners[i - 1] && owners[i - 1].ok ? addrAt(owners[i - 1].result, 0) : base.owner;
-            if (!owner) continue;
+          function pushItem(id, contract) {
+            var base = byId[id];
+            if (!base) return;
+            var oi = contract === NFT ? id - 1 : n + (id - 4444) - 1;
+            var owner = owners[oi] && owners[oi].ok ? addrAt(owners[oi].result, 0) : base.owner;
+            if (!owner) return;
             ownerSet[owner.toLowerCase()] = 1;
             items.push({
-              id: i,
+              id: id,
               owner: owner,
               form: base.form,
               palette: base.palette,
               rule: base.rule,
-              element: 'https://element.market/assets/bsc/' + NFT + '/' + i
+              img: contract === NFT ? 'https://nomio-six.vercel.app/api/image/' + id : 'https://nomio.uk/api/svg/' + id + '.svg',
+              element: 'https://element.market/assets/bsc/' + contract + '/' + id
             });
           }
-          return { contract: NFT, chain: 'bsc', minted: n, owners: Object.keys(ownerSet).length, items: items };
+          for (i = 1; i <= n; i++) pushItem(i, NFT);
+          for (i = 1; i <= n2; i++) pushItem(4444 + i, NFT2);
+          return { contract: NFT, chain: 'bsc', minted: n + n2, owners: Object.keys(ownerSet).length, items: items };
         });
       });
     });

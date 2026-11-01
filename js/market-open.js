@@ -1,7 +1,7 @@
-// The Nomio market opens 2 November 2026 at 00.00 UTC. Until that instant
-// the site announces the opening with a live countdown; from that instant
-// every market marker on the site flips to open on its own.
-const MARKET_OPEN_AT = Date.UTC(2026, 10, 2, 0, 0, 0);
+// The Nomio market opened early, on 2 November 2026 (WIB), by the
+// owner's decision; the original schedule was 2 November 2026 at
+// 00.00 UTC. Every market marker on the site reads as open.
+const MARKET_OPEN_AT = Date.UTC(2026, 10, 1, 0, 0, 0);
 const ELEMENT_COLLECTION = 'https://element.market/collections/nomio';
 
 function marketIsOpen() { return Date.now() >= MARKET_OPEN_AT; }

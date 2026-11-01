@@ -102,7 +102,7 @@
     try {
       const j = await window.NomioChain.stats();
       if (j.error) return;
-      $('barCount').textContent = fmt(j.minted); $('mMinted').textContent = fmt(j.minted);
+      $('barCount').textContent = fmt(j.series1Minted + j.minted); $('mMinted').textContent = fmt(j.minted);
       $('mLeft').textContent = fmt(j.max - j.minted); $('mFill').style.width = (j.minted / j.max * 100) + '%';
       $('mStatus').textContent = j.minted >= j.max ? 'Complete' : j.open ? 'Mint live' : 'Opening soon';
       if (j.minted !== minted) { minted = j.minted; loadRecent(); }
@@ -128,7 +128,7 @@
     out.textContent = 'Checking…';
     try {
       const j = await window.NomioChain.stats(w);
-      out.textContent = j.hasMinted ? 'This wallet already holds its Nomio.' : j.hasAgentId ? 'Eligible. This wallet holds an Agent ID and can mint once.' : 'Not eligible. No Binance Agent ID on this wallet.';
+      out.textContent = j.hasMinted ? 'This wallet holds an Agent ID and has already minted in Series II. It can mint again.' : j.hasAgentId ? 'Eligible. This wallet holds an Agent ID and can mint.' : 'Not eligible. No Binance Agent ID on this wallet.';
     } catch (e) { out.textContent = 'Could not reach the contract. Try again.'; }
   });
 

@@ -20,7 +20,7 @@
   $('workBtn').addEventListener('click', async () => {
     const out = $('workOut');
     const v = $('work').value.trim();
-    if (!/^\d+$/.test(v) || Number(v) < 1 || Number(v) > 4444) { out.textContent = 'Enter a Nomio number between 1 and 4,444.'; return; }
+    if (!/^\d+$/.test(v) || Number(v) < 1 || Number(v) > 5555) { out.textContent = 'Enter a Nomio number between 1 and 5,555.'; return; }
     const id = Number(v);
     out.textContent = 'Checking…';
     try {
