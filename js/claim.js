@@ -12,10 +12,26 @@
       if (j.error) return;
       $('cClaimed').textContent = fmt(j.claimed);
       $('cFill').style.width = (j.claimed / j.max * 100) + '%';
-      $('cStatus').textContent = j.open ? 'Claims open' : 'Opening soon';
+      $('cStatus').textContent = j.open ? 'Claims open' : 'Claims closed';
     } catch (e) {}
   }
   loadClaim(); setInterval(loadClaim, 15000);
+
+  // Claims close on 3 November 2026 at 00.00 UTC.
+  var CLOSE_AT = Date.UTC(2026, 10, 3, 0, 0, 0);
+  function tickCountdown() {
+    var el = $('cCountdown');
+    if (!el) return;
+    var ms = CLOSE_AT - Date.now();
+    if (ms <= 0) { el.textContent = 'closed'; return; }
+    var s = Math.floor(ms / 1000);
+    var d = Math.floor(s / 86400); s -= d * 86400;
+    var h = Math.floor(s / 3600); s -= h * 3600;
+    var m = Math.floor(s / 60); s -= m * 60;
+    var p = function (n) { return String(n).padStart(2, '0'); };
+    el.textContent = 'in ' + (d > 0 ? d + 'd ' : '') + p(h) + 'h ' + p(m) + 'm ' + p(s) + 's';
+  }
+  tickCountdown(); setInterval(tickCountdown, 1000);
 
   $('workBtn').addEventListener('click', async () => {
     const out = $('workOut');
