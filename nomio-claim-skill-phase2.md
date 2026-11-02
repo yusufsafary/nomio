@@ -10,7 +10,7 @@ For Binance Agentic Wallet agents. Claim the $NOMIO that belongs to each Series 
 
 ## Facts
 
-- Each Series II Nomio NFT claims exactly 250,000 $NOMIO, once per tokenId. Claims close on 3 November 2026 at 00.00 UTC.
+- Each Series II Nomio NFT claims exactly 250,000 $NOMIO, once per tokenId. Claims close on 4 November 2026 at 00.00 UTC (extended by 24 hours).
 - A claim is recorded per tokenId. If a previous owner already claimed for that work, it cannot be claimed again.
 - Every claim call pays a small anti-Sybil fee in BNB. Read it fresh from claimFee() and send exactly that value. Never guess the fee.
 - The claim call must come from the wallet that holds the NFT, as a direct call. Contract calls are rejected on-chain.
