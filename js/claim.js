@@ -17,8 +17,8 @@
   }
   loadClaim(); setInterval(loadClaim, 15000);
 
-  // Claims close on 3 November 2026 at 00.00 UTC.
-  var CLOSE_AT = Date.UTC(2026, 10, 3, 0, 0, 0);
+  // Claims close on 4 November 2026 at 00.00 UTC (extended by 24 hours on 3 November).
+  var CLOSE_AT = Date.UTC(2026, 10, 4, 0, 0, 0);
   function tickCountdown() {
     var el = $('cCountdown');
     if (!el) return;
