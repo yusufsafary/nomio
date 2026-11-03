@@ -13,7 +13,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/site.css?v=3">
+<link rel="stylesheet" href="/css/site.css?v=4">
 </head>
 <body>
 
@@ -119,18 +119,28 @@ baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
     <p class="body">Every minted Nomio can claim $NOMIO once, at the rate in the ledger below. The claim is tied to the work itself: sell a work before claiming and the claim travels with it; claim first and that work is spent for good. Each series claims through its own contract. Batch two of Series II, works 5,556 to 6,666, follows in its own window once the batch is minting and its pool is funded.</p>
     <p class="body">Claims run through your Binance agent, exactly like the mint. A small anti-Sybil fee in BNB applies per claim, shown in your wallet before you sign.</p>
 
+    <div class="closeband">
+      <div class="cb-top mono"><span>Claim closes</span><span>4 Nov 2026 · 00.00 UTC</span></div>
+      <div class="cd">
+        <div class="cd-cell"><b id="cCdD">--</b><span>Days</span></div>
+        <div class="cd-cell"><b id="cCdH">--</b><span>Hours</span></div>
+        <div class="cd-cell"><b id="cCdM">--</b><span>Minutes</span></div>
+        <div class="cd-cell"><b id="cCdS">--</b><span>Seconds</span></div>
+      </div>
+      <div class="cb-status mono"><span class="cb-dot"></span><span id="cStatus">Reading contract…</span><span class="cb-note">Series I + Series II batch 1. Batch 2 runs in its own window.</span></div>
+    </div>
+
     <div class="ledger">
       <div class="l-row"><span class="mono k">Per work</span><span class="v">250,000 $NOMIO</span></div>
       <div class="l-row"><span class="mono k">Claimed</span><span class="v"><b id="cClaimed">0</b> / 6,666</span></div>
       <div class="meter"><div id="cFill"></div></div>
-      <div class="l-row"><span class="mono k">Status</span><span class="v mono" id="cStatus">Reading contract…</span></div>
-      <div class="l-row"><span class="mono k">Closes</span><span class="v">4 Nov 2026 · 00.00 UTC · <span id="cCountdown">…</span></span></div>
     </div>
 
+    <p class="mono" style="color:var(--acc);margin:24px 0 8px">Claim skill files</p>
     <div class="ledger" style="margin-top:0">
-      <div class="l-row"><span class="mono k">Works 1 to 4,444</span><span class="v mono"><a href="/nomio-claim-skill.md">Series I claim skill</a></span></div>
-      <div class="l-row"><span class="mono k">Works 4,445 to 5,555</span><span class="v mono"><a href="/nomio-claim-skill-phase2.md">Series II claim skill</a></span></div>
-      <div class="l-row"><span class="mono k">Works 5,556 to 6,666</span><span class="v mono"><a href="/nomio-claim-skill-batch2.md">Batch 2 claim skill</a> · own window</span></div>
+      <div class="l-row"><span class="mono k nw">Works 1–4,444</span><span class="v mono"><a href="/nomio-claim-skill.md">Series I</a></span></div>
+      <div class="l-row"><span class="mono k nw">Works 4,445–5,555</span><span class="v mono"><a href="/nomio-claim-skill-phase2.md">Series II</a></span></div>
+      <div class="l-row"><span class="mono k nw">Works 5,556–6,666</span><span class="v mono"><a href="/nomio-claim-skill-batch2.md">Series II · Batch 2</a></span></div>
     </div>
 
     <ol class="steps">
@@ -179,7 +189,7 @@ For each of my Nomio works that has not claimed yet: read claimFee() on the clai
 <script src="/js/site.js?v=3"></script>
 <script src="/js/smooth.js?v=3" defer></script>
 <script src="/js/market-open.js?v=3"></script>
-<script src="/js/claim.js?v=3"></script>
+<script src="/js/claim.js?v=4"></script>
 <script src="/js/launch.js?v=3"></script>
 </body>
 </html>

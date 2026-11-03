@@ -211,3 +211,18 @@ details p{animation:dIn .35s cubic-bezier(.2,.7,.2,1)}
 @media (min-width:760px){.route{grid-template-columns:1fr 1fr}}
 .l-row .v a{text-decoration:none;border-bottom:1px solid var(--rule)}
 .l-row .v a:hover{color:var(--acc);border-color:var(--acc)}
+
+/* ---- claim close band (launch-style) ---- */
+.closeband{background:var(--ink);color:var(--paper);padding:24px 20px 20px;margin:28px 0 26px}
+.cb-top{display:flex;justify-content:space-between;gap:12px;color:#a89f8d;font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px}
+.closeband .cd{margin:0}
+.cb-status{display:flex;align-items:center;gap:9px;margin-top:16px;color:#a89f8d;font-size:11px;letter-spacing:.12em;text-transform:uppercase;flex-wrap:wrap}
+.cb-dot{width:8px;height:8px;border-radius:50%;background:#7bc47f;animation:pulse 1.6s infinite;flex:0 0 auto}
+.cb-status #cStatus{color:var(--paper)}
+.cb-note{display:block;width:100%;margin-top:2px;text-transform:none;letter-spacing:.02em}
+/* ledger rows: keep label and value from colliding on narrow screens */
+.l-row{gap:16px}
+.l-row .k{flex:0 0 auto}
+.l-row .v{min-width:0}
+.nw{white-space:nowrap}
+.steps li div{font-size:15.5px;line-height:1.65}

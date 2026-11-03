@@ -20,16 +20,16 @@
   // Claims close on 4 November 2026 at 00.00 UTC (extended by 24 hours on 3 November).
   var CLOSE_AT = Date.UTC(2026, 10, 4, 0, 0, 0);
   function tickCountdown() {
-    var el = $('cCountdown');
-    if (!el) return;
+    var D = $('cCdD'), H = $('cCdH'), M = $('cCdM'), S = $('cCdS');
+    if (!D) return;
+    var p = function (n) { return String(n).padStart(2, '0'); };
     var ms = CLOSE_AT - Date.now();
-    if (ms <= 0) { el.textContent = 'closed'; return; }
+    if (ms <= 0) { D.textContent = H.textContent = M.textContent = S.textContent = '00'; return; }
     var s = Math.floor(ms / 1000);
     var d = Math.floor(s / 86400); s -= d * 86400;
     var h = Math.floor(s / 3600); s -= h * 3600;
     var m = Math.floor(s / 60); s -= m * 60;
-    var p = function (n) { return String(n).padStart(2, '0'); };
-    el.textContent = 'in ' + (d > 0 ? d + 'd ' : '') + p(h) + 'h ' + p(m) + 'm ' + p(s) + 's';
+    D.textContent = p(d); H.textContent = p(h); M.textContent = p(m); S.textContent = p(s);
   }
   tickCountdown(); setInterval(tickCountdown, 1000);
 
