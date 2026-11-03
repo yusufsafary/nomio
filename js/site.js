@@ -143,6 +143,8 @@
   document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
     try { await navigator.clipboard.writeText($(b.dataset.copy).innerText); b.textContent = 'Copied'; setTimeout(() => (b.textContent = 'Copy'), 1400); } catch (e) {}
   }));
+  const barEl = document.querySelector('.bar');
+  if (barEl) addEventListener('scroll', () => barEl.classList.toggle('scrolled', scrollY > 10), { passive: true });
   document.querySelectorAll('.sec h2, .body, .toy, .ledger, .steps li, .code, details').forEach((el) => el.classList.add('rv'));
   const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -6% 0px' });
   document.querySelectorAll('.rv').forEach((el) => io.observe(el));

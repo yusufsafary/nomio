@@ -226,3 +226,34 @@ details p{animation:dIn .35s cubic-bezier(.2,.7,.2,1)}
 .l-row .v{min-width:0}
 .nw{white-space:nowrap}
 .steps li div{font-size:15.5px;line-height:1.65}
+
+/* ---- polish pass: smoother, more professional ---- */
+html{scroll-behavior:smooth}
+::selection{background:var(--acc);color:#fff}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.ledger,.cd,.lz-stats,.count,.closeband{font-variant-numeric:tabular-nums}
+.rv{transition:opacity .95s cubic-bezier(.22,.61,.21,1),transform .95s cubic-bezier(.22,.61,.21,1)}
+.btn{transition:transform .25s ease,background .25s ease,color .25s ease,box-shadow .25s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(23,22,26,.16)}
+.btn:active{transform:translateY(0);box-shadow:none}
+.chip{transition:border-color .2s ease,color .2s ease}
+.chip:hover{border-color:var(--acc);color:var(--acc)}
+.bar{transition:box-shadow .3s ease}
+.bar.scrolled{box-shadow:0 12px 32px rgba(23,22,26,.12)}
+.nav a{position:relative}
+.nav a.on{color:var(--ink)}
+.nav a.on::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--acc)}
+.marquee{mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.mq-track a svg,.mq-track a img{transition:transform .45s cubic-bezier(.22,.61,.21,1)}
+.mq-track a:hover svg,.mq-track a:hover img{transform:scale(1.05)}
+.sec.dark{position:relative;overflow:hidden}
+.sec.dark::before{content:"";position:absolute;inset:0;background:radial-gradient(760px 360px at 88% -60px,rgba(216,67,42,.30),transparent 62%);pointer-events:none}
+.sec.dark>*{position:relative;z-index:1}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(680px 320px at 10% -40px,rgba(216,67,42,.10),transparent 60%);pointer-events:none;z-index:1}
+.wordmark{letter-spacing:-.045em}
+.cd-cell b{font-size:clamp(42px,9vw,64px)}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--paper)}
+::-webkit-scrollbar-thumb{background:#c8bfa9;border:2px solid var(--paper);border-radius:6px}
+@media (min-width:760px){.mq-track a{width:168px;height:168px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.mq-track{animation:none}.rv{transition:none;opacity:1;transform:none}.btn:hover{transform:none;box-shadow:none}}

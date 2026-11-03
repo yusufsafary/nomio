@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Market — Nomio</title>
-<meta name="description" content="The Nomio market: every minted Nomio work and its owner. Trading is open through Element on BNB Chain.">
+<meta name="description" content="Nomio market: every minted Nomio work and its owner. Trading is open through Element on BNB Chain.">
 <meta name="theme-color" content="#EEE8DC">
 <meta property="og:title" content="Nomio Market">
-<meta property="og:description" content="The Nomio market: every minted work and its owner, trading through Element on BNB Chain.">
+<meta property="og:description" content="Nomio market: every minted work and its owner, trading through Element on BNB Chain.">
 <meta property="og:image" content="https://nomio.uk/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/site.css?v=4">
+<link rel="stylesheet" href="/css/site.css?v=5">
 <style>
 .mk-head{padding:64px 20px 28px;max-width:1080px;margin:0 auto}
 .mk-head h1{font-weight:400;font-size:clamp(46px,11vw,96px);line-height:.95;letter-spacing:-.02em;margin:14px 0 18px}
@@ -46,7 +46,7 @@
 
 <section class="mk-head">
   <span class="mono" style="color:var(--acc)">Article IV · Exchange · <span data-open-hide>Opens 2 Nov 2026 · 00.00 UTC</span><span data-open-show style="display:none">Open</span></span>
-  <h1>The market.<br><em style="color:var(--acc)"><span data-open-hide>Opens at midnight.</span><span data-open-show style="display:none">Now open.</span></em></h1>
+  <h1>Market.<br><em style="color:var(--acc)"><span data-open-hide>Opens at midnight.</span><span data-open-show style="display:none">Now open.</span></em></h1>
   <p><span data-open-hide>Every Nomio minted so far, with its owner. Trading opens on 2 November 2026 at 00.00 UTC, with buying, selling and offers through Element, the BNB Chain NFT marketplace.</span><span data-open-show style="display:none">Every Nomio minted so far, with its owner. Trading is open, with buying, selling and offers through Element, the BNB Chain NFT marketplace.</span></p>
   <div class="mk-stats mono">
     <div><b id="sMinted">—</b>Minted</div>
@@ -100,6 +100,6 @@ window.NomioChain.market().then((j) => {
 ['#q', '#fForm', '#fPal', '#sort'].forEach((s) => $(s).addEventListener('input', render));
 window.onMarketFlip = () => render();
 </script>
-<script src="/js/smooth.js?v=3" defer></script>
+<script src="/js/smooth.js?v=4" defer></script>
 </body>
 </html>
