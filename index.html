@@ -105,12 +105,12 @@ baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
   <section class="sec" id="claim">
     <div class="art-no mono">Article III · Claim</div>
     <h2 class="display">Every work claims $NOMIO.</h2>
-    <p class="body">Every minted Nomio can claim 250,000 $NOMIO, once. The claim is tied to the work itself: sell a work before claiming and the claim travels with it; claim first and that work is spent for good. Series II works, numbered 4,445 to 5,555, claim through their own claim contract on the same terms. For both series, the claim closes on 4 November 2026 at 00.00 UTC. The closing was extended by 24 hours so holders in every time zone get a full final day.</p>
+    <p class="body">Every minted Nomio can claim 250,000 $NOMIO, once. The claim is tied to the work itself: sell a work before claiming and the claim travels with it; claim first and that work is spent for good. Series II works, numbered 4,445 to 5,555, claim through their own claim contract on the same terms. Series II batch two, works 5,556 to 6,666, claims through a third contract on the same terms, in its own window that opens once the batch is minting and its pool is funded. For Series I and Series II batch one, the claim closes on 4 November 2026 at 00.00 UTC. The closing was extended by 24 hours so holders in every time zone get a full final day.</p>
     <p class="body">Claims run through your Binance agent, exactly like the mint. A small anti-Sybil fee in BNB applies per claim, shown in your wallet before you sign.</p>
 
     <div class="ledger">
       <div class="l-row"><span class="mono k">Per work</span><span class="v">250,000 $NOMIO</span></div>
-      <div class="l-row"><span class="mono k">Claimed</span><span class="v"><b id="cClaimed">0</b> / 5,555</span></div>
+      <div class="l-row"><span class="mono k">Claimed</span><span class="v"><b id="cClaimed">0</b> / 6,666</span></div>
       <div class="meter"><div id="cFill"></div></div>
       <div class="l-row"><span class="mono k">Status</span><span class="v mono" id="cStatus">Reading contract…</span></div>
       <div class="l-row"><span class="mono k">Closes</span><span class="v">4 Nov 2026 · 00.00 UTC · <span id="cCountdown">…</span></span></div>
@@ -118,7 +118,7 @@ baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
 
     <ol class="steps">
       <li><span class="mono">01</span><div><b>Hold a Nomio</b> that has not claimed yet. Unsure about a work? Check its number below.</div></li>
-      <li><span class="mono">02</span><div><b>Tell your agent to claim.</b> Copy the prompt below, or point it to the claim skill file for your series: <a href="/nomio-claim-skill.md">Series I</a> or <a href="/nomio-claim-skill-phase2.md">Series II</a>. It reads the fee on-chain and shows you a preview first.</div></li>
+      <li><span class="mono">02</span><div><b>Tell your agent to claim.</b> Copy the prompt below, or point it to the claim skill file for your series: <a href="/nomio-claim-skill.md">Series I</a>, <a href="/nomio-claim-skill-phase2.md">Series II</a> or <a href="/nomio-claim-skill-batch2.md">Series II, batch 2</a>. It reads the fee on-chain and shows you a preview first.</div></li>
       <li><span class="mono">03</span><div><b>Confirm in your wallet.</b> 250,000 $NOMIO arrives in the same transaction.</div></li>
     </ol>
 
@@ -127,14 +127,15 @@ baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
       <pre id="cprompt">Claim the $NOMIO for my Nomio on BNB Chain (chain id 56).
 For works 1 to 4,444, read the skill file at https://nomio.uk/nomio-claim-skill.md and follow it exactly.
 For works 4,445 to 5,555, read the skill file at https://nomio.uk/nomio-claim-skill-phase2.md and follow it exactly.
+For works 5,556 to 6,666, read the skill file at https://nomio.uk/nomio-claim-skill-batch2.md and follow it exactly.
 For each of my Nomio works that has not claimed yet: read claimFee() on the claim contract for its series, preview the transaction, then call claim(tokenId) with exactly that value. Each work claims 250,000 $NOMIO, once.</pre>
     </div>
     <div class="check">
       <label class="mono" for="work">Check a work</label>
-      <div class="check-row"><input id="work" placeholder="Nomio number, 1 to 5,555" autocomplete="off" spellcheck="false" inputmode="numeric"><button class="btn ink sm" id="workBtn">Check</button></div>
+      <div class="check-row"><input id="work" placeholder="Nomio number, 1 to 6,666" autocomplete="off" spellcheck="false" inputmode="numeric"><button class="btn ink sm" id="workBtn">Check</button></div>
       <p class="mono small" id="workOut"></p>
     </div>
-    <p class="mono small" style="margin-top:18px">Token <a href="https://bscscan.com/address/0x84B61D73E098e7D46B214bF0032E5C5CdfbAc433" target="_blank" rel="noopener">0x84B6…Ac433 ↗</a> · Claim contract <a href="https://bscscan.com/address/0xcbeE2612E3f3FEb298b274E7119a6a9ce08871b9" target="_blank" rel="noopener">0xcbeE…871b9 ↗</a> · Series II claim <a href="https://bscscan.com/address/0xeFf514283A109613A5Ae7306e1266Ec52EaB63d2" target="_blank" rel="noopener">0xeFf5…63d2 ↗</a></p>
+    <p class="mono small" style="margin-top:18px">Token <a href="https://bscscan.com/address/0x84B61D73E098e7D46B214bF0032E5C5CdfbAc433" target="_blank" rel="noopener">0x84B6…Ac433 ↗</a> · Claim contract <a href="https://bscscan.com/address/0xcbeE2612E3f3FEb298b274E7119a6a9ce08871b9" target="_blank" rel="noopener">0xcbeE…871b9 ↗</a> · Series II claim <a href="https://bscscan.com/address/0xeFf514283A109613A5Ae7306e1266Ec52EaB63d2" target="_blank" rel="noopener">0xeFf5…63d2 ↗</a> · Batch 2 claim <a href="https://bscscan.com/address/0xe5d9694BA55FE41a792fD9F1D1d5b08ec7C57b0d" target="_blank" rel="noopener">0xe5d9…7b0d ↗</a></p>
   </section>
 
   <section class="sec" id="worlds">

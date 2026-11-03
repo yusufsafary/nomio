@@ -8,6 +8,7 @@
   var NFT3 = '0xa41Dd6a32dd7a0EfB405Cb38716015Ff44E9877D'; // Series II batch 2 (works 5,556 to 6,666), opens automatically when batch 1 sells out
   var CLAIM = '0xcbeE2612E3f3FEb298b274E7119a6a9ce08871b9';
   var CLAIM2 = '0xeFf514283A109613A5Ae7306e1266Ec52EaB63d2';
+  var CLAIM3 = '0xe5d9694BA55FE41a792fD9F1D1d5b08ec7C57b0d'; // Series II batch 2 claim (works 5,556 to 6,666)
   var TOKEN = '0x84B61D73E098e7D46B214bF0032E5C5CdfbAc433';
   var ZERO = '0x0000000000000000000000000000000000000000';
   var RPCS = [
@@ -204,27 +205,33 @@
       { to: CLAIM, data: SEL.claimOpen },
       { to: CLAIM2, data: SEL.totalClaimed },
       { to: CLAIM2, data: SEL.claimsRemaining },
-      { to: CLAIM2, data: SEL.claimOpen }
+      { to: CLAIM2, data: SEL.claimOpen },
+      { to: CLAIM3, data: SEL.totalClaimed },
+      { to: CLAIM3, data: SEL.claimsRemaining },
+      { to: CLAIM3, data: SEL.claimOpen }
     ];
     if (id !== undefined) {
-      var p2 = id > 4444;
-      calls.push({ to: p2 ? CLAIM2 : CLAIM, data: SEL.claimedById + encUint(id) });
-      calls.push({ to: p2 ? NFT2 : NFT, data: SEL.ownerOf + encUint(id) });
+      var route = id > 5555 ? { c: CLAIM3, n: NFT3 } : id > 4444 ? { c: CLAIM2, n: NFT2 } : { c: CLAIM, n: NFT };
+      calls.push({ to: route.c, data: SEL.claimedById + encUint(id) });
+      calls.push({ to: route.n, data: SEL.ownerOf + encUint(id) });
     }
     return aggregate3(calls).then(function (r) {
       if (!r[0].ok || !r[3].ok) throw new Error('claim read failed');
+      var c3claimed = r[6].ok ? Number(wordAt(r[6].result, 0)) : 0;
+      var c3remaining = r[7].ok ? Number(wordAt(r[7].result, 0)) : 0;
+      var c3open = r[8].ok ? wordAt(r[8].result, 0) !== 0n : false;
       var out = {
-        claimed: Number(wordAt(r[0].result, 0)) + Number(wordAt(r[3].result, 0)),
-        max: 5555,
-        remaining: Number(wordAt(r[1].result, 0)) + Number(wordAt(r[4].result, 0)),
-        open: wordAt(r[2].result, 0) !== 0n && wordAt(r[5].result, 0) !== 0n,
+        claimed: Number(wordAt(r[0].result, 0)) + Number(wordAt(r[3].result, 0)) + c3claimed,
+        max: 6666,
+        remaining: Number(wordAt(r[1].result, 0)) + Number(wordAt(r[4].result, 0)) + c3remaining,
+        open: (wordAt(r[2].result, 0) !== 0n && wordAt(r[5].result, 0) !== 0n) || c3open,
         claimContract: CLAIM,
         tokenContract: TOKEN
       };
       if (id !== undefined) {
         out.id = id;
-        out.claimedForId = r[6].ok ? wordAt(r[6].result, 0) !== 0n : false;
-        out.owner = r[7].ok ? addrAt(r[7].result, 0) : null;
+        out.claimedForId = r[9].ok ? wordAt(r[9].result, 0) !== 0n : false;
+        out.owner = r[10].ok ? addrAt(r[10].result, 0) : null;
       }
       return out;
     });
