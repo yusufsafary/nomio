@@ -37,7 +37,7 @@
 
   function post(url, payload) {
     var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    var timer = ctl ? setTimeout(function () { ctl.abort(); }, 20000) : null;
+    var timer = ctl ? setTimeout(function () { ctl.abort(); }, 6000) : null;
     return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -52,11 +52,20 @@
       throw e;
     });
   }
-  // Try each RPC endpoint in turn until one answers.
+  // Race every RPC endpoint in parallel and take the first good answer;
+  // public endpoints hang often enough that a sequential fallback left
+  // the ledgers sitting on their defaults. If the race fails outright,
+  // walk the list in order as a last resort.
   function viaRpc(fn) {
-    var p = Promise.reject(new Error('no rpc'));
-    RPCS.forEach(function (u) { p = p.catch(function () { return fn(u); }); });
-    return p;
+    var attempts = RPCS.map(function (u) { return fn(u); });
+    var raced = (typeof Promise.any === 'function')
+      ? Promise.any(attempts)
+      : attempts.reduce(function (p, q) { return p.catch(function () { return q; }); }, Promise.reject(new Error('no rpc')));
+    return raced.catch(function () {
+      var p = Promise.reject(new Error('no rpc'));
+      RPCS.forEach(function (u) { p = p.catch(function () { return fn(u); }); });
+      return p;
+    });
   }
   function ethCall(to, data) {
     return viaRpc(function (u) {
