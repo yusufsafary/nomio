@@ -14,8 +14,11 @@
   }
 
   // ---------- hero field: a law writing itself ----------
-  const cv = $('field'), cx = cv.getContext('2d');
-  let cell, cols, rows, grid = [], rule = 110, tick = 0, dpr = Math.min(2, window.devicePixelRatio || 1);
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const cv = $('field');
+  if (cv) {
+  const cx = cv.getContext('2d');
+  let cell, cols, rows, grid = [], rule = 110, tick = 0;
   function sizeField() {
     const r = cv.getBoundingClientRect();
     cv.width = r.width * dpr; cv.height = r.height * dpr;
@@ -52,8 +55,10 @@
   let fieldTimer = setInterval(animate, 90);
   let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { sizeField(); drawField(); }, 200); });
   document.addEventListener('visibilitychange', () => { clearInterval(fieldTimer); if (!document.hidden) fieldTimer = setInterval(animate, 90); });
+  }
 
   // ---------- Article I: the rule toy ----------
+  if ($('toyRule') && $('toyCanvas')) {
   let toyRule = 110, single = true, toySeedRow = null;
   const tr = $('toyRule'), tc = $('toyCanvas'), tx = tc.getContext('2d');
   for (let k = 7; k >= 0; k--) {
@@ -75,8 +80,10 @@
   $('toyRand').addEventListener('click', () => { toyRule = NICE[Math.floor(Math.random() * NICE.length)]; drawToy(); });
   $('toySeed').addEventListener('click', (e) => { single = !single; toySeedRow = null; e.target.textContent = single ? 'Single seed' : 'Random row'; drawToy(); });
   drawToy();
+  }
 
   // ---------- Article II: forms + palettes ----------
+  if ($('formGrid') && $('pals')) {
   const FORMS = [
     ['Loom', 'A law written row by row, like cloth on a loom.', 'bc2b116f80ae4cfe01fec51c14411b79b74f57b91c67d49c2f9ae297ddca9f44'],
     ['Halo', 'The same law wrapped into rings around a sun.', 'af39e47e62f9454aae0e68e9e10e64d1ecfd57d4908b17e0741d1ff3ccdf8d28'],
@@ -95,6 +102,7 @@
     el.innerHTML = `<span class="sw"><i style="background:${p.bg}"></i><i style="background:${p.ink}"></i><i style="background:${p.acc}"></i></span>${p.name}`;
     pals.appendChild(el);
   });
+  }
 
   // ---------- stats ----------
   let minted = -1;
@@ -102,9 +110,8 @@
     try {
       const j = await window.NomioChain.stats();
       if (j.error) return;
-      $('barCount').textContent = fmt(j.series1Minted + j.minted); $('mMinted').textContent = fmt(j.minted);
-      $('mLeft').textContent = fmt(j.max - j.minted); $('mFill').style.width = (j.minted / j.max * 100) + '%';
-      $('mStatus').textContent = j.minted >= j.max ? 'Complete' : j.open ? 'Mint live' : 'Opening soon';
+      var bc = $('barCount'); if (bc) bc.textContent = fmt(j.series1Minted + j.minted);
+      var mm = $('mMinted'); if (mm) { mm.textContent = fmt(j.minted); $('mLeft').textContent = fmt(j.max - j.minted); $('mFill').style.width = (j.minted / j.max * 100) + '%'; $('mStatus').textContent = j.minted >= j.max ? 'Complete' : j.open ? 'Mint live' : 'Opening soon'; }
       if (j.minted !== minted) { minted = j.minted; loadRecent(); }
     } catch (e) {}
   }
@@ -112,7 +119,7 @@
     try {
       const j = await window.NomioChain.recent();
       if (!j.items || !j.items.length) return;
-      const g = $('gallery'); g.innerHTML = '';
+      const g = $('gallery'); if (!g) return; g.innerHTML = '';
       j.items.slice(0, 8).forEach((it) => {
         const a = document.createElement('a'); a.href = `https://nomio-six.vercel.app/api/svg/${it.id}`; a.target = '_blank'; a.rel = 'noopener';
         a.innerHTML = N.render(it.seed, it.id).svg; g.appendChild(a);
@@ -122,7 +129,7 @@
   loadStats(); setInterval(loadStats, 10000);
 
   // ---------- wallet check ----------
-  $('whoBtn').addEventListener('click', async () => {
+  if ($('whoBtn')) $('whoBtn').addEventListener('click', async () => {
     const w = $('who').value.trim(), out = $('whoOut');
     if (!/^0x[0-9a-fA-F]{40}$/.test(w)) { out.textContent = 'Enter a full 0x address.'; return; }
     out.textContent = 'Checking…';
