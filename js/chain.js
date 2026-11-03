@@ -5,6 +5,7 @@
   'use strict';
   var NFT = '0x48b5e5573e76caaa41a893496de6c857720e6b40';
   var NFT2 = '0xC9747B35800eB4A0A3221EB45cb9FcDE7463728C';
+  var NFT3 = '0xa41Dd6a32dd7a0EfB405Cb38716015Ff44E9877D'; // Series II batch 2 (works 5,556 to 6,666), opens automatically when batch 1 sells out
   var CLAIM = '0xcbeE2612E3f3FEb298b274E7119a6a9ce08871b9';
   var CLAIM2 = '0xeFf514283A109613A5Ae7306e1266Ec52EaB63d2';
   var TOKEN = '0x84B61D73E098e7D46B214bF0032E5C5CdfbAc433';
@@ -130,45 +131,46 @@
   // total rides along so the header can show the whole edition. ----
   function stats(wallet) {
     var hasWallet = /^0x[0-9a-fA-F]{40}$/.test(wallet || '') && wallet.toLowerCase() !== ZERO.toLowerCase();
-    if (!hasWallet) {
-      // The Series II stats() reverts for the zero address (its Agent ID
-      // check reads balanceOf(0)), so the public ledger reads the mint
-      // numbers directly instead.
-      return aggregate3([
-        { to: NFT2, data: SEL.totalSupply },
-        { to: NFT2, data: SEL.currentPrice },
-        { to: NFT2, data: SEL.mintOpen },
-        { to: NFT, data: SEL.totalSupply }
-      ]).then(function (r) {
-        if (!r[0].ok) throw new Error('stats read failed');
-        return {
-          minted: Number(wordAt(r[0].result, 0)),
-          max: 1111,
-          priceWei: wordAt(r[1].result, 0).toString(),
-          open: wordAt(r[2].result, 0) !== 0n,
-          hasAgentId: false,
-          hasMinted: false,
-          series1Minted: r[3].ok ? Number(wordAt(r[3].result, 0)) : 4444,
-          contract: NFT2
-        };
-      });
-    }
+    // Series II runs in two batches of 1,111. Batch 2 (NFT3) opens
+    // automatically when batch 1 (NFT2) sells out, so the live ledger is
+    // the sum of both and the "active" contract is batch 1 until it is
+    // complete, then batch 2. Direct reads only: stats() on either
+    // contract reverts for the zero address.
     return aggregate3([
-      { to: NFT2, data: SEL.stats + encAddr(wallet) },
+      { to: NFT2, data: SEL.totalSupply },
+      { to: NFT3, data: SEL.totalSupply },
       { to: NFT, data: SEL.totalSupply }
     ]).then(function (r) {
       if (!r[0].ok) throw new Error('stats read failed');
-      var hex = r[0].result;
-      return {
-        minted: Number(wordAt(hex, 0)),
-        max: Number(wordAt(hex, 1)),
-        priceWei: wordAt(hex, 2).toString(),
-        open: wordAt(hex, 3) !== 0n,
-        hasAgentId: wordAt(hex, 4) !== 0n,
-        hasMinted: wordAt(hex, 5) !== 0n,
-        series1Minted: r[1].ok ? Number(wordAt(r[1].result, 0)) : 4444,
-        contract: NFT2
+      var n2 = Number(wordAt(r[0].result, 0));
+      var n3 = r[1].ok ? Number(wordAt(r[1].result, 0)) : 0;
+      var s1 = r[2].ok ? Number(wordAt(r[2].result, 0)) : 4444;
+      var active = n2 >= 1111 ? NFT3 : NFT2;
+      var base = {
+        minted: n2 + n3,
+        max: 2222,
+        series1Minted: s1,
+        contract: active
       };
+      if (!hasWallet) {
+        return aggregate3([
+          { to: active, data: SEL.currentPrice },
+          { to: active, data: SEL.mintOpen }
+        ]).then(function (r2) {
+          base.priceWei = r2[0].ok ? wordAt(r2[0].result, 0).toString() : '270000000000000';
+          base.open = r2[1].ok ? wordAt(r2[1].result, 0) !== 0n : false;
+          base.hasAgentId = false;
+          base.hasMinted = false;
+          return base;
+        });
+      }
+      return ethCall(active, SEL.stats + encAddr(wallet)).then(function (hex) {
+        base.priceWei = wordAt(hex, 2).toString();
+        base.open = wordAt(hex, 3) !== 0n;
+        base.hasAgentId = wordAt(hex, 4) !== 0n;
+        base.hasMinted = wordAt(hex, 5) !== 0n;
+        return base;
+      });
     });
   }
 
@@ -239,22 +241,26 @@
       .catch(function () { return null; });
     var countsP = aggregate3([
       { to: NFT, data: SEL.totalSupply },
-      { to: NFT2, data: SEL.totalSupply }
+      { to: NFT2, data: SEL.totalSupply },
+      { to: NFT3, data: SEL.totalSupply }
     ]);
     return Promise.all([snapP, countsP]).then(function (pair) {
       var snap = pair[0] || { minted: 0, items: [] };
       var n = Number(wordAt(pair[1][0].result, 0));
       var n2 = Number(wordAt(pair[1][1].result, 0));
+      var n3 = pair[1][2] && pair[1][2].ok ? Number(wordAt(pair[1][2].result, 0)) : 0;
       var byId = {};
       (snap.items || []).forEach(function (it) { byId[it.id] = it; });
       var calls = [];
       var i;
       for (i = 1; i <= n; i++) calls.push({ to: NFT, data: SEL.ownerOf + encUint(i) });
       for (i = 1; i <= n2; i++) calls.push({ to: NFT2, data: SEL.ownerOf + encUint(4444 + i) });
+      for (i = 1; i <= n3; i++) calls.push({ to: NFT3, data: SEL.ownerOf + encUint(5555 + i) });
       return aggregate3Chunked(calls, 300).then(function (owners) {
         var fresh = [];
         for (i = (snap.minted || 0) + 1; i <= n; i++) if (!byId[i]) fresh.push({ id: i, to: NFT });
         for (i = 1; i <= n2; i++) fresh.push({ id: 4444 + i, to: NFT2 });
+        for (i = 1; i <= n3; i++) fresh.push({ id: 5555 + i, to: NFT3 });
         var seedCalls = fresh.map(function (f) { return { to: f.to, data: SEL.seedOf + encUint(f.id) }; });
         return (seedCalls.length ? aggregate3(seedCalls) : Promise.resolve([])).then(function (seeds) {
           fresh.forEach(function (f, k) {
@@ -273,7 +279,7 @@
           function pushItem(id, contract) {
             var base = byId[id];
             if (!base) return;
-            var oi = contract === NFT ? id - 1 : n + (id - 4444) - 1;
+            var oi = contract === NFT ? id - 1 : contract === NFT2 ? n + (id - 4444) - 1 : n + n2 + (id - 5555) - 1;
             var owner = owners[oi] && owners[oi].ok ? addrAt(owners[oi].result, 0) : base.owner;
             if (!owner) return;
             ownerSet[owner.toLowerCase()] = 1;
@@ -289,7 +295,8 @@
           }
           for (i = 1; i <= n; i++) pushItem(i, NFT);
           for (i = 1; i <= n2; i++) pushItem(4444 + i, NFT2);
-          return { contract: NFT, chain: 'bsc', minted: n + n2, owners: Object.keys(ownerSet).length, items: items };
+          for (i = 1; i <= n3; i++) pushItem(5555 + i, NFT3);
+          return { contract: NFT, chain: 'bsc', minted: n + n2 + n3, owners: Object.keys(ownerSet).length, items: items };
         });
       });
     });

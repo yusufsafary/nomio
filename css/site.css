@@ -167,4 +167,5 @@ details p{animation:dIn .35s cubic-bezier(.2,.7,.2,1)}
 @media (min-width:760px){.rm-head{padding:110px 36px 30px}.rm{padding:50px 36px 60px}.rm:before{left:47px}.rm li{padding-left:70px}.rm li:before{left:21px}.rm-coda{padding:40px 36px 100px}}
 
 .notice{background:var(--ink);color:var(--bg);text-align:center;font-size:11px;letter-spacing:.08em;padding:8px 14px;line-height:1.5}
+.notice.launch{background:var(--acc);color:var(--bg)}
 .notice a{color:var(--bg);text-decoration:underline;text-underline-offset:3px}
