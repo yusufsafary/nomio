@@ -12,7 +12,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
@@ -22,7 +22,7 @@
 
 <header class="bar">
   <a class="mark" href="#top"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><g fill="currentColor"><rect x="9" y="1" width="6" height="6"/><rect x="3" y="9" width="6" height="6"/><rect x="15" y="9" width="6" height="6"/><rect x="9" y="17" width="6" height="6"/></g></svg>NOMIO</a>
-  <nav class="nav mono"><a href="#law">Law</a><a href="#forms">Forms</a><a href="#mint">Mint</a><a href="#claim">Claim</a><a href="#worlds">Worlds</a><a href="/market">Market</a><a href="/roadmap">Roadmap</a></nav>
+  <nav class="nav mono"><a href="#launch">Launch</a><a href="#law">Law</a><a href="#forms">Forms</a><a href="#mint">Mint</a><a href="#claim">Claim</a><a href="#worlds">Worlds</a><a href="/market">Market</a><a href="/roadmap">Roadmap</a></nav>
   <a class="mono mk-pill" href="/market">Market · <span data-open-hide>opens 00.00 UTC</span><span data-open-show style="display:none">open</span></a>
   <div class="count mono"><i></i><b id="barCount">0</b>/6,666</div>
 </header>
@@ -34,9 +34,33 @@
       <p class="kicker mono">νόμος &nbsp;/ nomos / &nbsp;n. a law, a custom, the way a thing behaves</p>
       <h1 class="display">Small laws.<br><em>Endless worlds.</em></h1>
       <p class="lede">6,666 works on BNB Chain, in two series. Every Nomio is one rule, eight tiny instructions, and the world it grows from a seed fixed the moment an AI agent mints it.</p>
-      <div class="cta"><a class="btn ink" href="#mint">Mint as an agent</a><a class="btn line" href="#law">Read the law</a></div>
+      <div class="cta"><a class="btn ink" href="#mint">Mint as an agent</a><a class="btn line" href="#launch">The 8 Nov launch</a></div>
     </div>
     <div class="hero-foot mono"><span>Series I + II</span><span>BNB Chain</span><span>Binance Agentic Wallets only</span></div>
+  </section>
+
+  <div class="marquee" aria-hidden="true"><div class="mq-track" id="mqTrack"></div></div>
+
+  <section class="sec dark" id="launch">
+    <div class="in">
+      <div class="art-no mono">Next · Token launch</div>
+      <h2 class="display">$NOMIO goes <em>live.</em></h2>
+      <p class="body">The holder token of Nomio lists on PancakeSwap on 8 November 2026. Fixed supply of 10,000,000,000, never more. Liquidity and the opening price go live with the pool on launch day.</p>
+      <div class="cd" role="timer" aria-label="Countdown to the PancakeSwap launch">
+        <div class="cd-cell"><b id="cdD">..</b><span>Days</span></div>
+        <div class="cd-cell"><b id="cdH">..</b><span>Hours</span></div>
+        <div class="cd-cell"><b id="cdM">..</b><span>Minutes</span></div>
+        <div class="cd-cell"><b id="cdS">..</b><span>Seconds</span></div>
+      </div>
+      <p class="mono small" id="cdNote" style="color:#9a948a;text-transform:none;letter-spacing:.02em">Counting down to 8 November 2026, 00.00 UTC.</p>
+      <div class="lstats mono">
+        <span><i class="live-dot"></i>Live on chain</span>
+        <span>Works minted <b id="lzMinted">…</b></span>
+        <span>$NOMIO claimed by <b id="lzClaimed">…</b> works</span>
+        <span>Supply <b>10,000,000,000</b></span>
+      </div>
+      <div class="cta" style="margin-top:28px"><a class="btn paper" href="#claim">Claim before the close</a><a class="btn ghost" href="https://bscscan.com/address/0x84B61D73E098e7D46B214bF0032E5C5CdfbAc433" target="_blank" rel="noopener">Token on BscScan</a></div>
+    </div>
   </section>
 
   <section class="sec" id="law">
@@ -178,5 +202,6 @@ For each of my Nomio works that has not claimed yet: read claimFee() on the clai
 <script src="/js/smooth.js" defer></script>
 <script src="/js/market-open.js"></script>
 <script src="/js/claim.js"></script>
+<script src="/js/launch.js"></script>
 </body>
 </html>
