@@ -87,6 +87,7 @@
       <li><span class="mono">02</span><div><b>Call mint().</b> One call, no arguments. Read <code>currentPrice()</code> and send exactly that. Your wallet shows the value before you sign.</div></li>
       <li><span class="mono">03</span><div><b>Your law is chosen.</b> Seed follows from the block; rule, palette and form follow from the seed. Nothing is curated after the fact.</div></li>
     </ol>
+    <p class="body">A mint that fails almost always fails for one of four reasons: no Agent ID in the wallet, a value that differs from currentPrice() by even one wei, a call routed through another contract, or too little BNB for price plus gas. Each one shows in the preview before anything is signed.</p>
 
     <div class="code">
       <div class="code-top mono"><span>Prompt for your agent</span><button class="chip" data-copy="prompt">Copy</button></div>
@@ -94,7 +95,10 @@
 Batch 1, works 4,445 to 5,555: <span class="caddr">0xC9747B35800eB4A0A3221EB45cb9FcDE7463728C</span>
 First read totalSupply() on batch 1. If it reads 1,111, batch 1 is sold out: mint batch 2 instead, works 5,556 to 6,666: <span class="caddr">0xa41Dd6a32dd7a0EfB405Cb38716015Ff44E9877D</span>
 Call mint() with calldata 0x1249c58b.
-Value: read currentPrice() on the active contract and send exactly that.</pre>
+Value: read currentPrice() on the active contract and send exactly that.
+Before previewing, read holdsAgentId(your wallet) on the active contract. False means the wallet holds no Binance Agent ID: stop, and tell the user to claim one in the Binance Wallet app first.
+Call directly from the agentic wallet. Routed calls and calls from other contracts are rejected on-chain.
+Keep a little BNB beyond the price for gas. If the preview simulation fails, do not execute and do not retry with a different value: tell the user which check failed.</pre>
     </div>
     <div class="code dark">
       <div class="code-top mono"><span>baw CLI</span><button class="chip" data-copy="cli">Copy</button></div>
@@ -148,6 +152,7 @@ baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
       <li><span class="mono">02</span><div><b>Tell your agent to claim.</b> Copy the prompt below, or point it to the skill file for your series in the table under the ledger. It reads the fee on-chain and shows you a preview first.</div></li>
       <li><span class="mono">03</span><div><b>Confirm in your wallet.</b> 250,000 $NOMIO arrives in the same transaction.</div></li>
     </ol>
+    <p class="body">A claim that fails almost always fails for one of five reasons: a work already claimed, possibly by an earlier owner before a sale; a work held in a different wallet than the agentic wallet calling; a fee that differs from claimFee() by even one wei; a skill file from the wrong series; or too little BNB for fee plus gas. Each one shows in the preview before anything is signed.</p>
 
     <div class="code">
       <div class="code-top mono"><span>Prompt for your agent</span><button class="chip" data-copy="cprompt">Copy</button></div>

@@ -35,3 +35,13 @@ For Binance Agentic Wallet agents. Claim the $NOMIO that belongs to each Series 
 6. Verify on-chain: claimedById(tokenId) is now true and the wallet $NOMIO balance rose by 250,000.
 
 Repeat for each unclaimed Series II Nomio the user holds. Each claim is a separate call and carries its own fee.
+
+## If a claim fails
+
+Do not retry blindly. Each cause below has a read that identifies it:
+
+- claimedById(tokenId) returns true: already claimed. Claims attach to the work, not the owner, so a work bought on the market may have been claimed by an earlier owner. Nothing more can be claimed for it.
+- ownerOf(tokenId) is not your user's agentic wallet: the work sits in another wallet. A claim only succeeds from the wallet holding the work. Ask the user to move the work into the agentic wallet, then claim again.
+- The value sent differs from claimFee(): the fee is compared exactly, wei for wei. Read claimFee() again and send precisely that, never a rounded figure.
+- Your user holds too little BNB: a claim needs the fee plus gas. Ask the user to top up a small amount of BNB, then retry.
+- You are reading a skill file for a different series: works claim only through their own series contract. Switch to the file whose number range contains the work.
