@@ -13,7 +13,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/site.css">
+<link rel="stylesheet" href="/css/site.css?v=3">
 <style>
 .mk-head{padding:64px 20px 28px;max-width:1080px;margin:0 auto}
 .mk-head h1{font-weight:400;font-size:clamp(46px,11vw,96px);line-height:.95;letter-spacing:-.02em;margin:14px 0 18px}
@@ -70,9 +70,9 @@
 <main class="mk-grid" id="grid"><div class="mk-empty mono">Reading BNB Chain…</div></main>
 <p class="mk-note">Nomio is a standard ERC-721 on BNB Chain. Series I contract: <span class="mono">0x48b5e5573e76CaAa41a893496dE6C857720E6b40</span> · Series II contract: <span class="mono">0xC9747B35800eB4A0A3221EB45cb9FcDE7463728C</span> · Series II batch 2 contract: <span class="mono">0xa41Dd6a32dd7a0EfB405Cb38716015Ff44E9877D</span></p>
 
-<script src="/js/market-open.js"></script>
-<script src="/js/art.js"></script>
-<script src="/js/chain.js"></script>
+<script src="/js/market-open.js?v=3"></script>
+<script src="/js/art.js?v=3"></script>
+<script src="/js/chain.js?v=3"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 let ALL = [];
@@ -100,6 +100,6 @@ window.NomioChain.market().then((j) => {
 ['#q', '#fForm', '#fPal', '#sort'].forEach((s) => $(s).addEventListener('input', render));
 window.onMarketFlip = () => render();
 </script>
-<script src="/js/smooth.js" defer></script>
+<script src="/js/smooth.js?v=3" defer></script>
 </body>
 </html>

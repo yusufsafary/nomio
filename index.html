@@ -13,7 +13,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/site.css">
+<link rel="stylesheet" href="/css/site.css?v=3">
 </head>
 <body>
 
@@ -76,6 +76,12 @@
       <div class="l-row"><span class="mono k">Status</span><span class="v mono" id="mStatus">Reading contract…</span></div>
     </div>
 
+    <div class="route">
+      <div class="route-cell"><span class="mono k">Batch 1 · Minting now</span><b>Works 4,445 to 5,555</b><span class="mono addr">0xC9747B35800eB4A0A3221EB45cb9FcDE7463728C</span></div>
+      <div class="route-cell"><span class="mono k">Batch 2 · Opens automatically</span><b>Works 5,556 to 6,666</b><span class="mono addr">0xa41Dd6a32dd7a0EfB405Cb38716015Ff44E9877D</span></div>
+    </div>
+    <p class="body small" style="margin-bottom:6px">Your agent checks batch 1 first. Once it reads sold out, the same prompt mints batch 2 instead. Nothing to change on your side.</p>
+
     <ol class="steps">
       <li><span class="mono">01</span><div><b>Hold an Agent ID.</b> Claim it in the Binance Wallet app under your Agentic Wallet. The contract checks it before anything else.</div></li>
       <li><span class="mono">02</span><div><b>Call mint().</b> One call, no arguments. Read <code>currentPrice()</code> and send exactly that. Your wallet shows the value before you sign.</div></li>
@@ -121,9 +127,15 @@ baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
       <div class="l-row"><span class="mono k">Closes</span><span class="v">4 Nov 2026 · 00.00 UTC · <span id="cCountdown">…</span></span></div>
     </div>
 
+    <div class="ledger" style="margin-top:0">
+      <div class="l-row"><span class="mono k">Works 1 to 4,444</span><span class="v mono"><a href="/nomio-claim-skill.md">Series I claim skill</a></span></div>
+      <div class="l-row"><span class="mono k">Works 4,445 to 5,555</span><span class="v mono"><a href="/nomio-claim-skill-phase2.md">Series II claim skill</a></span></div>
+      <div class="l-row"><span class="mono k">Works 5,556 to 6,666</span><span class="v mono"><a href="/nomio-claim-skill-batch2.md">Batch 2 claim skill</a> · own window</span></div>
+    </div>
+
     <ol class="steps">
       <li><span class="mono">01</span><div><b>Hold a Nomio</b> that has not claimed yet. Unsure about a work? Check its number below.</div></li>
-      <li><span class="mono">02</span><div><b>Tell your agent to claim.</b> Copy the prompt below, or point it to the claim skill file for your series: <a href="/nomio-claim-skill.md">Series I</a>, <a href="/nomio-claim-skill-phase2.md">Series II</a> or <a href="/nomio-claim-skill-batch2.md">Series II, batch 2</a>. It reads the fee on-chain and shows you a preview first.</div></li>
+      <li><span class="mono">02</span><div><b>Tell your agent to claim.</b> Copy the prompt below, or point it to the skill file for your series in the table under the ledger. It reads the fee on-chain and shows you a preview first.</div></li>
       <li><span class="mono">03</span><div><b>Confirm in your wallet.</b> 250,000 $NOMIO arrives in the same transaction.</div></li>
     </ol>
 
@@ -140,7 +152,12 @@ For each of my Nomio works that has not claimed yet: read claimFee() on the clai
       <div class="check-row"><input id="work" placeholder="Nomio number, 1 to 6,666" autocomplete="off" spellcheck="false" inputmode="numeric"><button class="btn ink sm" id="workBtn">Check</button></div>
       <p class="mono small" id="workOut"></p>
     </div>
-    <p class="mono small" style="margin-top:18px">Token <a href="https://bscscan.com/address/0x84B61D73E098e7D46B214bF0032E5C5CdfbAc433" target="_blank" rel="noopener">0x84B6…Ac433 ↗</a> · Claim contract <a href="https://bscscan.com/address/0xcbeE2612E3f3FEb298b274E7119a6a9ce08871b9" target="_blank" rel="noopener">0xcbeE…871b9 ↗</a> · Series II claim <a href="https://bscscan.com/address/0xeFf514283A109613A5Ae7306e1266Ec52EaB63d2" target="_blank" rel="noopener">0xeFf5…63d2 ↗</a> · Batch 2 claim <a href="https://bscscan.com/address/0xe5d9694BA55FE41a792fD9F1D1d5b08ec7C57b0d" target="_blank" rel="noopener">0xe5d9…7b0d ↗</a></p>
+    <div class="ledger">
+      <div class="l-row"><span class="mono k">$NOMIO token</span><span class="v mono"><a href="https://bscscan.com/address/0x84B61D73E098e7D46B214bF0032E5C5CdfbAc433" target="_blank" rel="noopener">0x84B6…Ac433 ↗</a></span></div>
+      <div class="l-row"><span class="mono k">Claim · Series I</span><span class="v mono"><a href="https://bscscan.com/address/0xcbeE2612E3f3FEb298b274E7119a6a9ce08871b9" target="_blank" rel="noopener">0xcbeE…871b9 ↗</a></span></div>
+      <div class="l-row"><span class="mono k">Claim · Series II</span><span class="v mono"><a href="https://bscscan.com/address/0xeFf514283A109613A5Ae7306e1266Ec52EaB63d2" target="_blank" rel="noopener">0xeFf5…63d2 ↗</a></span></div>
+      <div class="l-row"><span class="mono k">Claim · Batch 2</span><span class="v mono"><a href="https://bscscan.com/address/0xe5d9694BA55FE41a792fD9F1D1d5b08ec7C57b0d" target="_blank" rel="noopener">0xe5d9…7b0d ↗</a></span></div>
+    </div>
   </section>
 
   <section class="sec" id="market">
@@ -157,12 +174,12 @@ For each of my Nomio works that has not claimed yet: read claimFee() on the clai
   <a id="cLink" href="https://bscscan.com/address/0x48b5e5573e76CaAa41a893496dE6C857720E6b40" target="_blank" rel="noopener">Contract 0x48b5…6b40 ↗</a>
 </footer>
 
-<script src="/js/art.js"></script>
-<script src="/js/chain.js"></script>
-<script src="/js/site.js"></script>
-<script src="/js/smooth.js" defer></script>
-<script src="/js/market-open.js"></script>
-<script src="/js/claim.js"></script>
-<script src="/js/launch.js"></script>
+<script src="/js/art.js?v=3"></script>
+<script src="/js/chain.js?v=3"></script>
+<script src="/js/site.js?v=3"></script>
+<script src="/js/smooth.js?v=3" defer></script>
+<script src="/js/market-open.js?v=3"></script>
+<script src="/js/claim.js?v=3"></script>
+<script src="/js/launch.js?v=3"></script>
 </body>
 </html>
