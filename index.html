@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Nomio — Small laws, endless worlds</title>
-<meta name="description" content="6,666 cellular-automaton works on BNB Chain, in two series. Each token is a rule and the world it grows. Mintable only by Binance Agentic Wallets with an Agent ID.">
+<meta name="description" content="7,221 cellular-automaton works on BNB Chain, in two series plus a 555-work Premium phase with on-chain rarity. Each token is a rule and the world it grows. Mintable only by Binance Agentic Wallets with an Agent ID.">
 <meta name="theme-color" content="#EEE8DC">
 <meta property="og:title" content="Nomio — Small laws, endless worlds">
-<meta property="og:description" content="6,666 cellular-automaton works in two series, minted only by AI agents.">
+<meta property="og:description" content="7,221 cellular-automaton works in two series plus a Premium phase, minted only by AI agents.">
 <meta property="og:image" content="https://nomio.uk/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -24,7 +24,7 @@
   <a class="mark" href="#top"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><g fill="currentColor"><rect x="9" y="1" width="6" height="6"/><rect x="3" y="9" width="6" height="6"/><rect x="15" y="9" width="6" height="6"/><rect x="9" y="17" width="6" height="6"/></g></svg>NOMIO</a>
   <nav class="nav mono"><a href="#launch">Launch</a><a href="#mint">Mint</a><a href="#claim">Claim</a><a href="/story">Story</a><a href="/market">Market</a><a href="/roadmap">Roadmap</a></nav>
   <a class="mono mk-pill" href="/market">Market · <span data-open-hide>opens 00.00 UTC</span><span data-open-show style="display:none">open</span></a>
-  <div class="count mono"><i></i><b id="barCount">0</b>/6,666</div>
+  <div class="count mono"><i></i><b id="barCount">0</b>/7,221</div>
 </header>
 
 <main id="top">
@@ -33,7 +33,7 @@
     <div class="hero-in">
       <p class="wordmark">NOMIO<i>.</i></p>
       <h1 class="display tagline">Small laws. <em>Endless worlds.</em></h1>
-      <p class="lede">6,666 cellular-automaton works on BNB Chain, minted only by AI agents. Series I is complete. Series II is minting now.</p>
+      <p class="lede">7,221 cellular-automaton works on BNB Chain, minted only by AI agents. Series I is complete. Series II is minting now, and a 555-work Premium phase with on-chain rarity has opened.</p>
       <div class="cta"><a class="btn ink" href="#mint">Mint as an agent</a><a class="btn line" href="#launch">8 Nov launch</a></div>
     </div>
     <div class="hero-foot mono"><span>Series I + II</span><span>BNB Chain</span><span>Binance Agentic Wallets only</span></div>
@@ -66,7 +66,7 @@
   <section class="sec mint" id="mint">
     <div class="art-no mono">Article II</div>
     <h2 class="display">Only agents may mint.</h2>
-    <p class="body">A single caller is accepted: a Binance Agentic Wallet holding an Agent ID. Ordinary wallets and other contracts are turned away on-chain. Series I, works 1 to 4,444, is complete. Series II mints in two batches of 1,111. Batch one, works 4,445 to 5,555, is open now: one work per call, no limit per wallet. Once it sells out, batch two opens on its own, works 5,556 to 6,666, on the same terms.</p>
+    <p class="body">A single caller is accepted: a Binance Agentic Wallet holding an Agent ID. Ordinary wallets and other contracts are turned away on-chain. Series I, works 1 to 4,444, is complete. Series II mints in two batches of 1,111. Batch one, works 4,445 to 5,555, is open now: one work per call, no limit per wallet. Once it sells out, batch two opens on its own, works 5,556 to 6,666, on the same terms. A separate Premium phase runs alongside: 555 works, numbered 6,667 to 7,221, each with a rarity class locked on chain at mint, Common, Rare or Mythic, at most ten per wallet.</p>
 
     <div class="ledger">
       <div class="l-row"><span class="mono k">Series I</span><span class="v">4,444 / 4,444 · Complete</span></div>
@@ -81,6 +81,38 @@
       <div class="route-cell"><span class="mono k">Batch 2 · Opens automatically</span><b>Works 5,556 to 6,666</b><span class="mono addr">0xa41Dd6a32dd7a0EfB405Cb38716015Ff44E9877D</span></div>
     </div>
     <p class="body small" style="margin-bottom:6px">Your agent checks batch 1 first. Once it reads sold out, the same prompt mints batch 2 instead. Nothing to change on your side.</p>
+    <div class="ledger">
+      <div class="l-row"><span class="mono k">Minted · Premium</span><span class="v"><b id="pMinted">0</b> / 555</span></div>
+      <div class="meter"><div id="pFill"></div></div>
+      <div class="l-row"><span class="mono k">Remaining</span><span class="v" id="pLeft">555</span></div>
+      <div class="l-row"><span class="mono k">Status</span><span class="v mono" id="pStatus">Reading contract…</span></div>
+    </div>
+    <div class="route">
+      <div class="route-cell"><span class="mono k">Premium · Minting now</span><b>Works 6,667 to 7,221</b><span class="mono addr">0x168ab2316a96f25F686dFED5a62b58704A8b13F1</span></div>
+    </div>
+    <p class="body small" style="margin-bottom:6px">Rarity is fixed at mint by the work's seed and can never change: Common in about 70 of every 100 works, Rare in 27, Mythic in 3. The class also sets the Premium claim below. At most ten Premium works per wallet.</p>
+    <div class="code">
+      <div class="code-top mono"><span>Prompt for your agent · Premium</span><button class="chip" data-copy="pprompt">Copy</button></div>
+      <pre id="pprompt">Mint one Nomio (Premium) on BNB Chain (chain id 56).
+Premium contract, works 6,667 to 7,221: <span class="caddr">0x168ab2316a96f25F686dFED5a62b58704A8b13F1</span>
+Call mint() with calldata 0x1249c58b.
+Value: read currentPrice() on the contract and send exactly that.
+At most 10 Premium works per wallet. mintedBy(your wallet) on the contract reads how many you already hold.
+Before previewing, read holdsAgentId(your wallet) on the contract. False means the wallet holds no Binance Agent ID: stop, and tell the user to claim one in the Binance Wallet app first.
+Call directly from the agentic wallet. Routed calls and calls from other contracts are rejected on-chain.
+After minting, read rarityClassOf(tokenId) on the contract and tell the user the class: 0 Common, 1 Rare, 2 Mythic. The class is locked by the seed at mint.
+Keep a little BNB beyond the price for gas. If the preview simulation fails, do not execute and do not retry with a different value: tell the user which check failed.</pre>
+    </div>
+    <div class="code dark">
+      <div class="code-top mono"><span>baw CLI · Premium</span><button class="chip" data-copy="pcli">Copy</button></div>
+      <pre id="pcli">baw contract-call preview --binanceChainId 56 \
+  --from &lt;your agentic wallet&gt; \
+  --to <span class="caddr">0x168ab2316a96f25F686dFED5a62b58704A8b13F1</span> \
+  --value &lt;currentPrice() in wei&gt; --inputData 0x1249c58b --json
+
+baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
+    </div>
+
 
     <ol class="steps">
       <li><span class="mono">01</span><div><b>Hold an Agent ID.</b> Claim it in the Binance Wallet app under your Agentic Wallet. Nothing proceeds without it.</div></li>
@@ -120,8 +152,8 @@ baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
   <section class="sec" id="claim">
     <div class="art-no mono">Article III · Claim</div>
     <h2 class="display">Every work claims $NOMIO.</h2>
-    <p class="body">Every minted Nomio can claim $NOMIO once, at the rate in the ledger below. Claims attach to the work itself: sell a work before claiming and the claim travels with it; claim first and that work is spent for good. Each series claims through its own contract. Batch two of Series II, works 5,556 to 6,666, follows in its own window once the batch is minting and its pool is funded.</p>
-    <p class="body">Claims run through your Binance agent, exactly like the mint. A small anti-Sybil fee in BNB applies per claim, shown in your wallet before you sign.</p>
+    <p class="body">Every minted Nomio can claim $NOMIO once, at the rate in the ledger below. Claims attach to the work itself: sell a work before claiming and the claim travels with it; claim first and that work is spent for good. Each series claims through its own contract. Batch two of Series II, works 5,556 to 6,666, follows in its own window once the batch is minting and its pool is funded. Premium works, 6,667 to 7,221, claim by rarity class through their own contract in their own window: Common 1,000,000, Rare 3,000,000, Mythic 10,000,000 $NOMIO.</p>
+    <p class="body">Claims run through your Binance agent, exactly like the mint. A small anti-Sybil fee in BNB applies per claim, shown in your wallet before you sign. Premium claims carry no fee.</p>
 
     <div class="closeband">
       <div class="cb-top mono"><span>Claim closes</span><span>8 Nov 2026 · 00.00 UTC</span></div>
@@ -131,12 +163,13 @@ baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
         <div class="cd-cell"><b id="cCdM">--</b><span>Minutes</span></div>
         <div class="cd-cell"><b id="cCdS">--</b><span>Seconds</span></div>
       </div>
-      <div class="cb-status mono"><span class="cb-dot"></span><span id="cStatus">Reading contract…</span><span class="cb-note">Series I + Series II batch 1. Batch 2 runs in its own window.</span></div>
+      <div class="cb-status mono"><span class="cb-dot"></span><span id="cStatus">Reading contract…</span><span class="cb-note">Series I + Series II batch 1 close here. Batch 2 and Premium run in their own windows.</span></div>
     </div>
 
     <div class="ledger">
       <div class="l-row"><span class="mono k">Per work</span><span class="v">250,000 $NOMIO</span></div>
-      <div class="l-row"><span class="mono k">Claimed</span><span class="v"><b id="cClaimed">0</b> / 6,666</span></div>
+      <div class="l-row"><span class="mono k">Per work · Premium</span><span class="v">1,000,000 / 3,000,000 / 10,000,000 $NOMIO by rarity</span></div>
+      <div class="l-row"><span class="mono k">Claimed</span><span class="v"><b id="cClaimed">0</b> / 7,221</span></div>
       <div class="meter"><div id="cFill"></div></div>
     </div>
 
@@ -145,12 +178,13 @@ baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
       <div class="l-row"><span class="mono k nw">Works 1–4,444</span><span class="v mono"><a href="/nomio-claim-skill.md">Series I</a></span></div>
       <div class="l-row"><span class="mono k nw">Works 4,445–5,555</span><span class="v mono"><a href="/nomio-claim-skill-phase2.md">Series II</a></span></div>
       <div class="l-row"><span class="mono k nw">Works 5,556–6,666</span><span class="v mono"><a href="/nomio-claim-skill-batch2.md">Series II · Batch 2</a></span></div>
+      <div class="l-row"><span class="mono k nw">Works 6,667–7,221</span><span class="v mono"><a href="/nomio-claim-skill-premium.md">Premium</a></span></div>
     </div>
 
     <ol class="steps">
       <li><span class="mono">01</span><div><b>Hold a Nomio</b> that has not claimed yet. Unsure about a work? Check its number below.</div></li>
       <li><span class="mono">02</span><div><b>Tell your agent to claim.</b> Copy the prompt below, or point it to the skill file for your series in the table under the ledger. It reads the fee on-chain and shows you a preview first.</div></li>
-      <li><span class="mono">03</span><div><b>Confirm in your wallet.</b> 250,000 $NOMIO arrives in the same transaction.</div></li>
+      <li><span class="mono">03</span><div><b>Confirm in your wallet.</b> Your $NOMIO arrives in the same transaction.</div></li>
     </ol>
     <p class="body">A claim that fails almost always fails for one of five reasons: a work already claimed, possibly by an earlier owner before a sale; a work held in a different wallet than the agentic wallet calling; a fee that differs from claimFee() by even one wei; a skill file from the wrong series; or too little BNB for fee plus gas. Each one shows in the preview before anything is signed.</p>
 
@@ -160,11 +194,12 @@ baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
 For works 1 to 4,444, read the skill file at https://nomio.uk/nomio-claim-skill.md and follow it exactly.
 For works 4,445 to 5,555, read the skill file at https://nomio.uk/nomio-claim-skill-phase2.md and follow it exactly.
 For works 5,556 to 6,666, read the skill file at https://nomio.uk/nomio-claim-skill-batch2.md and follow it exactly.
-For each of my Nomio works that has not claimed yet: read claimFee() on the claim contract for its series, preview the transaction, then call claim(tokenId) with exactly that value. Each work claims 250,000 $NOMIO, once.</pre>
+For works 6,667 to 7,221 (Premium), read the skill file at https://nomio.uk/nomio-claim-skill-premium.md and follow it exactly. Premium claims pay by rarity class and carry no fee.
+For each of my Nomio works that has not claimed yet: read claimFee() on the claim contract for its series, preview the transaction, then call claim(tokenId) with exactly that value. Works up to 6,666 claim 250,000 $NOMIO each, once. Premium works claim 1,000,000 (Common), 3,000,000 (Rare), or 10,000,000 (Mythic) $NOMIO, once.</pre>
     </div>
     <div class="check">
       <label class="mono" for="work">Check a work</label>
-      <div class="check-row"><input id="work" placeholder="Nomio number, 1 to 6,666" autocomplete="off" spellcheck="false" inputmode="numeric"><button class="btn ink sm" id="workBtn">Check</button></div>
+      <div class="check-row"><input id="work" placeholder="Nomio number, 1 to 7,221" autocomplete="off" spellcheck="false" inputmode="numeric"><button class="btn ink sm" id="workBtn">Check</button></div>
       <p class="mono small" id="workOut"></p>
     </div>
     <div class="ledger">
@@ -172,6 +207,7 @@ For each of my Nomio works that has not claimed yet: read claimFee() on the clai
       <div class="l-row"><span class="mono k">Claim · Series I</span><span class="v mono"><a href="https://bscscan.com/address/0xcbeE2612E3f3FEb298b274E7119a6a9ce08871b9" target="_blank" rel="noopener">0xcbeE…871b9 ↗</a></span></div>
       <div class="l-row"><span class="mono k">Claim · Series II</span><span class="v mono"><a href="https://bscscan.com/address/0xeFf514283A109613A5Ae7306e1266Ec52EaB63d2" target="_blank" rel="noopener">0xeFf5…63d2 ↗</a></span></div>
       <div class="l-row"><span class="mono k">Claim · Batch 2</span><span class="v mono"><a href="https://bscscan.com/address/0xe5d9694BA55FE41a792fD9F1D1d5b08ec7C57b0d" target="_blank" rel="noopener">0xe5d9…7b0d ↗</a></span></div>
+      <div class="l-row"><span class="mono k">Claim · Premium</span><span class="v mono"><a href="https://bscscan.com/address/0x1638801c0E3ae3f8f7D601F62A9836fbfC646E75" target="_blank" rel="noopener">0x1638…6E75 ↗</a></span></div>
     </div>
   </section>
 
@@ -185,16 +221,16 @@ For each of my Nomio works that has not claimed yet: read claimFee() on the clai
 </main>
 
 <footer class="foot mono">
-  <span>NOMIO · SERIES I + II · 6,666</span>
+  <span>NOMIO · SERIES I + II + PREMIUM · 7,221</span>
   <a id="cLink" href="https://bscscan.com/address/0x48b5e5573e76CaAa41a893496dE6C857720E6b40" target="_blank" rel="noopener">Contract 0x48b5…6b40 ↗</a>
 </footer>
 
 <script src="/js/art.js?v=3"></script>
-<script src="/js/chain.js?v=4"></script>
-<script src="/js/site.js?v=4"></script>
+<script src="/js/chain.js?v=5"></script>
+<script src="/js/site.js?v=5"></script>
 <script src="/js/smooth.js?v=4" defer></script>
 <script src="/js/market-open.js?v=3"></script>
-<script src="/js/claim.js?v=5"></script>
-<script src="/js/launch.js?v=3"></script>
+<script src="/js/claim.js?v=6"></script>
+<script src="/js/launch.js?v=4"></script>
 </body>
 </html>
