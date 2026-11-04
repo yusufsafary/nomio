@@ -9,6 +9,8 @@
   var CLAIM = '0xcbeE2612E3f3FEb298b274E7119a6a9ce08871b9';
   var CLAIM2 = '0xeFf514283A109613A5Ae7306e1266Ec52EaB63d2';
   var CLAIM3 = '0xe5d9694BA55FE41a792fD9F1D1d5b08ec7C57b0d'; // Series II batch 2 claim (works 5,556 to 6,666)
+  var NFT4 = '0x168ab2316a96f25F686dFED5a62b58704A8b13F1'; // Premium (works 6,667 to 7,221), rarity locked at mint
+  var CLAIM4 = '0x1638801c0E3ae3f8f7D601F62A9836fbfC646E75'; // Premium claim, by rarity class, own window
   var TOKEN = '0x84B61D73E098e7D46B214bF0032E5C5CdfbAc433';
   var ZERO = '0x0000000000000000000000000000000000000000';
   var RPCS = [
@@ -27,7 +29,8 @@
     totalClaimed: '0xd54ad2a1',
     claimsRemaining: '0x754c463f',
     claimOpen: '0x4b8bcb58',
-    claimedById: '0x4c80ee12'
+    claimedById: '0x4c80ee12',
+    claimAmount: '0x23b221a0'
   };
 
   function encUint(n) { return BigInt(n).toString(16).padStart(64, '0'); }
@@ -149,17 +152,21 @@
     return aggregate3([
       { to: NFT2, data: SEL.totalSupply },
       { to: NFT3, data: SEL.totalSupply },
-      { to: NFT, data: SEL.totalSupply }
+      { to: NFT, data: SEL.totalSupply },
+      { to: NFT4, data: SEL.totalSupply }
     ]).then(function (r) {
       if (!r[0].ok) throw new Error('stats read failed');
       var n2 = Number(wordAt(r[0].result, 0));
       var n3 = r[1].ok ? Number(wordAt(r[1].result, 0)) : 0;
       var s1 = r[2].ok ? Number(wordAt(r[2].result, 0)) : 4444;
+      var n4 = r[3].ok ? Number(wordAt(r[3].result, 0)) : 0;
       var active = n2 >= 1111 ? NFT3 : NFT2;
       var base = {
         minted: n2 + n3,
         max: 2222,
         series1Minted: s1,
+        premiumMinted: n4,
+        totalWorks: s1 + n2 + n3 + n4,
         contract: active
       };
       if (!hasWallet) {
@@ -217,30 +224,38 @@
       { to: CLAIM2, data: SEL.claimOpen },
       { to: CLAIM3, data: SEL.totalClaimed },
       { to: CLAIM3, data: SEL.claimsRemaining },
-      { to: CLAIM3, data: SEL.claimOpen }
+      { to: CLAIM3, data: SEL.claimOpen },
+      { to: CLAIM4, data: SEL.totalClaimed },
+      { to: CLAIM4, data: SEL.claimsRemaining },
+      { to: CLAIM4, data: SEL.claimOpen }
     ];
     if (id !== undefined) {
-      var route = id > 5555 ? { c: CLAIM3, n: NFT3 } : id > 4444 ? { c: CLAIM2, n: NFT2 } : { c: CLAIM, n: NFT };
+      var route = id > 6666 ? { c: CLAIM4, n: NFT4 } : id > 5555 ? { c: CLAIM3, n: NFT3 } : id > 4444 ? { c: CLAIM2, n: NFT2 } : { c: CLAIM, n: NFT };
       calls.push({ to: route.c, data: SEL.claimedById + encUint(id) });
       calls.push({ to: route.n, data: SEL.ownerOf + encUint(id) });
+      if (id > 6666) calls.push({ to: CLAIM4, data: SEL.claimAmount + encUint(id) });
     }
     return aggregate3(calls).then(function (r) {
       if (!r[0].ok || !r[3].ok) throw new Error('claim read failed');
       var c3claimed = r[6].ok ? Number(wordAt(r[6].result, 0)) : 0;
       var c3remaining = r[7].ok ? Number(wordAt(r[7].result, 0)) : 0;
       var c3open = r[8].ok ? wordAt(r[8].result, 0) !== 0n : false;
+      var c4claimed = r[9].ok ? Number(wordAt(r[9].result, 0)) : 0;
+      var c4remaining = r[10].ok ? Number(wordAt(r[10].result, 0)) : 0;
+      var c4open = r[11].ok ? wordAt(r[11].result, 0) !== 0n : false;
       var out = {
-        claimed: Number(wordAt(r[0].result, 0)) + Number(wordAt(r[3].result, 0)) + c3claimed,
-        max: 6666,
-        remaining: Number(wordAt(r[1].result, 0)) + Number(wordAt(r[4].result, 0)) + c3remaining,
-        open: (wordAt(r[2].result, 0) !== 0n && wordAt(r[5].result, 0) !== 0n) || c3open,
+        claimed: Number(wordAt(r[0].result, 0)) + Number(wordAt(r[3].result, 0)) + c3claimed + c4claimed,
+        max: 7221,
+        remaining: Number(wordAt(r[1].result, 0)) + Number(wordAt(r[4].result, 0)) + c3remaining + c4remaining,
+        open: (wordAt(r[2].result, 0) !== 0n && wordAt(r[5].result, 0) !== 0n) || c3open || c4open,
         claimContract: CLAIM,
         tokenContract: TOKEN
       };
       if (id !== undefined) {
         out.id = id;
-        out.claimedForId = r[9].ok ? wordAt(r[9].result, 0) !== 0n : false;
-        out.owner = r[10].ok ? addrAt(r[10].result, 0) : null;
+        out.claimedForId = r[12].ok ? wordAt(r[12].result, 0) !== 0n : false;
+        out.owner = r[13].ok ? addrAt(r[13].result, 0) : null;
+        out.claimAmount = id > 6666 && r[14] && r[14].ok ? wordAt(r[14].result, 0).toString() : null;
       }
       return out;
     });
@@ -258,13 +273,15 @@
     var countsP = aggregate3([
       { to: NFT, data: SEL.totalSupply },
       { to: NFT2, data: SEL.totalSupply },
-      { to: NFT3, data: SEL.totalSupply }
+      { to: NFT3, data: SEL.totalSupply },
+      { to: NFT4, data: SEL.totalSupply }
     ]);
     return Promise.all([snapP, countsP]).then(function (pair) {
       var snap = pair[0] || { minted: 0, items: [] };
       var n = Number(wordAt(pair[1][0].result, 0));
       var n2 = Number(wordAt(pair[1][1].result, 0));
       var n3 = pair[1][2] && pair[1][2].ok ? Number(wordAt(pair[1][2].result, 0)) : 0;
+      var n4 = pair[1][3] && pair[1][3].ok ? Number(wordAt(pair[1][3].result, 0)) : 0;
       var byId = {};
       (snap.items || []).forEach(function (it) { byId[it.id] = it; });
       var calls = [];
@@ -272,11 +289,13 @@
       for (i = 1; i <= n; i++) calls.push({ to: NFT, data: SEL.ownerOf + encUint(i) });
       for (i = 1; i <= n2; i++) calls.push({ to: NFT2, data: SEL.ownerOf + encUint(4444 + i) });
       for (i = 1; i <= n3; i++) calls.push({ to: NFT3, data: SEL.ownerOf + encUint(5555 + i) });
+      for (i = 1; i <= n4; i++) calls.push({ to: NFT4, data: SEL.ownerOf + encUint(6666 + i) });
       return aggregate3Chunked(calls, 300).then(function (owners) {
         var fresh = [];
         for (i = (snap.minted || 0) + 1; i <= n; i++) if (!byId[i]) fresh.push({ id: i, to: NFT });
         for (i = 1; i <= n2; i++) fresh.push({ id: 4444 + i, to: NFT2 });
         for (i = 1; i <= n3; i++) fresh.push({ id: 5555 + i, to: NFT3 });
+        for (i = 1; i <= n4; i++) fresh.push({ id: 6666 + i, to: NFT4 });
         var seedCalls = fresh.map(function (f) { return { to: f.to, data: SEL.seedOf + encUint(f.id) }; });
         return (seedCalls.length ? aggregate3(seedCalls) : Promise.resolve([])).then(function (seeds) {
           fresh.forEach(function (f, k) {
@@ -295,7 +314,7 @@
           function pushItem(id, contract) {
             var base = byId[id];
             if (!base) return;
-            var oi = contract === NFT ? id - 1 : contract === NFT2 ? n + (id - 4444) - 1 : n + n2 + (id - 5555) - 1;
+            var oi = contract === NFT ? id - 1 : contract === NFT2 ? n + (id - 4444) - 1 : contract === NFT3 ? n + n2 + (id - 5555) - 1 : n + n2 + n3 + (id - 6666) - 1;
             var owner = owners[oi] && owners[oi].ok ? addrAt(owners[oi].result, 0) : base.owner;
             if (!owner) return;
             ownerSet[owner.toLowerCase()] = 1;
@@ -312,11 +331,29 @@
           for (i = 1; i <= n; i++) pushItem(i, NFT);
           for (i = 1; i <= n2; i++) pushItem(4444 + i, NFT2);
           for (i = 1; i <= n3; i++) pushItem(5555 + i, NFT3);
-          return { contract: NFT, chain: 'bsc', minted: n + n2 + n3, owners: Object.keys(ownerSet).length, items: items };
+          for (i = 1; i <= n4; i++) pushItem(6666 + i, NFT4);
+          return { contract: NFT, chain: 'bsc', minted: n + n2 + n3 + n4, owners: Object.keys(ownerSet).length, items: items };
         });
       });
     });
   }
 
-  window.NomioChain = { stats: stats, recent: recent, claim: claim, market: market };
+  // ---- Premium phase ledger: minted, price, open state ----
+  function premium() {
+    return aggregate3([
+      { to: NFT4, data: SEL.totalSupply },
+      { to: NFT4, data: SEL.currentPrice },
+      { to: NFT4, data: SEL.mintOpen }
+    ]).then(function (r) {
+      if (!r[0].ok) throw new Error('premium read failed');
+      return {
+        minted: Number(wordAt(r[0].result, 0)),
+        max: 555,
+        priceWei: r[1].ok ? wordAt(r[1].result, 0).toString() : '4000000000000000',
+        open: r[2].ok ? wordAt(r[2].result, 0) !== 0n : false
+      };
+    });
+  }
+
+  window.NomioChain = { stats: stats, recent: recent, claim: claim, market: market, premium: premium };
 })();

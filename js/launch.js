@@ -32,7 +32,7 @@
       var j = await window.NomioChain.stats();
       if (j && !j.error) {
         var el = $('lzMinted');
-        if (el) el.textContent = fmt(j.series1Minted + j.minted) + ' / 6,666';
+        if (el) el.textContent = fmt(j.totalWorks !== undefined ? j.totalWorks : j.series1Minted + j.minted) + ' / 7,221';
       }
       var c = await window.NomioChain.claim();
       if (c && !c.error) {

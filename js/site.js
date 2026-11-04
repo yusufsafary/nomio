@@ -110,7 +110,7 @@
     try {
       const j = await window.NomioChain.stats();
       if (j.error) return;
-      var bc = $('barCount'); if (bc) bc.textContent = fmt(j.series1Minted + j.minted);
+      var bc = $('barCount'); if (bc) bc.textContent = fmt(j.totalWorks !== undefined ? j.totalWorks : j.series1Minted + j.minted);
       var mm = $('mMinted'); if (mm) { mm.textContent = fmt(j.minted); $('mLeft').textContent = fmt(j.max - j.minted); $('mFill').style.width = (j.minted / j.max * 100) + '%'; $('mStatus').textContent = j.minted >= j.max ? 'Complete' : j.open ? 'Mint live' : 'Opening soon'; }
       if (j.minted !== minted) { minted = j.minted; loadRecent(); }
     } catch (e) {}
@@ -127,6 +127,20 @@
     } catch (e) {}
   }
   loadStats(); setInterval(loadStats, 10000);
+
+  // ---------- premium ledger ----------
+  async function loadPremium() {
+    try {
+      const j = await window.NomioChain.premium();
+      if (j.error) return;
+      var pm = $('pMinted'); if (!pm) return;
+      pm.textContent = fmt(j.minted);
+      $('pLeft').textContent = fmt(j.max - j.minted);
+      $('pFill').style.width = (j.minted / j.max * 100) + '%';
+      $('pStatus').textContent = j.minted >= j.max ? 'Complete' : j.open ? 'Mint live' : 'Opening soon';
+    } catch (e) {}
+  }
+  loadPremium(); setInterval(loadPremium, 15000);
 
   // ---------- wallet check ----------
   if ($('whoBtn')) $('whoBtn').addEventListener('click', async () => {
