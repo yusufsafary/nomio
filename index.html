@@ -13,16 +13,17 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/site.css?v=5">
+<link rel="stylesheet" href="/css/site.css?v=6">
 </head>
 <body>
 
 <div class="notice launch mono">$NOMIO launches on PancakeSwap on 8 November 2026.</div>
 <div class="notice mono">$NOMIO claims close on 8 Nov 2026 at 00.00 UTC, when the token launches. <a href="#claim">Claim yours</a></div>
+<div class="notice prem mono">New · Nomio Premium is live: 555 works, rarity locked at mint, claims up to 10,000,000 $NOMIO. <a href="#premium">Mint the Premium route</a></div>
 
 <header class="bar">
   <a class="mark" href="#top"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><g fill="currentColor"><rect x="9" y="1" width="6" height="6"/><rect x="3" y="9" width="6" height="6"/><rect x="15" y="9" width="6" height="6"/><rect x="9" y="17" width="6" height="6"/></g></svg>NOMIO</a>
-  <nav class="nav mono"><a href="#launch">Launch</a><a href="#mint">Mint</a><a href="#claim">Claim</a><a href="/story">Story</a><a href="/market">Market</a><a href="/roadmap">Roadmap</a></nav>
+  <nav class="nav mono"><a href="#launch">Launch</a><a href="#mint">Mint</a><a href="#premium">Premium</a><a href="#claim">Claim</a><a href="/story">Story</a><a href="/market">Market</a><a href="/roadmap">Roadmap</a></nav>
   <a class="mono mk-pill" href="/market">Market · <span data-open-hide>opens 00.00 UTC</span><span data-open-show style="display:none">open</span></a>
   <div class="count mono"><i></i><b id="barCount">0</b>/7,221</div>
 </header>
@@ -34,7 +35,7 @@
       <p class="wordmark">NOMIO<i>.</i></p>
       <h1 class="display tagline">Small laws. <em>Endless worlds.</em></h1>
       <p class="lede">7,221 cellular-automaton works on BNB Chain, minted only by AI agents. Series I is complete. Series II is minting now, and a 555-work Premium phase with on-chain rarity has opened.</p>
-      <div class="cta"><a class="btn ink" href="#mint">Mint as an agent</a><a class="btn line" href="#launch">8 Nov launch</a></div>
+      <div class="cta"><a class="btn ink" href="#mint">Mint as an agent</a><a class="btn acc" href="#premium">Premium · 555 works</a><a class="btn line" href="#launch">8 Nov launch</a></div>
     </div>
     <div class="hero-foot mono"><span>Series I + II</span><span>BNB Chain</span><span>Binance Agentic Wallets only</span></div>
   </section>
@@ -104,7 +105,8 @@ Keep a little BNB beyond the price for gas. If the preview simulation fails, do 
 baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
     </div>
 
-    <p class="mono" style="color:var(--acc);margin:28px 0 8px">Route 2 · Premium</p>
+    <p class="mono" id="premium" style="color:var(--acc);margin:28px 0 8px">Route 2 · Premium <span style="background:var(--acc);color:var(--bg);padding:2px 8px;margin-left:6px">NEW</span></p>
+    <div class="prem-wrap">
     <div class="ledger">
       <div class="l-row"><span class="mono k">Minted · Premium</span><span class="v"><b id="pMinted">0</b> / 555</span></div>
       <div class="meter"><div id="pFill"></div></div>
@@ -115,6 +117,7 @@ baw contract-call execute --requestId &lt;requestId&gt; --json</pre>
       <div class="route-cell"><span class="mono k">Premium · Minting now</span><b>Works 6,667 to 7,221</b><span class="mono addr">0x168ab2316a96f25F686dFED5a62b58704A8b13F1</span></div>
     </div>
     <p class="body small" style="margin-bottom:6px">Rarity is fixed at mint by the work's seed and can never change: Common in about 70 of every 100 works, Rare in 27, Mythic in 3. The class also sets the Premium claim below. At most ten Premium works per wallet.</p>
+    </div>
     <div class="code">
       <div class="code-top mono"><span>Prompt for your agent · Premium</span><button class="chip" data-copy="pprompt">Copy</button></div>
       <pre id="pprompt">Mint one Nomio (Premium) on BNB Chain (chain id 56).
